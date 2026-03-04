@@ -61,10 +61,10 @@ export function Navbar() {
 
         <div className="hidden lg:flex items-center gap-4">
           <Link href="/contact">
-            <button className="bg-accent-lime hover:bg-accent-lime/90 text-black font-bold px-6 py-3 rounded-full flex items-center gap-2 transition-all">
+            <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-6 pr-1 rounded-full flex items-center gap-4 transition-all text-sm group">
               Contactează-ne
-              <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                <ArrowUpRight size={14} className="text-black" />
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover:scale-95">
+                <ArrowUpRight size={18} className="text-black" strokeWidth={2.5} />
               </div>
             </button>
           </Link>
@@ -85,20 +85,27 @@ export function Navbar() {
             exit={{ opacity: 0, y: -20 }}
             className="fixed inset-0 top-0 bg-neutral-900 z-40 lg:hidden p-8 flex flex-col pt-24"
           >
-            {NAV_LINKS.map((link) => (
-              <Link 
-                key={link.name} 
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className="text-3xl font-headline font-bold text-white border-b border-white/5 py-6"
-              >
-                {link.name}
-              </Link>
-            ))}
+            <div className="flex flex-col gap-2">
+              {NAV_LINKS.map((link) => (
+                <Link 
+                  key={link.name} 
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  className="text-3xl font-headline font-bold text-white border-b border-white/5 py-6"
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
             <div className="mt-auto">
-              <button className="bg-accent-lime w-full py-5 text-xl font-bold rounded-full flex items-center justify-center gap-3 text-black">
-                Contactează-ne <ArrowUpRight />
-              </button>
+              <Link href="/contact" onClick={() => setIsOpen(false)}>
+                <button className="bg-accent-lime w-full h-16 pl-8 pr-1.5 rounded-full flex items-center justify-between transition-all text-xl font-bold text-black group">
+                  Contactează-ne
+                  <div className="w-13 h-13 bg-white rounded-full flex items-center justify-center">
+                    <ArrowUpRight size={24} className="text-black" strokeWidth={2.5} />
+                  </div>
+                </button>
+              </Link>
             </div>
           </motion.div>
         )}
