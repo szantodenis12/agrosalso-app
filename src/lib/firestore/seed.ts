@@ -11,13 +11,6 @@ const CATEGORIES = [
   { id: 'sprayere', name: 'Sprayere', slug: 'sprayere', icon: '🧪', order: 6, productCount: 9, isActive: true, description: 'Protecția plantelor la cel mai înalt nivel.' },
 ];
 
-const BRANDS = [
-  { id: 'john-deere', name: 'John Deere', slug: 'john-deere', logo: '', description: 'Lider mondial în utilaje', isPartner: true, order: 1 },
-  { id: 'claas', name: 'CLAAS', slug: 'claas', logo: '', description: 'Performanță germană', isPartner: true, order: 2 },
-  { id: 'new-holland', name: 'New Holland', slug: 'new-holland', logo: '', description: 'Inovație în agricultură', isPartner: true, order: 3 },
-  { id: 'case-ih', name: 'Case IH', slug: 'case-ih', logo: '', description: 'Putere pură', isPartner: true, order: 4 },
-];
-
 const PRODUCTS = [
   {
     id: 'john-deere-6r-150',
@@ -27,46 +20,22 @@ const PRODUCTS = [
     brandSlug: 'john-deere',
     category: 'tractoare',
     description: 'Un tractor versatil și puternic, perfect pentru ferme medii și mari.',
+    detailedDescription: 'Tractorul John Deere 6R 150 reprezintă vârful tehnologiei pentru fermele medii din România. Echipat cu motorul PowerTech™ EWL de 150 CP, acesta oferă un echilibru perfect între putere și eficiență. Cabina CommandView™ III asigură un confort de neegalat pentru operator, în timp ce transmisia AutoPower IVT optimizează fiecare litru de combustibil consumat.',
     shortDescription: 'Tractor John Deere 6R 150 cu transmisie AutoPower și tehnologie de ultimă oră.',
     price: 145000,
     priceOnRequest: false,
     currency: 'RON',
     images: ['https://picsum.photos/seed/10/800/600'],
     mainImage: 'https://picsum.photos/seed/10/800/600',
-    specifications: { 'Putere': '150 CP', 'Transmisie': 'AutoPower IVT' },
+    specifications: { 'Putere': '150 CP', 'Transmisie': 'AutoPower IVT', 'An': '2023' },
     inStock: true,
     stockQuantity: 2,
     isNew: true,
     isFeatured: true,
     isOnSale: false,
     tags: ['tractor', '6r', 'john deere'],
-    metaTitle: 'John Deere 6R 150 - AgroSalso',
-    metaDescription: 'Cumpără tractorul John Deere 6R 150 de la AgroSalso.',
-  },
-  {
-    id: 'claas-lexion-6600',
-    name: 'CLAAS Lexion 6600',
-    slug: 'claas-lexion-6600',
-    brand: 'CLAAS',
-    brandSlug: 'claas',
-    category: 'combine',
-    description: 'Combină de recoltat de înaltă performanță pentru cereale.',
-    shortDescription: 'CLAAS Lexion 6600 cu sistem APS Synflow Walker.',
-    price: 320000,
-    priceOnRequest: true,
-    currency: 'RON',
-    images: ['https://picsum.photos/seed/20/800/600'],
-    mainImage: 'https://picsum.photos/seed/20/800/600',
-    specifications: { 'Putere': '408 CP', 'Buncăr': '11000 L' },
-    inStock: true,
-    stockQuantity: 1,
-    isNew: false,
-    isFeatured: true,
-    isOnSale: true,
-    salePercent: 10,
-    tags: ['combina', 'claas'],
-    metaTitle: 'CLAAS Lexion 6600 - AgroSalso',
-    metaDescription: 'Combină CLAAS Lexion 6600 disponibilă la cerere.',
+    metaTitle: 'John Deere 6R 150 | AgroSalso România',
+    metaDescription: 'Cumpără tractorul John Deere 6R 150 de la AgroSalso. Performanță și service garantat.',
   }
 ];
 
@@ -75,10 +44,6 @@ export async function seedDatabase(db: Firestore) {
 
   for (const cat of CATEGORIES) {
     await setDoc(doc(db, 'categories', cat.id), { ...cat, createdAt: serverTimestamp() });
-  }
-
-  for (const brand of BRANDS) {
-    await setDoc(doc(db, 'brands', brand.id), { ...brand, createdAt: serverTimestamp() });
   }
 
   for (const product of PRODUCTS) {

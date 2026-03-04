@@ -1,19 +1,19 @@
+
 'use client';
 import { use, useEffect, useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { useFirestore, useMemoFirebase } from '@/firebase';
+import { useFirestore } from '@/firebase';
 import { collection, query, where, getDocs, limit, addDoc, serverTimestamp } from 'firebase/firestore';
 import { Product } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, Check, Send, Phone, Info, ShieldCheck, Truck, Cog } from 'lucide-react';
+import { ChevronLeft, Send, Phone, Info, ShieldCheck, Truck, Cog, Sparkles, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
-import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -59,11 +59,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
       });
       setInquiry({ name: '', email: '', phone: '', message: '' });
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Eroare",
-        description: "Nu s-a putut trimite cererea. Vă rugăm încercați din nou.",
-      });
+      toast({ variant: "destructive", title: "Eroare", description: "Nu s-a putut trimite cererea." });
     } finally {
       setSubmitting(false);
     }
@@ -71,7 +67,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+      <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-accent-lime border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -81,7 +77,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
     return (
       <>
         <Navbar />
-        <main className="pt-40 pb-24 text-center">
+        <main className="pt-40 pb-24 text-center bg-neutral-50 min-h-screen">
           <h1 className="text-4xl font-headline font-extrabold mb-4">Produsul nu a fost găsit</h1>
           <Link href="/produse">
             <Button className="bg-neutral-900 text-white rounded-full px-8 h-12">Înapoi la catalog</Button>
@@ -95,149 +91,168 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
   return (
     <>
       <Navbar />
-      <main className="pt-[120px] pb-24 bg-neutral-50 min-h-screen">
-        <div className="max-w-[1440px] mx-auto px-6 md:px-14">
+      <main className="bg-neutral-50 min-h-screen">
+        {/* Immersive Header */}
+        <section className="relative h-[60vh] md:h-[75vh] w-full overflow-hidden bg-neutral-900">
+          <Image 
+            src={product.mainImage || 'https://picsum.photos/seed/placeholder/1920/1080'} 
+            alt={product.name} 
+            fill 
+            className="object-cover opacity-60"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-neutral-50 via-transparent to-black/40" />
           
-          {/* Breadcrumbs & Navigation */}
-          <div className="flex items-center justify-between mb-12">
-            <div className="flex gap-2 text-[10px] text-neutral-400 uppercase font-extrabold tracking-widest">
-              <Link href="/" className="hover:text-accent-lime transition-colors">Acasă</Link>
-              <span className="opacity-30">/</span>
-              <Link href="/produse" className="hover:text-accent-lime transition-colors">Catalog</Link>
-              <span className="opacity-30">/</span>
-              <span className="text-neutral-900">{product.name}</span>
-            </div>
-            <Link href="/produse">
-              <Button variant="ghost" className="text-[10px] font-extrabold uppercase tracking-widest gap-2 hover:bg-white rounded-full h-10 px-6">
-                <ChevronLeft size={16} /> Înapoi la catalog
-              </Button>
-            </Link>
+          <div className="absolute bottom-0 left-0 right-0 max-w-[1440px] mx-auto px-6 md:px-14 pb-12">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6 max-w-4xl"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-accent-lime font-extrabold text-[12px] uppercase tracking-[0.4em]">{product.brand}</span>
+                <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" />
+                <span className="text-white/60 font-bold text-[12px] uppercase tracking-widest">{product.category}</span>
+              </div>
+              <h1 className="font-headline font-extrabold text-5xl md:text-8xl text-neutral-900 tracking-tighter leading-none">{product.name}</h1>
+              <div className="flex flex-wrap gap-4 pt-4">
+                 {product.isNew && <span className="bg-blue-600 text-white text-[10px] font-extrabold px-6 py-2.5 rounded-full tracking-widest uppercase">Utilaj Nou</span>}
+                 {product.isOnSale && <span className="bg-yellow-400 text-black text-[10px] font-extrabold px-6 py-2.5 rounded-full tracking-widest uppercase">Ofertă Specială</span>}
+                 <div className="flex items-center gap-2 bg-white/80 backdrop-blur-md px-6 py-2.5 rounded-full border border-white">
+                   <Star size={14} className="fill-yellow-500 text-yellow-500" />
+                   <span className="text-[10px] font-extrabold text-neutral-900 tracking-widest uppercase">Calitate Garantată</span>
+                 </div>
+              </div>
+            </motion.div>
           </div>
+        </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-            {/* Visuals Column */}
-            <div className="lg:col-span-7 space-y-8">
+        <div className="max-w-[1440px] mx-auto px-6 md:px-14 py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+            
+            {/* Content Column */}
+            <div className="lg:col-span-7 space-y-16">
+              
+              {/* Detailed Content - The SEO description */}
               <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="relative aspect-[4/3] bg-white rounded-[3rem] overflow-hidden shadow-2xl shadow-black/5 group"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="bg-white rounded-[3.5rem] p-10 md:p-16 border border-neutral-100 shadow-sm space-y-10"
               >
-                <Image 
-                  src={product.mainImage || 'https://picsum.photos/seed/placeholder/1200/900'} 
-                  alt={product.name} 
-                  fill 
-                  className="object-cover group-hover:scale-105 transition-transform duration-1000"
-                  priority
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-12 bg-accent-lime/10 rounded-2xl flex items-center justify-center">
+                    <Sparkles className="text-accent-lime" size={24} />
+                  </div>
+                  <h2 className="font-headline font-extrabold text-3xl text-neutral-900 tracking-tight">Viziunea AgroSalso</h2>
+                </div>
+                
+                <div 
+                  className="prose prose-neutral max-w-none text-neutral-500 font-body leading-relaxed text-xl"
+                  dangerouslySetInnerHTML={{ __html: product.detailedDescription || product.description }}
                 />
-                <div className="absolute top-8 left-8 flex gap-3">
-                  {product.isNew && (
-                    <span className="bg-blue-600 text-white text-[10px] font-extrabold px-6 py-2.5 rounded-full tracking-widest uppercase shadow-xl shadow-blue-600/20">NOU</span>
-                  )}
-                  {product.isOnSale && (
-                    <span className="bg-yellow-400 text-black text-[10px] font-extrabold px-6 py-2.5 rounded-full tracking-widest uppercase shadow-xl shadow-yellow-400/20">PROMOȚIE</span>
-                  )}
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-10">
+                   {[
+                     { icon: <ShieldCheck size={28} />, title: "Garanție RO", sub: "Service autorizat" },
+                     { icon: <Truck size={28} />, title: "Livrare Rapidă", sub: "În toată țara" },
+                     { icon: <Cog size={28} />, title: "Piese Originale", sub: "Stoc permanent" },
+                   ].map((item, i) => (
+                     <div key={i} className="space-y-3">
+                       <div className="text-accent-lime">{item.icon}</div>
+                       <h4 className="font-headline font-bold text-lg text-neutral-900 leading-tight">{item.title}</h4>
+                       <p className="text-sm text-neutral-400 font-medium">{item.sub}</p>
+                     </div>
+                   ))}
                 </div>
               </motion.div>
 
-              {/* Benefits Icons */}
-              <div className="grid grid-cols-3 gap-6 pt-4">
-                {[
-                  { icon: <ShieldCheck className="text-accent-lime" />, label: "Garanție", sub: "2 ani extinsă" },
-                  { icon: <Truck className="text-accent-lime" />, label: "Livrare", sub: "În toată țara" },
-                  { icon: <Cog className="text-accent-lime" />, label: "Service", sub: "Autorizat 24/7" },
-                ].map((item, i) => (
-                  <div key={i} className="bg-white p-6 rounded-[2rem] flex flex-col items-center text-center gap-3 border border-neutral-100">
-                    <div className="w-12 h-12 bg-neutral-50 rounded-2xl flex items-center justify-center">{item.icon}</div>
-                    <div className="space-y-0.5">
-                      <div className="text-xs font-extrabold text-neutral-900 uppercase tracking-widest">{item.label}</div>
-                      <div className="text-[10px] font-bold text-neutral-400">{item.sub}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Description */}
-              <div className="bg-white rounded-[3rem] p-10 md:p-14 space-y-8 border border-neutral-100">
-                <h3 className="font-headline font-extrabold text-3xl text-neutral-900 tracking-tight">Descriere Produs</h3>
-                <div 
-                  className="prose prose-neutral max-w-none text-neutral-500 font-body leading-relaxed text-lg"
-                  dangerouslySetInnerHTML={{ __html: product.description }}
-                />
+              {/* Gallery / Extra Images if any */}
+              <div className="grid grid-cols-2 gap-8">
+                <div className="relative aspect-square rounded-[3rem] overflow-hidden bg-white shadow-xl">
+                   <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
+                </div>
+                <div className="relative aspect-square rounded-[3rem] overflow-hidden bg-neutral-900 flex items-center justify-center text-center p-8">
+                   <div className="space-y-4">
+                      <Star className="text-accent-lime mx-auto" size={40} />
+                      <h3 className="text-white font-headline font-bold text-2xl tracking-tight">Performanță fără compromis</h3>
+                      <p className="text-white/40 text-sm font-medium">Fiecare utilaj din catalogul AgroSalso este verificat riguros înainte de livrare.</p>
+                   </div>
+                </div>
               </div>
             </div>
 
-            {/* Content & Action Column */}
-            <aside className="lg:col-span-5 space-y-8">
-              {/* Product Intro */}
-              <div className="bg-white rounded-[3.5rem] p-10 md:p-14 border border-neutral-100 shadow-sm space-y-10">
-                <div className="space-y-6">
-                  <span className="text-accent-lime font-extrabold text-[12px] uppercase tracking-[0.4em] block">{product.brand}</span>
-                  <h1 className="font-headline font-extrabold text-4xl md:text-5xl text-neutral-900 tracking-tighter leading-none">{product.name}</h1>
-                  <p className="text-neutral-500 font-medium text-lg leading-relaxed">{product.shortDescription}</p>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <span className="text-[11px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț estimativ</span>
-                  <div className="font-headline font-extrabold text-5xl text-neutral-900 tracking-tighter">
-                    {product.priceOnRequest ? "LA CERERE" : `${product.price.toLocaleString()} RON`}
+            {/* Sticky Action Column */}
+            <aside className="lg:col-span-5 space-y-8 sticky top-[120px]">
+              
+              {/* Pricing Card */}
+              <div className="bg-white rounded-[3.5rem] p-10 md:p-14 border border-neutral-100 shadow-sm space-y-10 overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-accent-lime/5 rounded-full translate-x-10 -translate-y-10" />
+                
+                <div className="space-y-8 relative z-10">
+                  <div className="space-y-2">
+                    <span className="text-[11px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț Catalog (fără TVA)</span>
+                    <div className="font-headline font-extrabold text-6xl text-neutral-900 tracking-tighter">
+                      {product.priceOnRequest ? "LA CERERE" : `${product.price.toLocaleString()} RON`}
+                    </div>
                   </div>
-                </div>
 
-                <div className="pt-10 border-t border-neutral-50 space-y-6">
-                  <h4 className="text-[11px] font-extrabold text-neutral-900 uppercase tracking-[0.2em]">Specificații Cheie</h4>
-                  <div className="space-y-4">
-                    {Object.entries(product.specifications).map(([key, value]) => (
-                      <div key={key} className="flex justify-between items-center group">
-                        <span className="text-sm font-bold text-neutral-400 group-hover:text-neutral-600 transition-colors">{key}</span>
-                        <span className="text-sm font-extrabold text-neutral-900">{value}</span>
-                      </div>
-                    ))}
+                  <div className="space-y-6">
+                    <h4 className="text-[11px] font-extrabold text-neutral-900 uppercase tracking-[0.2em] flex items-center gap-2">
+                      <div className="w-1 h-1 bg-accent-lime rounded-full" /> Specificații Tehnice
+                    </h4>
+                    <div className="space-y-4">
+                      {Object.entries(product.specifications).map(([key, value]) => (
+                        <div key={key} className="flex justify-between items-center group border-b border-neutral-50 pb-2">
+                          <span className="text-sm font-bold text-neutral-400">{key}</span>
+                          <span className="text-sm font-extrabold text-neutral-900">{value}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Inquiry Form */}
-              <div className="bg-neutral-900 rounded-[3.5rem] p-10 md:p-14 text-white space-y-10">
-                <div className="space-y-4 text-center">
+              {/* Contact Form */}
+              <div className="bg-neutral-900 rounded-[3.5rem] p-10 md:p-14 text-white space-y-10 shadow-2xl shadow-black/20">
+                <div className="space-y-4">
                   <h3 className="font-headline font-extrabold text-3xl tracking-tight">Solicită Ofertă</h3>
-                  <p className="text-white/50 text-sm font-medium">Completează formularul și un expert AgroSalso te va contacta în max. 2 ore.</p>
+                  <p className="text-white/50 text-sm font-medium">Un expert AgroSalso te va contacta în cel mai scurt timp pentru detalii și finanțare.</p>
                 </div>
 
                 <form onSubmit={handleInquirySubmit} className="space-y-6">
-                  <div className="space-y-4">
+                  <Input 
+                    placeholder="Nume Complet" 
+                    value={inquiry.name}
+                    onChange={(e) => setInquiry({...inquiry, name: e.target.value})}
+                    required
+                    className="h-14 bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-2xl focus:ring-accent-lime"
+                  />
+                  <div className="grid grid-cols-2 gap-4">
                     <Input 
-                      placeholder="Nume Complet" 
-                      value={inquiry.name}
-                      onChange={(e) => setInquiry({...inquiry, name: e.target.value})}
+                      type="email" 
+                      placeholder="Email" 
+                      value={inquiry.email}
+                      onChange={(e) => setInquiry({...inquiry, email: e.target.value})}
                       required
                       className="h-14 bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-2xl focus:ring-accent-lime"
                     />
-                    <div className="grid grid-cols-2 gap-4">
-                      <Input 
-                        type="email" 
-                        placeholder="Email" 
-                        value={inquiry.email}
-                        onChange={(e) => setInquiry({...inquiry, email: e.target.value})}
-                        required
-                        className="h-14 bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-2xl focus:ring-accent-lime"
-                      />
-                      <Input 
-                        type="tel" 
-                        placeholder="Telefon" 
-                        value={inquiry.phone}
-                        onChange={(e) => setInquiry({...inquiry, phone: e.target.value})}
-                        required
-                        className="h-14 bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-2xl focus:ring-accent-lime"
-                      />
-                    </div>
-                    <Textarea 
-                      placeholder="Mesajul tău (ex: detalii finanțare, accesorii...)" 
-                      value={inquiry.message}
-                      onChange={(e) => setInquiry({...inquiry, message: e.target.value})}
+                    <Input 
+                      type="tel" 
+                      placeholder="Telefon" 
+                      value={inquiry.phone}
+                      onChange={(e) => setInquiry({...inquiry, phone: e.target.value})}
                       required
-                      className="min-h-[120px] bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-2xl focus:ring-accent-lime"
+                      className="h-14 bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-2xl focus:ring-accent-lime"
                     />
                   </div>
+                  <Textarea 
+                    placeholder="Mesajul tău..." 
+                    value={inquiry.message}
+                    onChange={(e) => setInquiry({...inquiry, message: e.target.value})}
+                    required
+                    className="min-h-[120px] bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-2xl focus:ring-accent-lime"
+                  />
 
                   <Button 
                     type="submit" 
@@ -245,21 +260,20 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                     className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold h-16 rounded-full flex items-center justify-between pl-10 pr-2 group transition-all"
                   >
                     {submitting ? 'SE TRIMITE...' : 'TRIMITE SOLICITAREA'}
-                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
+                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45 shadow-lg">
                       <Send size={20} className="text-black" />
                     </div>
                   </Button>
                 </form>
 
-                <div className="flex items-center justify-center gap-6 pt-4 text-white/40">
-                   <div className="flex items-center gap-2">
-                     <Phone size={16} />
+                <div className="flex flex-col gap-4 pt-4 border-t border-white/5">
+                   <a href="tel:+40751234567" className="flex items-center gap-4 text-white/60 hover:text-accent-lime transition-colors group">
+                     <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center group-hover:bg-accent-lime/20"><Phone size={16} /></div>
                      <span className="text-xs font-bold">+40 751 234 567</span>
-                   </div>
-                   <div className="w-1 h-1 bg-white/20 rounded-full" />
-                   <div className="flex items-center gap-2">
-                     <Info size={16} />
-                     <span className="text-xs font-bold">Consultanță gratuită</span>
+                   </a>
+                   <div className="flex items-center gap-4 text-white/60">
+                     <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center"><Info size={16} /></div>
+                     <span className="text-xs font-bold">Consultanță specializată gratuită</span>
                    </div>
                 </div>
               </div>

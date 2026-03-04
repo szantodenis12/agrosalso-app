@@ -19,6 +19,7 @@ export interface Product {
   category: ProductCategory;
   subcategory?: string;
   description: string;
+  detailedDescription: string; // Nou: Conținut SEO bogat
   shortDescription: string;
   price: number;
   priceOnRequest: boolean;
