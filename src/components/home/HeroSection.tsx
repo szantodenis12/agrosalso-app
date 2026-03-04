@@ -38,15 +38,15 @@ export function HeroSection() {
             Farming.
           </h1>
 
-          <p className="text-white/80 text-lg md:text-2xl max-w-3xl mb-16 font-body leading-relaxed">
+          <p className="text-white/80 text-lg md:text-2xl max-w-3xl mb-20 font-body leading-relaxed">
             AgroSalso sprijină fermierii și afacerile agricole cu soluții inteligente și sustenabile, care cresc productivitatea și profitabilitatea — protejând în același timp planeta.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-8 items-start">
-            <button className="bg-white hover:bg-neutral-100 text-black font-bold h-16 px-8 rounded-full flex items-center gap-4 transition-all text-lg shadow-2xl group">
+            <button className="bg-white hover:bg-neutral-50 text-neutral-900 font-bold h-14 pl-8 pr-1.5 rounded-full flex items-center gap-8 transition-all text-base shadow-2xl group border border-white/20">
               Începe Acum
-              <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center group-hover:bg-accent-lime transition-colors">
-                <ArrowUpRight size={18} className="text-white group-hover:text-black transition-colors" />
+              <div className="w-11 h-11 bg-neutral-900 rounded-full flex items-center justify-center transition-transform group-hover:scale-95">
+                <ArrowUpRight size={20} className="text-white" strokeWidth={2.5} />
               </div>
             </button>
           </div>
