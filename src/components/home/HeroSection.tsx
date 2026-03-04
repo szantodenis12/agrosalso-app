@@ -11,7 +11,7 @@ const BACKGROUNDS = [
     id: 'bg-video',
     type: 'video',
     src: '/hero-video-tractor.mp4',
-    thumbnail: '/thumb-1.jpg' // Folosim prima imagine ca thumbnail pentru video
+    thumbnail: '/thumb-1.jpg'
   },
   {
     id: 'bg-image-1',
