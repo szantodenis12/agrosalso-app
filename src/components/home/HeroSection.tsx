@@ -43,10 +43,10 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-8 items-start">
-            <button className="bg-white hover:bg-neutral-100 text-black font-bold h-20 px-10 rounded-full flex items-center gap-4 transition-all text-xl shadow-2xl group">
+            <button className="bg-white hover:bg-neutral-100 text-black font-bold h-16 px-8 rounded-full flex items-center gap-4 transition-all text-lg shadow-2xl group">
               Începe Acum
-              <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center group-hover:bg-accent-lime transition-colors">
-                <ArrowUpRight size={22} className="text-white group-hover:text-black transition-colors" />
+              <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center group-hover:bg-accent-lime transition-colors">
+                <ArrowUpRight size={18} className="text-white group-hover:text-black transition-colors" />
               </div>
             </button>
           </div>
