@@ -6,7 +6,6 @@ import { useUser } from '@/firebase';
 import Link from 'next/link';
 import { LayoutDashboard, Package, PlusCircle, Database, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 function AdminShell({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
@@ -86,9 +85,5 @@ function AdminShell({ children }: { children: React.ReactNode }) {
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <FirebaseClientProvider>
-      <AdminShell>{children}</AdminShell>
-    </FirebaseClientProvider>
-  );
+  return <AdminShell>{children}</AdminShell>;
 }
