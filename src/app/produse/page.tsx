@@ -30,11 +30,11 @@ export default function CatalogPage() {
             <span className="text-neutral-900">Produse</span>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
+          <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
             {/* Sidebar Filters - Refined */}
-            <aside className="lg:w-72 shrink-0 space-y-12 sticky top-[120px] h-fit">
+            <aside className="lg:w-64 shrink-0 space-y-12 sticky top-[120px] h-fit">
               <div>
-                <h3 className="font-headline font-extrabold text-xl mb-6 tracking-tight text-neutral-900">Căutare</h3>
+                <h3 className="font-headline font-extrabold text-xl mb-6 tracking-tight text-neutral-900 uppercase text-[12px] tracking-widest">Căutare</h3>
                 <div className="relative group">
                   <Input 
                     placeholder="Ex: John Deere..." 
@@ -47,7 +47,7 @@ export default function CatalogPage() {
               </div>
 
               <div>
-                <h3 className="font-headline font-extrabold text-xl mb-6 tracking-tight text-neutral-900">Categorii</h3>
+                <h3 className="font-headline font-extrabold text-xl mb-6 tracking-tight text-neutral-900 uppercase text-[12px] tracking-widest">Categorii</h3>
                 <div className="space-y-4">
                   {MOCK_CATEGORIES.map(cat => (
                     <div key={cat.id} className="flex items-center justify-between group cursor-pointer">
@@ -64,7 +64,7 @@ export default function CatalogPage() {
               <Separator className="bg-neutral-200/50" />
 
               <div>
-                <h3 className="font-headline font-extrabold text-xl mb-6 tracking-tight text-neutral-900">Disponibilitate</h3>
+                <h3 className="font-headline font-extrabold text-xl mb-6 tracking-tight text-neutral-900 uppercase text-[12px] tracking-widest">Disponibilitate</h3>
                 <div className="space-y-4">
                   {[
                     { id: 'inStock', label: 'În stoc' },
@@ -79,7 +79,7 @@ export default function CatalogPage() {
                 </div>
               </div>
 
-              <Button className="w-full bg-neutral-900 hover:bg-black text-white font-extrabold h-14 rounded-2xl tracking-widest text-[10px] uppercase transition-all">
+              <Button className="w-full bg-neutral-900 hover:bg-black text-white font-extrabold h-14 rounded-2xl tracking-widest text-[10px] uppercase transition-all shadow-lg">
                 RESETEAZĂ FILTRELE
               </Button>
             </aside>
@@ -113,7 +113,7 @@ export default function CatalogPage() {
 
               <div className={cn(
                 "grid gap-10",
-                viewMode === 'grid' ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
+                viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
               )}>
                 {MOCK_PRODUCTS.map((product, idx) => (
                   <motion.div 
@@ -123,7 +123,7 @@ export default function CatalogPage() {
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.05 }}
                     className={cn(
-                      "bg-white group border border-neutral-100 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.06)] transition-all duration-500 overflow-hidden rounded-[2.5rem] p-5 md:p-8 flex flex-col",
+                      "bg-white group border border-neutral-100 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.06)] transition-all duration-500 overflow-hidden rounded-[2.5rem] p-6 md:p-8 flex flex-col",
                       viewMode === 'list' ? "md:flex-row gap-8" : ""
                     )}
                   >
@@ -157,12 +157,12 @@ export default function CatalogPage() {
                       <div className="mt-auto pt-6 border-t border-neutral-100 flex items-center justify-between gap-4">
                          <div className="flex flex-col">
                             <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest mb-1 leading-none">Preț estimativ</span>
-                            <span className="font-headline font-extrabold text-xl md:text-2xl text-neutral-900 tracking-tight">
+                            <span className="font-headline font-extrabold text-lg md:text-xl text-neutral-900 tracking-tight">
                               {product.priceOnRequest ? "LA CERERE" : `${product.price.toLocaleString()} RON`}
                             </span>
                          </div>
-                         <Link href={`/produse/${product.slug}`}>
-                            <Button className="bg-neutral-900 hover:bg-black text-white rounded-full h-12 pl-5 pr-1.5 flex items-center gap-4 transition-all group/btn shadow-xl shadow-black/5 shrink-0">
+                         <Link href={`/produse/${product.slug}`} className="shrink-0">
+                            <Button className="bg-neutral-900 hover:bg-black text-white rounded-full h-12 pl-5 pr-1.5 flex items-center gap-3 transition-all group/btn shadow-xl shadow-black/5">
                               <span className="text-[9px] font-extrabold uppercase tracking-widest">VEZI DETALII</span>
                               <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center transition-transform group-hover/btn:rotate-45">
                                 <ArrowUpRight size={16} className="text-black" strokeWidth={3} />
