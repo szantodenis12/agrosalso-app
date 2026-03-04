@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -6,12 +5,12 @@ import { Footer } from '@/components/layout/Footer';
 import { MOCK_PRODUCTS, MOCK_CATEGORIES } from '@/lib/mock-data';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, SlidersHorizontal, ChevronDown, LayoutGrid, List } from 'lucide-react';
+import { Search, ChevronDown, LayoutGrid, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 export default function CatalogPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -37,7 +36,7 @@ export default function CatalogPage() {
                 <div className="relative">
                   <Input 
                     placeholder="Ex: John Deere..." 
-                    className="pl-10 h-12 rounded-none bg-white border-neutral-200"
+                    className="pl-10 h-12 bg-white border-neutral-200"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -80,7 +79,7 @@ export default function CatalogPage() {
                 </div>
               </div>
 
-              <Button className="w-full bg-green-800 font-bold rounded-none h-12">RESETEAZĂ FILTRELE</Button>
+              <Button className="w-full bg-green-800 font-bold h-12">RESETEAZĂ FILTRELE</Button>
             </aside>
 
             {/* Catalog Grid */}
@@ -90,7 +89,7 @@ export default function CatalogPage() {
                   Catalog Echipamente <span className="text-neutral-300 ml-2 font-normal text-xl italic">(148 rezultate)</span>
                 </h1>
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center border border-neutral-200 bg-white">
+                  <div className="flex items-center border border-neutral-200 bg-white rounded-md overflow-hidden">
                     <button 
                       onClick={() => setViewMode('grid')}
                       className={cn("p-2 transition-colors", viewMode === 'grid' ? "bg-neutral-100 text-green-800" : "text-neutral-400")}
@@ -104,7 +103,7 @@ export default function CatalogPage() {
                       <List size={20} />
                     </button>
                   </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white border border-neutral-200 text-sm font-bold text-neutral-600 cursor-pointer">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white border border-neutral-200 text-sm font-bold text-neutral-600 cursor-pointer rounded-md">
                     SORTARE <ChevronDown size={16} />
                   </div>
                 </div>
@@ -118,7 +117,7 @@ export default function CatalogPage() {
                   <div 
                     key={product.id} 
                     className={cn(
-                      "bg-white group border border-neutral-100 hover:shadow-xl transition-all overflow-hidden",
+                      "bg-white group border border-neutral-100 hover:shadow-xl transition-all overflow-hidden rounded-xl",
                       viewMode === 'list' ? "flex flex-col md:flex-row" : "flex flex-col"
                     )}
                   >
@@ -154,7 +153,7 @@ export default function CatalogPage() {
                             </span>
                          </div>
                          <Link href={`/produse/${product.slug}`}>
-                            <Button className="bg-green-800 hover:bg-green-700 rounded-none h-11 px-6 font-bold uppercase tracking-wider text-xs">
+                            <Button className="bg-green-800 hover:bg-green-700 h-11 px-6 font-bold uppercase tracking-wider text-xs">
                               VEZI DETALII
                             </Button>
                          </Link>
