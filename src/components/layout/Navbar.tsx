@@ -35,12 +35,16 @@ export function Navbar() {
     }
   }, [isOpen]);
 
+  // Pe pagina de produse header-ul trebuie să fie mereu vizibil deoarece fundalul paginii este deschis
+  const isProductsPage = pathname?.startsWith('/produse');
+  const shouldBeVisible = scrolled || isOpen || isProductsPage;
+
   return (
     <>
       <nav 
         className={cn(
           "fixed top-0 left-0 right-0 z-[60] transition-all duration-500 px-6 py-6 md:px-14",
-          scrolled || isOpen ? "bg-neutral-950/95 backdrop-blur-md py-4 shadow-lg" : "bg-transparent"
+          shouldBeVisible ? "bg-neutral-950/95 backdrop-blur-md py-4 shadow-lg" : "bg-transparent"
         )}
       >
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">
@@ -73,7 +77,7 @@ export function Navbar() {
             <Link href="/contact">
               <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-6 pr-1 rounded-full flex items-center gap-4 transition-all text-sm group">
                 Contactează-ne
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover:scale-95">
+                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
                   <ArrowUpRight size={18} className="text-black" strokeWidth={2.5} />
                 </div>
               </button>
@@ -132,7 +136,7 @@ export function Navbar() {
               <Link href="/contact" onClick={() => setIsOpen(false)}>
                 <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-6 pr-1 rounded-full flex items-center gap-4 transition-all text-sm group">
                   Contactează-ne
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover:scale-95">
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
                     <ArrowUpRight size={18} className="text-black" strokeWidth={2.5} />
                   </div>
                 </button>
