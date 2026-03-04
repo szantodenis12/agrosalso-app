@@ -1,54 +1,34 @@
-
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
 
 const SLIDE_DURATION = 8000; // 8 secunde per slide
 
-const SLIDES = [
+const BACKGROUNDS = [
   {
-    id: 'hero-1',
-    title: (
-      <>
-        Smart. <span className="text-accent-lime">Sustainable.</span> <br className="hidden md:block" /> 
-        <span className="text-accent-lime">Future-Ready</span> <br className="hidden md:block" />
-        Farming.
-      </>
-    ),
-    description: "AgroSalso sprijină fermierii și afacerile agricole cu soluții inteligente și sustenabile, care cresc productivitatea și profitabilitatea — protejând în același timp planeta.",
+    id: 'bg-video',
     type: 'video',
     src: '/hero-video-tractor.mp4',
+    thumbnail: '/thumb-1.jpg' // Folosim prima imagine ca thumbnail pentru video
+  },
+  {
+    id: 'bg-image-1',
+    type: 'image',
+    src: '/thumb-1.jpg',
     thumbnail: '/thumb-1.jpg'
   },
   {
-    id: 'hero-2',
-    title: (
-      <>
-        Putere <span className="text-accent-lime">Fără Limite.</span> <br className="hidden md:block" /> 
-        Eficiență <span className="text-accent-lime">Maximă</span> <br className="hidden md:block" />
-        În Câmp.
-      </>
-    ),
-    description: "Echipamentele noastre de ultimă generație sunt proiectate pentru a face față celor mai dificile condiții, oferind un randament superior și fiabilitate pe termen lung.",
+    id: 'bg-image-2',
     type: 'image',
-    src: '/hero-tractor.jpg',
+    src: '/thumb-2.jpg',
     thumbnail: '/thumb-2.jpg'
   },
   {
-    id: 'hero-3',
-    title: (
-      <>
-        Tehnologie <span className="text-accent-lime">Avansată</span> <br className="hidden md:block" /> 
-        Pentru <span className="text-accent-lime">Recolte</span> <br className="hidden md:block" />
-        Bogate.
-      </>
-    ),
-    description: "Sisteme inteligente de monitorizare și automatizare care transformă agricultura tradițională într-o afacere de succes, bazată pe date și precizie.",
+    id: 'bg-image-3',
     type: 'image',
-    src: 'https://picsum.photos/seed/tractor3/1920/1080',
+    src: '/thumb-3.jpg',
     thumbnail: '/thumb-3.jpg'
   }
 ];
@@ -58,7 +38,7 @@ export function HeroSection() {
   const [progress, setProgress] = useState(0);
 
   const nextSlide = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % SLIDES.length);
+    setCurrentIndex((prev) => (prev + 1) % BACKGROUNDS.length);
     setProgress(0);
   }, []);
 
@@ -81,22 +61,22 @@ export function HeroSection() {
     setProgress(0);
   };
 
-  const currentSlide = SLIDES[currentIndex];
+  const currentBg = BACKGROUNDS[currentIndex];
 
   return (
     <section className="relative h-screen min-h-[700px] w-full flex flex-col justify-center px-6 md:px-14 overflow-hidden bg-black">
-      {/* Background Media */}
+      {/* Background Media - DOAR ACESTA SE SCHIMBĂ */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentSlide.id}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            key={currentBg.id}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
             className="w-full h-full"
           >
-            {currentSlide.type === 'video' ? (
+            {currentBg.type === 'video' ? (
               <video
                 autoPlay
                 muted
@@ -105,11 +85,11 @@ export function HeroSection() {
                 preload="auto"
                 className="w-full h-full object-cover"
               >
-                <source src={currentSlide.src} type="video/mp4" />
+                <source src={currentBg.src} type="video/mp4" />
               </video>
             ) : (
               <Image
-                src={currentSlide.src}
+                src={currentBg.src}
                 alt="AgroSalso Background"
                 fill
                 priority
@@ -124,45 +104,39 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 z-10" />
       </div>
 
-      {/* Content */}
+      {/* Static Content - NU SE SCHIMBĂ NICIODATĂ */}
       <div className="relative z-20 max-w-[1440px] mx-auto w-full">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentSlide.id}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="max-w-4xl"
-          >
-            <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8">
-              {currentSlide.title}
-            </h1>
+        <div className="max-w-4xl">
+          <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8">
+            Smart. <span className="text-accent-lime">Sustainable.</span> <br className="hidden md:block" /> 
+            <span className="text-accent-lime">Future-Ready</span> <br className="hidden md:block" />
+            Farming.
+          </h1>
 
-            <p className="text-white/80 text-base md:text-lg max-w-xl mb-10 font-body leading-relaxed">
-              {currentSlide.description}
-            </p>
+          <p className="text-white/80 text-base md:text-lg max-w-xl mb-10 font-body leading-relaxed">
+            AgroSalso sprijină fermierii și afacerile agricole cu soluții inteligente și sustenabile, 
+            care cresc productivitatea și profitabilitatea — protejând în același timp planeta.
+          </p>
 
-            <div className="flex flex-col sm:flex-row gap-6 items-start">
-              <button className="bg-white hover:bg-neutral-50 text-neutral-900 font-bold h-14 pl-8 pr-1.5 rounded-full flex items-center gap-8 transition-all text-base shadow-2xl group border border-white/20">
-                Începe Acum
-                <div className="w-11 h-11 bg-neutral-900 rounded-full flex items-center justify-center transition-transform group-hover:scale-95">
-                  <ArrowUpRight size={20} className="text-white" strokeWidth={2.5} />
-                </div>
-              </button>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+          <div className="flex flex-col sm:flex-row gap-6 items-start">
+            <button className="bg-white hover:bg-neutral-50 text-neutral-900 font-bold h-14 pl-8 pr-1.5 rounded-full flex items-center gap-8 transition-all text-base shadow-2xl group border border-white/20">
+              Începe Acum
+              <div className="w-11 h-11 bg-neutral-900 rounded-full flex items-center justify-center transition-transform group-hover:scale-95">
+                <ArrowUpRight size={20} className="text-white" strokeWidth={2.5} />
+              </div>
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Bottom Interface Elements */}
       <div className="absolute bottom-12 left-6 md:left-14 right-6 md:right-14 z-20 flex flex-col md:flex-row justify-between items-end gap-12">
-        {/* Progress Slider Indicators */}
+        {/* Progress Slider Indicators - Sincronizate cu BACKGROUNDS (4 elemente) */}
         <div className="flex gap-4 items-center scale-75 md:scale-100 origin-left">
-          {SLIDES.map((_, index) => (
+          {BACKGROUNDS.map((_, index) => (
             <div 
               key={index} 
-              className="w-32 md:w-40 h-[2px] bg-white/20 relative rounded-full overflow-hidden cursor-pointer"
+              className="w-24 md:w-32 h-[2px] bg-white/20 relative rounded-full overflow-hidden cursor-pointer"
               onClick={() => handleThumbnailClick(index)}
             >
               <motion.div 
@@ -179,17 +153,17 @@ export function HeroSection() {
 
         {/* Thumbnails Carousel */}
         <div className="hidden lg:flex gap-4">
-          {SLIDES.map((slide, index) => (
+          {BACKGROUNDS.map((item, index) => (
             <div 
-              key={slide.id} 
+              key={item.id} 
               onClick={() => handleThumbnailClick(index)}
               className={`w-24 h-16 rounded-xl border-2 overflow-hidden relative group cursor-pointer transition-all duration-300 ${
                 index === currentIndex ? 'border-accent-lime scale-110' : 'border-white/20'
               }`}
             >
               <Image 
-                src={slide.thumbnail} 
-                alt={`Slide ${index + 1}`} 
+                src={item.thumbnail} 
+                alt={`Background ${index + 1}`} 
                 fill 
                 className={`object-cover transition-opacity ${
                   index === currentIndex ? 'opacity-100' : 'opacity-40 group-hover:opacity-100'
