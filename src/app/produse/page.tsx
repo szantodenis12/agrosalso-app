@@ -24,7 +24,7 @@ export default function CatalogPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const db = useFirestore();
   
-  // Dynamic categories from Firestore
+  // Categorii dinamice din Firestore
   const categoriesQuery = useMemoFirebase(() => query(collection(db, 'categories'), orderBy('order', 'asc')), [db]);
   const { data: categories } = useCollection(categoriesQuery);
 
@@ -137,7 +137,7 @@ export default function CatalogPage() {
                 </div>
               </div>
 
-              {/* Quick Filters */}
+              {/* Status Filters */}
               <div className="space-y-4 bg-white p-8 rounded-[2.5rem] shadow-sm border border-neutral-100">
                 <h3 className="font-headline font-extrabold text-[12px] uppercase tracking-widest text-neutral-900">Status</h3>
                 <div className="space-y-4">
@@ -170,63 +170,52 @@ export default function CatalogPage() {
               )}
             </aside>
 
-            {/* Catalog Grid */}
+            {/* Catalog Results */}
             <div className="flex-1">
-              <AnimatePresence mode="wait">
-                {isLoading ? (
-                  <motion.div 
-                    key="loader"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className={cn("grid gap-10", viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1")}
-                  >
-                    {[1, 2, 3, 4].map(i => (
-                      <div key={i} className="bg-white rounded-[2.5rem] h-[500px] animate-pulse border border-neutral-100" />
-                    ))}
-                  </motion.div>
-                ) : products.length === 0 ? (
-                  <motion.div 
-                    key="empty"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex flex-col items-center justify-center py-40 text-center bg-white rounded-[3rem] border border-dashed border-neutral-200"
-                  >
-                    <div className="w-24 h-24 bg-neutral-100 rounded-full flex items-center justify-center mb-8">
-                      <FilterX size={40} className="text-neutral-300" />
-                    </div>
-                    <h2 className="font-headline font-extrabold text-3xl text-neutral-900 mb-4">Niciun utilaj găsit</h2>
-                    <p className="text-neutral-500 font-medium mb-10 max-w-xs">Încercați să ajustați filtrele sau căutarea pentru a găsi ceea ce doriți.</p>
-                    <Button onClick={resetFilters} className="bg-neutral-900 hover:bg-black text-white h-14 px-10 rounded-2xl font-extrabold uppercase tracking-widest text-[10px]">
-                      VEZI TOATE PRODUSELE
-                    </Button>
-                  </motion.div>
-                ) : (
-                  <motion.div 
-                    key="results"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className={cn("grid gap-10", viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1")}
-                  >
-                    {products.map((product, idx) => (
+              {isLoading ? (
+                <div className={cn("grid gap-10", viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1")}>
+                  {[1, 2, 4, 6].map(i => (
+                    <div key={i} className="bg-white rounded-[2.5rem] h-[500px] animate-pulse border border-neutral-100" />
+                  ))}
+                </div>
+              ) : products.length === 0 ? (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex flex-col items-center justify-center py-40 text-center bg-white rounded-[3rem] border border-dashed border-neutral-200"
+                >
+                  <div className="w-24 h-24 bg-neutral-100 rounded-full flex items-center justify-center mb-8">
+                    <FilterX size={40} className="text-neutral-300" />
+                  </div>
+                  <h2 className="font-headline font-extrabold text-3xl text-neutral-900 mb-4">Niciun utilaj găsit</h2>
+                  <p className="text-neutral-500 font-medium mb-10 max-w-xs">Încercați să ajustați filtrele sau căutarea pentru a găsi ceea ce doriți.</p>
+                  <Button onClick={resetFilters} className="bg-neutral-900 hover:bg-black text-white h-14 px-10 rounded-2xl font-extrabold uppercase tracking-widest text-[10px]">
+                    VEZI TOATE PRODUSELE
+                  </Button>
+                </motion.div>
+              ) : (
+                <div className={cn("grid gap-10", viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1")}>
+                  <AnimatePresence mode="popLayout">
+                    {products.map((product) => (
                       <motion.div 
                         key={product.id}
                         layout
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.05 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
                         className={cn(
                           "bg-white group border border-neutral-100 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.08)] transition-all duration-500 overflow-hidden rounded-[2.5rem] p-6 md:p-8 flex flex-col",
                           viewMode === 'list' ? "md:flex-row gap-10" : ""
                         )}
                       >
-                        {/* Image */}
+                        {/* Imagine */}
                         <div className={cn(
                           "relative bg-neutral-100 overflow-hidden rounded-[2rem]",
                           viewMode === 'list' ? "w-full md:w-[400px] h-[300px] shrink-0" : "aspect-[4/3] mb-8"
                         )}>
                           <Image 
-                            src={product.mainImage} 
+                            src={product.mainImage || 'https://picsum.photos/seed/placeholder/800/600'} 
                             alt={product.name} 
                             fill 
                             className="object-cover group-hover:scale-110 transition-transform duration-1000"
@@ -271,9 +260,9 @@ export default function CatalogPage() {
                         </div>
                       </motion.div>
                     ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                  </AnimatePresence>
+                </div>
+              )}
             </div>
           </div>
         </div>
