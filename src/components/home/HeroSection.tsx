@@ -1,4 +1,3 @@
-
 'use client';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -33,11 +32,6 @@ export function HeroSection() {
           transition={{ duration: 0.8 }}
           className="max-w-4xl"
         >
-          <div className="flex items-center gap-2 mb-8">
-            <span className="w-2 h-2 rounded-full bg-accent-lime" />
-            <span className="text-accent-lime font-bold text-sm tracking-wide">OFERIM SOLUȚII DE VIITOR</span>
-          </div>
-
           <h1 className="font-headline font-bold text-6xl md:text-8xl lg:text-[100px] text-white leading-[0.95] tracking-tight mb-10">
             Smart. <span className="text-accent-lime">Sustainable.</span> <br /> 
             <span className="text-accent-lime">Future-Ready</span> <br />
