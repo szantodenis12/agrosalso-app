@@ -1,0 +1,6 @@
+Acest folder este pregatit pentru imaginile tale.
+Incarca aici urmatoarele fisiere:
+1. hero-tractor.jpg (pentru sectiunea principala)
+2. thumb-1.jpg
+3. thumb-2.jpg
+4. thumb-3.jpg (pentru caruselul din Hero)
