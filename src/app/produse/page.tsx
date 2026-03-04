@@ -23,7 +23,7 @@ export default function CatalogPage() {
       <Navbar />
       <main className="pt-[140px] pb-24 px-6 md:px-14 bg-neutral-50 min-h-screen">
         <div className="max-w-[1440px] mx-auto">
-          {/* Breadcrumb */}
+          {/* Breadcrumb - Clean & Minimal */}
           <div className="flex gap-2 text-[10px] text-neutral-400 uppercase font-extrabold tracking-widest mb-12">
             <Link href="/" className="hover:text-green-800 transition-colors">Acasă</Link>
             <span className="opacity-30">/</span>
@@ -31,7 +31,7 @@ export default function CatalogPage() {
           </div>
 
           <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
-            {/* Sidebar Filters */}
+            {/* Sidebar Filters - Refined */}
             <aside className="lg:w-72 shrink-0 space-y-12 sticky top-[120px] h-fit">
               <div>
                 <h3 className="font-headline font-extrabold text-xl mb-6 tracking-tight text-neutral-900">Căutare</h3>
@@ -79,12 +79,12 @@ export default function CatalogPage() {
                 </div>
               </div>
 
-              <Button className="w-full bg-neutral-900 hover:bg-black text-white font-extrabold h-14 rounded-2xl tracking-widest text-[10px] uppercase">
+              <Button className="w-full bg-neutral-900 hover:bg-black text-white font-extrabold h-14 rounded-2xl tracking-widest text-[10px] uppercase transition-all">
                 RESETEAZĂ FILTRELE
               </Button>
             </aside>
 
-            {/* Catalog Grid */}
+            {/* Catalog Grid - Premium Layout */}
             <div className="flex-1">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 pb-8 border-b border-neutral-200/50">
                 <h1 className="font-headline font-extrabold text-4xl md:text-5xl text-neutral-900 tracking-tighter uppercase leading-none">
