@@ -2,7 +2,9 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { addProduct, updateProduct, Product, ProductCategory } from '@/lib/firestore/products';
+import { useFirestore } from '@/firebase';
+import { addProduct, updateProduct } from '@/lib/firestore/products';
+import { Product, ProductCategory } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -28,6 +30,7 @@ interface Props {
 
 export default function ProductForm({ initialData, mode }: Props) {
   const router = useRouter();
+  const db = useFirestore();
   const [saving, setSaving] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [specs, setSpecs] = useState<{ key: string; value: string }[]>(
@@ -129,9 +132,9 @@ export default function ProductForm({ initialData, mode }: Props) {
       };
 
       if (mode === 'create') {
-        await addProduct(data);
+        await addProduct(db, data);
       } else if (initialData?.id) {
-        await updateProduct(initialData.id, data);
+        await updateProduct(db, initialData.id, data);
       }
 
       toast({ title: "Succes!", description: "Produsul a fost salvat." });

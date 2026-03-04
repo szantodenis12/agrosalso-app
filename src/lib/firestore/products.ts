@@ -18,7 +18,7 @@ import {
 } from 'firebase/firestore';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
-import { Product, ProductCategory } from '@/types';
+import { Product } from '@/types';
 
 export interface ProductFilters {
   category?: string;
@@ -41,18 +41,6 @@ export async function getProducts(db: Firestore, filters?: ProductFilters): Prom
   if (filters?.category && filters.category !== 'toate') {
     constraints.push(where('category', '==', filters.category));
   }
-  if (filters?.brand) {
-    constraints.push(where('brandSlug', '==', filters.brand));
-  }
-  if (filters?.inStock === true) {
-    constraints.push(where('inStock', '==', true));
-  }
-  if (filters?.isNew === true) {
-    constraints.push(where('isNew', '==', true));
-  }
-  if (filters?.isOnSale === true) {
-    constraints.push(where('isOnSale', '==', true));
-  }
   if (filters?.isFeatured === true) {
     constraints.push(where('isFeatured', '==', true));
   }
@@ -64,13 +52,13 @@ export async function getProducts(db: Firestore, filters?: ProductFilters): Prom
     const snapshot = await getDocs(q);
     let products = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Product));
 
-    // Client-side filtering for search and price ranges
+    // Client-side filtering for search
     if (filters?.searchQuery) {
       const search = filters.searchQuery.toLowerCase();
       products = products.filter(p => 
         p.name.toLowerCase().includes(search) || 
         p.brand.toLowerCase().includes(search) ||
-        p.shortDescription.toLowerCase().includes(search)
+        p.shortDescription?.toLowerCase().includes(search)
       );
     }
 
@@ -79,6 +67,28 @@ export async function getProducts(db: Firestore, filters?: ProductFilters): Prom
     console.error("Error fetching products:", error);
     return [];
   }
+}
+
+/**
+ * Adds a new product to Firestore.
+ */
+export async function addProduct(db: Firestore, data: any) {
+  return addDoc(collection(db, 'products'), {
+    ...data,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+/**
+ * Updates an existing product.
+ */
+export async function updateProduct(db: Firestore, id: string, data: any) {
+  const docRef = doc(db, 'products', id);
+  return updateDoc(docRef, {
+    ...data,
+    updatedAt: serverTimestamp(),
+  });
 }
 
 /**
