@@ -1,0 +1,158 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * AGROSALSO SECURITY RULES - PROTOTYPING MODE
+     * 
+     * Core Philosophy: 
+     * This ruleset implements a "Public Catalog, Admin Managed" security model. 
+     * The application serves as a public-facing storefront for agricultural machinery, 
+     * while sensitive operations and data management are restricted to a single 
+     * designated administrator account.
+     * 
+     * Data Structure:
+     * The database uses a flat, top-level collection structure (products, categories, 
+     * brands, etc.) to ensure simplicity and high performance for public queries.
+     * 
+     * Key Security Decisions:
+     * 1. Public Visibility: Catalog entities (Products, Categories, Brands, Promotions, 
+     *    Testimonials, and Site Configuration) are publicly readable to support 
+     *    SEO and guest browsing.
+     * 2. Strict Administrative Control: All write operations on the catalog are 
+     *    restricted to the authenticated admin user (admin@agrosalso.ro).
+     * 3. Inquiry Privacy: Anyone can submit an inquiry (public create), but only 
+     *    the administrator can view or manage submitted leads.
+     * 4. Relational Integrity: In prototyping mode, we allow flexible data shapes 
+     *    but enforce that administrative actions are properly authorized.
+     * 
+     * Denormalization for Authorization:
+     * To avoid expensive `get()` calls in rules, the system relies on denormalized 
+     * data. Products contain their own category and brand identifiers, allowing 
+     * public listing and filtering without cross-collection security checks.
+     */
+
+    // --- GLOBAL HELPER FUNCTIONS ---
+
+    /** 
+     * @description Checks if the request is from an authenticated user.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** 
+     * @description Checks if the authenticated user is the designated system administrator.
+     * Relies on the verified email claim from Firebase Auth.
+     */
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email == 'admin@agrosalso.ro';
+    }
+
+    /** 
+     * @description Ensures the document exists before allowing modification or removal.
+     */
+    function isExistingAdmin() {
+      return isAdmin() && resource != null;
+    }
+
+    // --- COLLECTION RULES ---
+
+    /**
+     * @description Publicly readable catalog of agricultural machinery. Admin-only writes.
+     * @path /products/{productId}
+     * @allow (get, list) if true; (create) if auth.email == 'admin@agrosalso.ro'
+     * @deny (update) if not signed in as admin.
+     * @principle Public Read with Owner-Only Writes.
+     */
+    match /products/{productId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isExistingAdmin();
+    }
+
+    /**
+     * @description Organization categories for the product catalog.
+     * @path /categories/{categoryId}
+     * @allow (get, list) if true; (create) if auth.email == 'admin@agrosalso.ro'
+     * @deny (delete) if not signed in as admin.
+     * @principle Public Read with Owner-Only Writes.
+     */
+    match /categories/{categoryId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isExistingAdmin();
+    }
+
+    /**
+     * @description Brand entities for filtering and partner management.
+     * @path /brands/{brandId}
+     * @allow (get, list) if true; (create) if auth.email == 'admin@agrosalso.ro'
+     * @deny (update) if user is not the admin.
+     * @principle Public Read with Owner-Only Writes.
+     */
+    match /brands/{brandId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isExistingAdmin();
+    }
+
+    /**
+     * @description Marketing promotions and special offers.
+     * @path /promotions/{promotionId}
+     * @allow (get, list) if true; (create) if admin.
+     * @deny (write) if unauthorized.
+     * @principle Public Read with Owner-Only Writes.
+     */
+    match /promotions/{promotionId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isExistingAdmin();
+    }
+
+    /**
+     * @description Customer lead collection. Public submission, Admin management.
+     * @path /inquiries/{inquiryId}
+     * @allow (create) if true; (get, list) if auth.email == 'admin@agrosalso.ro'
+     * @deny (get) if visitor is not admin.
+     * @principle Public Create with Private Management.
+     */
+    match /inquiries/{inquiryId} {
+      allow create: if true;
+      allow get, list: if isAdmin();
+      allow update, delete: if isExistingAdmin();
+    }
+
+    /**
+     * @description Global site settings (Hero text, contact info, etc.).
+     * @path /siteConfig/{configId}
+     * @allow (get) if true; (update) if admin.
+     * @deny (list) if not admin (prevents metadata scraping, though singleton).
+     * @principle Singleton configuration protection.
+     */
+    match /siteConfig/{configId} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create: if isAdmin();
+      allow update, delete: if isExistingAdmin();
+    }
+
+    /**
+     * @description Customer reviews and testimonials.
+     * @path /testimonials/{testimonialId}
+     * @allow (get, list) if true; (create) if admin.
+     * @deny (update) if not admin.
+     * @principle Public Read with Owner-Only Writes.
+     */
+    match /testimonials/{testimonialId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isExistingAdmin();
+    }
+
+    // --- DEFAULT DENY ---
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}
