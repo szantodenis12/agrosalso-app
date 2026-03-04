@@ -1,10 +1,10 @@
 import { Navbar } from '@/components/layout/Navbar';
 import { HeroSection } from '@/components/home/HeroSection';
 import { FeaturedProducts } from '@/components/home/FeaturedProducts';
+import { AboutSection } from '@/components/home/AboutSection';
 import { PromoBanner } from '@/components/home/PromoBanner';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
-import { Star } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -13,63 +13,9 @@ export default function Home() {
       <main>
         <HeroSection />
         <FeaturedProducts />
+        <AboutSection />
         <PromoBanner />
         
-        {/* Why Choose Us Section */}
-        <section className="py-24 px-6 md:px-14 bg-white">
-          <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-             <div className="relative">
-                <div className="aspect-[4/5] bg-green-800 relative overflow-hidden rounded-2xl">
-                   <img 
-                    src="https://picsum.photos/seed/farmer/800/1000" 
-                    alt="Why Us" 
-                    className="object-cover w-full h-full opacity-60 grayscale hover:grayscale-0 transition-all duration-700"
-                    data-ai-hint="agricultural technology"
-                   />
-                </div>
-                <div className="absolute -bottom-10 -right-10 bg-yellow-400 p-10 shadow-2xl hidden md:block rounded-xl">
-                   <div className="font-headline font-extrabold text-5xl text-neutral-900 mb-1">18+</div>
-                   <div className="text-neutral-900/60 font-bold text-sm uppercase tracking-widest">Ani Experiență</div>
-                </div>
-             </div>
-
-             <div>
-                <div className="text-green-800 font-extrabold text-sm uppercase tracking-widest mb-6">Excelență în agricultură</div>
-                <h2 className="font-headline font-extrabold text-5xl text-neutral-900 mb-10 leading-[1.1] tracking-tight">De ce fermierii aleg AgroSalso?</h2>
-                
-                <div className="space-y-8 font-body">
-                   <div className="flex gap-6">
-                      <div className="w-14 h-14 bg-green-50 flex items-center justify-center shrink-0 rounded-xl">
-                         <Star className="text-green-800" fill="currentColor" size={24} />
-                      </div>
-                      <div>
-                         <h4 className="font-headline font-bold text-xl text-neutral-900 mb-2">Utilaje de top mondial</h4>
-                         <p className="text-neutral-500">Parteneriate directe cu producători consacrați pentru a asigura cel mai bun randament.</p>
-                      </div>
-                   </div>
-                   <div className="flex gap-6">
-                      <div className="w-14 h-14 bg-green-50 flex items-center justify-center shrink-0 rounded-xl">
-                         <Star className="text-green-800" fill="currentColor" size={24} />
-                      </div>
-                      <div>
-                         <h4 className="font-headline font-bold text-xl text-neutral-900 mb-2">Service și piese originale</h4>
-                         <p className="text-neutral-500">Intervenții rapide în câmp și stoc permanent de piese pentru a minimiza timpul de nefuncționare.</p>
-                      </div>
-                   </div>
-                   <div className="flex gap-6">
-                      <div className="w-14 h-14 bg-green-50 flex items-center justify-center shrink-0 rounded-xl">
-                         <Star className="text-green-800" fill="currentColor" size={24} />
-                      </div>
-                      <div>
-                         <h4 className="font-headline font-bold text-xl text-neutral-900 mb-2">Consultanță specializată</h4>
-                         <p className="text-neutral-500">Echipa noastră te ajută să alegi utilajul potrivit nevoilor și bugetului fermei tale.</p>
-                      </div>
-                   </div>
-                </div>
-             </div>
-          </div>
-        </section>
-
         {/* CTA Section */}
         <section className="py-24 px-6 md:px-14 bg-neutral-900 relative overflow-hidden text-center">
            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(26,77,46,0.3)_0%,_transparent_70%)]" />
