@@ -62,10 +62,10 @@ export function ContactSection() {
               <Textarea placeholder="Scrie mesajul tău aici..." className="bg-neutral-50 border-none min-h-[120px] rounded-xl p-4 focus-visible:ring-accent-lime" />
             </div>
 
-            <Button className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold h-14 rounded-full text-base flex justify-between px-6 group">
+            <Button className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold h-14 pl-8 pr-1.5 rounded-full text-base flex items-center justify-between group transition-all">
               TRIMITE ACUM
-              <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
-                <ArrowUpRight size={18} />
+              <div className="w-11 h-11 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
+                <ArrowUpRight size={20} className="text-black" />
               </div>
             </Button>
           </motion.div>
