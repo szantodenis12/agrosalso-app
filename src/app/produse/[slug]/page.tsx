@@ -1,4 +1,3 @@
-
 'use client';
 import { use, useEffect, useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -144,7 +143,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                   <div className="w-12 h-12 bg-accent-lime/10 rounded-2xl flex items-center justify-center">
                     <Sparkles className="text-accent-lime" size={24} />
                   </div>
-                  <h2 className="font-headline font-extrabold text-3xl text-neutral-900 tracking-tight">Viziunea AgroSalso</h2>
+                  <h2 className="font-headline font-extrabold text-3xl text-neutral-900 tracking-tight">Despre acest utilaj</h2>
                 </div>
                 
                 <div 
