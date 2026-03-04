@@ -1,82 +1,129 @@
+'use client';
 import Link from 'next/link';
-import { Facebook, Instagram, Youtube, Phone, Mail, MapPin } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowUpRight, Mail, Phone } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export function Footer() {
   return (
-    <footer className="bg-neutral-900 text-white pt-24 pb-12 px-6 md:px-14">
-      <div className="max-w-[1440px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
-          <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-8 group">
-              <div className="w-8 h-8 bg-green-800 flex items-center justify-center rounded-sm">
-                <span className="font-headline font-extrabold text-white">A</span>
-              </div>
-              <span className="font-headline font-extrabold text-xl tracking-tighter">AGROSALSO</span>
-            </Link>
-            <p className="text-neutral-500 mb-8 leading-relaxed max-w-xs font-body">
-              Expertiză în utilaje agricole din 2012. Oferim soluții complete pentru fermierii români.
+    <footer className="w-full">
+      {/* Top CTA Section */}
+      <section className="relative h-[600px] w-full flex items-center px-6 md:px-14 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image 
+            src="/thumb-0.jpg" 
+            alt="Ready to Transform" 
+            fill 
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-black/60" />
+        </div>
+
+        <div className="relative z-10 max-w-[1440px] mx-auto w-full">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-2xl space-y-8"
+          >
+            <div className="flex items-center gap-2 px-3 py-1 bg-accent-lime/20 rounded-full w-fit backdrop-blur-sm border border-accent-lime/30">
+              <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" />
+              <span className="text-accent-lime text-[10px] font-bold uppercase tracking-widest">Contactează-ne</span>
+            </div>
+            
+            <h2 className="font-headline font-bold text-4xl md:text-7xl text-white leading-[1.1] tracking-tight">
+              Ești gata să îți <br /> transformi ferma?
+            </h2>
+            
+            <p className="text-white/70 text-base md:text-lg max-w-md font-body leading-relaxed">
+              Rezervă o consultanță gratuită și lasă AgroSalso să îți arate cum funcționează agricultura modernă și sustenabilă. Adaptează-te la noile standarde.
             </p>
-            <div className="flex gap-4">
-              <Link href="#" className="w-10 h-10 border border-white/10 flex items-center justify-center hover:bg-yellow-400 hover:text-neutral-900 transition-all">
-                <Facebook size={18} />
+
+            <Link href="/contact" className="block w-fit">
+              <motion.button 
+                whileHover={{ scale: 1.05, x: 5 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-14 pl-8 pr-1.5 rounded-full flex items-center gap-8 transition-all text-base group"
+              >
+                Începe Acum
+                <div className="w-11 h-11 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
+                  <ArrowUpRight size={20} className="text-black" strokeWidth={2.5} />
+                </div>
+              </motion.button>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Bottom Navigation Section */}
+      <section className="bg-black text-white pt-24 pb-12 px-6 md:px-14">
+        <div className="max-w-[1440px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16 mb-24">
+            {/* Brand Column */}
+            <div className="lg:col-span-1 space-y-8">
+              <Link href="/" className="flex items-center gap-2">
+                <div className="w-6 h-4 bg-accent-lime rounded-sm rotate-12" />
+                <span className="font-headline font-extrabold text-2xl tracking-tighter text-accent-lime">
+                  AgroSalso
+                </span>
               </Link>
-              <Link href="#" className="w-10 h-10 border border-white/10 flex items-center justify-center hover:bg-yellow-400 hover:text-neutral-900 transition-all">
-                <Instagram size={18} />
-              </Link>
-              <Link href="#" className="w-10 h-10 border border-white/10 flex items-center justify-center hover:bg-yellow-400 hover:text-neutral-900 transition-all">
-                <Youtube size={18} />
-              </Link>
+              <div className="space-y-4">
+                <a href="mailto:office@agrosalso.ro" className="flex items-center gap-3 text-white font-bold hover:text-accent-lime transition-colors">
+                  office@agrosalso.ro
+                </a>
+                <a href="tel:+40751234567" className="flex items-center gap-3 text-white font-bold hover:text-accent-lime transition-colors">
+                  +40 751 234 567
+                </a>
+              </div>
+            </div>
+
+            {/* Links Columns */}
+            <div>
+              <h4 className="text-neutral-500 font-bold text-sm mb-8">Link-uri rapide</h4>
+              <ul className="space-y-4">
+                <li><Link href="/servicii" className="text-white/60 hover:text-white transition-colors text-sm">Servicii</Link></li>
+                <li><Link href="/produse" className="text-white/60 hover:text-white transition-colors text-sm">Produse</Link></li>
+                <li><Link href="/preturi" className="text-white/60 hover:text-white transition-colors text-sm">Prețuri</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-neutral-500 font-bold text-sm mb-8">Companie</h4>
+              <ul className="space-y-4">
+                <li><Link href="/despre" className="text-white/60 hover:text-white transition-colors text-sm">Despre noi</Link></li>
+                <li><Link href="/echipa" className="text-white/60 hover:text-white transition-colors text-sm">Echipa</Link></li>
+                <li><Link href="/recenzii" className="text-white/60 hover:text-white transition-colors text-sm">Recenzii</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-neutral-500 font-bold text-sm mb-8">Altele</h4>
+              <ul className="space-y-4">
+                <li><Link href="/cariere" className="text-white/60 hover:text-white transition-colors text-sm">Cariere</Link></li>
+                <li><Link href="/blog" className="text-white/60 hover:text-white transition-colors text-sm">Blog</Link></li>
+                <li><Link href="/contact" className="text-white/60 hover:text-white transition-colors text-sm">Contact</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-neutral-500 font-bold text-sm mb-8">Social Media</h4>
+              <ul className="space-y-4">
+                <li><Link href="#" className="text-white/60 hover:text-white transition-colors text-sm">Instagram</Link></li>
+                <li><Link href="#" className="text-white/60 hover:text-white transition-colors text-sm">Facebook</Link></li>
+                <li><Link href="#" className="text-white/60 hover:text-white transition-colors text-sm">TikTok</Link></li>
+              </ul>
             </div>
           </div>
 
-          <div>
-            <h4 className="font-headline font-bold text-lg uppercase tracking-wider mb-8">Link-uri utile</h4>
-            <ul className="flex flex-col gap-4">
-              <li><Link href="/produse" className="text-neutral-500 hover:text-yellow-400 transition-colors">Catalog Produse</Link></li>
-              <li><Link href="/promotii" className="text-neutral-500 hover:text-yellow-400 transition-colors">Promoții Active</Link></li>
-              <li><Link href="/marci" className="text-neutral-500 hover:text-yellow-400 transition-colors">Branduri Partenere</Link></li>
-              <li><Link href="/contact" className="text-neutral-500 hover:text-yellow-400 transition-colors">Contact</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-headline font-bold text-lg uppercase tracking-wider mb-8">Categorii</h4>
-            <ul className="flex flex-col gap-4">
-              <li><Link href="/produse?categorie=tractoare" className="text-neutral-500 hover:text-yellow-400 transition-colors">Tractoare</Link></li>
-              <li><Link href="/produse?categorie=combine" className="text-neutral-500 hover:text-yellow-400 transition-colors">Combine</Link></li>
-              <li><Link href="/produse?categorie=irigatii" className="text-neutral-500 hover:text-yellow-400 transition-colors">Sisteme Irigații</Link></li>
-              <li><Link href="/produse?categorie=piese" className="text-neutral-500 hover:text-yellow-400 transition-colors">Piese de schimb</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-headline font-bold text-lg uppercase tracking-wider mb-8">Contact</h4>
-            <ul className="flex flex-col gap-6">
-              <li className="flex gap-4">
-                <MapPin className="text-yellow-400 shrink-0" size={20} />
-                <span className="text-neutral-500">Mădăras, Bihor, România</span>
-              </li>
-              <li className="flex gap-4">
-                <Phone className="text-yellow-400 shrink-0" size={20} />
-                <span className="text-neutral-500 font-bold">+40 751 234 567</span>
-              </li>
-              <li className="flex gap-4">
-                <Mail className="text-yellow-400 shrink-0" size={20} />
-                <span className="text-neutral-500">office@agrosalso.ro</span>
-              </li>
-            </ul>
+          {/* Copyright */}
+          <div className="pt-12 border-t border-white/10 text-center">
+            <p className="text-white/40 text-xs tracking-widest font-body">
+              ( © {new Date().getFullYear()} AgroSalso. Toate drepturile rezervate. )
+            </p>
           </div>
         </div>
-
-        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-neutral-600 text-sm">
-          <p>© {new Date().getFullYear()} AgroSalso Direct. Toate drepturile rezervate.</p>
-          <div className="flex gap-8">
-            <Link href="#" className="hover:text-white">Termeni și condiții</Link>
-            <Link href="#" className="hover:text-white">Politica Cookie</Link>
-            <Link href="#" className="hover:text-white">GDPR</Link>
-          </div>
-        </div>
-      </div>
+      </section>
     </footer>
   );
 }
