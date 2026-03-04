@@ -2,7 +2,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { HeroSection } from '@/components/home/HeroSection';
 import { FeaturedProducts } from '@/components/home/FeaturedProducts';
 import { AboutSection } from '@/components/home/AboutSection';
-import { PromoBanner } from '@/components/home/PromoBanner';
+import { TestimonialsSection } from '@/components/home/TestimonialsSection';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 
@@ -14,7 +14,7 @@ export default function Home() {
         <HeroSection />
         <FeaturedProducts />
         <AboutSection />
-        <PromoBanner />
+        <TestimonialsSection />
         
         {/* CTA Section */}
         <section className="py-24 px-6 md:px-14 bg-neutral-900 relative overflow-hidden text-center">
