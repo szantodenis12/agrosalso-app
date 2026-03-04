@@ -42,7 +42,7 @@ export default function ProductForm({ initialData, mode }: Props) {
   const [uploadingMain, setUploadingMain] = useState(false);
   const [uploadingGallery, setUploadingGallery] = useState(false);
 
-  // Folosim o stare unificată pentru imagini pentru a asigura re-randarea corectă
+  // Stările pentru imagini
   const [galleryImages, setGalleryImages] = useState<string[]>(initialData?.images ?? []);
   const [mainImage, setMainImage] = useState<string>(initialData?.mainImage ?? '');
 
@@ -96,7 +96,6 @@ export default function ProductForm({ initialData, mode }: Props) {
       toast({ variant: "destructive", title: "Eroare upload", description: error.message || "Nu s-a putut încărca imaginea." });
     } finally {
       setUploadingMain(false);
-      // Reset input value to allow selecting same file again
       if (mainImageInputRef.current) mainImageInputRef.current.value = '';
     }
   };
@@ -121,7 +120,6 @@ export default function ProductForm({ initialData, mode }: Props) {
       toast({ variant: "destructive", title: "Eroare upload", description: "Unele imagini nu s-au putut încărca." });
     } finally {
       setUploadingGallery(false);
-      // Reset input value
       if (galleryInputRef.current) galleryInputRef.current.value = '';
     }
   };
@@ -223,7 +221,6 @@ export default function ProductForm({ initialData, mode }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-5xl mx-auto space-y-10 pb-20">
-      {/* Hidden Inputs for Files */}
       <input type="file" ref={mainImageInputRef} onChange={handleMainImageFile} accept="image/*" className="hidden" />
       <input type="file" ref={galleryInputRef} onChange={handleGalleryFiles} accept="image/*" multiple className="hidden" />
 
@@ -250,7 +247,6 @@ export default function ProductForm({ initialData, mode }: Props) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2 space-y-10">
-          {/* Main Info */}
           <div className="bg-white rounded-[2.5rem] p-10 shadow-sm space-y-8 border border-neutral-100">
             <h3 className="font-headline font-extrabold text-xl tracking-tight flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Detalii Principale
@@ -288,14 +284,12 @@ export default function ProductForm({ initialData, mode }: Props) {
             </div>
           </div>
 
-          {/* Media Gallery */}
           <div className="bg-white rounded-[2.5rem] p-10 shadow-sm space-y-8 border border-neutral-100">
              <h3 className="font-headline font-extrabold text-xl tracking-tight flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Galerie Media
             </h3>
             
             <div className="space-y-8">
-              {/* Main Image Upload */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                 <div className="space-y-4">
                   <label className={labelClass}>Imagine Principală</label>
@@ -361,7 +355,6 @@ export default function ProductForm({ initialData, mode }: Props) {
             </div>
           </div>
 
-          {/* Specifications */}
           <div className="bg-white rounded-[2.5rem] p-10 shadow-sm space-y-8 border border-neutral-100">
             <div className="flex justify-between items-center">
               <h3 className="font-headline font-extrabold text-xl tracking-tight flex items-center gap-2">
@@ -394,7 +387,6 @@ export default function ProductForm({ initialData, mode }: Props) {
         </div>
 
         <div className="space-y-10">
-          {/* Pricing & Stock */}
           <div className="bg-neutral-900 rounded-[2.5rem] p-8 text-white space-y-8 shadow-xl">
              <h3 className="font-headline font-extrabold text-xl tracking-tight">Preț & Stoc</h3>
              <div className="space-y-6">
@@ -425,7 +417,6 @@ export default function ProductForm({ initialData, mode }: Props) {
              </div>
           </div>
 
-          {/* SEO Metadata */}
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-neutral-100 space-y-6">
             <h3 className="font-headline font-extrabold text-xl tracking-tight">Setări SEO</h3>
             <div className="space-y-4">
