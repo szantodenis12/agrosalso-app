@@ -1,26 +1,28 @@
 'use client';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import Image from 'next/image';
 
 export function HeroSection() {
-  const bgImage = PlaceHolderImages.find(img => img.id === 'hero-tractor');
   const thumbs = PlaceHolderImages.filter(img => img.id.startsWith('thumb-'));
 
   return (
-    <section className="relative h-screen min-h-[700px] w-full flex flex-col justify-center px-6 md:px-14 overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <Image 
-          src={bgImage?.imageUrl || "/hero-tractor.jpg"} 
-          alt="Tractor in Field" 
-          fill 
-          className="object-cover"
-          priority
-          data-ai-hint={bgImage?.imageHint || "tractor field"}
-        />
-        {/* Dark Overlay Gradient */}
+    <section className="relative h-screen min-h-[700px] w-full flex flex-col justify-center px-6 md:px-14 overflow-hidden bg-black">
+      {/* Background Video */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="w-full h-full object-cover"
+        >
+          <source src="/hero-video-tractor.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        {/* Dark Overlay Gradient - Updated for better contrast with video */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 z-10" />
       </div>
