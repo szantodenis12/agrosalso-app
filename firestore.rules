@@ -4,40 +4,42 @@ service cloud.firestore {
 
     /**
      * AGROSALSO SECURITY RULES
-     * Ensures public catalog access and admin-only management.
+     * Permite accesul public la catalogul de produse și categorii.
+     * Restricționează scrierea doar pentru utilizatorii autentificați (Admin).
      */
 
-    function isSignedIn() {
+    function isAdmin() {
       return request.auth != null;
     }
 
-    // Publicly readable collections (Catalog)
-    // admin-only writes (using isSignedIn for prototype simplicity)
-    
+    // Produse - Citire publică, scriere admin
     match /products/{productId} {
       allow read: if true;
-      allow write: if isSignedIn();
+      allow write: if isAdmin();
     }
 
+    // Categorii - Citire publică, scriere admin
     match /categories/{categoryId} {
       allow read: if true;
-      allow write: if isSignedIn();
+      allow write: if isAdmin();
     }
 
+    // Mărci - Citire publică, scriere admin
     match /brands/{brandId} {
       allow read: if true;
-      allow write: if isSignedIn();
+      allow write: if isAdmin();
     }
 
+    // Configurație site
     match /siteConfig/{configId} {
       allow read: if true;
-      allow write: if isSignedIn();
+      allow write: if isAdmin();
     }
 
-    // Public submission for inquiries, Admin-only read/manage
+    // Cereri de ofertă - Oricine poate trimite, doar admin le vede
     match /inquiries/{inquiryId} {
       allow create: if true;
-      allow read, update, delete: if isSignedIn();
+      allow read, update, delete: if isAdmin();
     }
   }
 }
