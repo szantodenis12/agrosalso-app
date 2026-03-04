@@ -1,7 +1,5 @@
-
 import { Navbar } from '@/components/layout/Navbar';
 import { HeroSection } from '@/components/home/HeroSection';
-import { CategoryStrip } from '@/components/home/CategoryStrip';
 import { FeaturedProducts } from '@/components/home/FeaturedProducts';
 import { PromoBanner } from '@/components/home/PromoBanner';
 import { Footer } from '@/components/layout/Footer';
@@ -14,7 +12,6 @@ export default function Home() {
       <Navbar />
       <main>
         <HeroSection />
-        <CategoryStrip />
         <FeaturedProducts />
         <PromoBanner />
         
