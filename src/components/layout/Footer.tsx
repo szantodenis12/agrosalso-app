@@ -17,10 +17,14 @@ export function Footer() {
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-black/60" />
+          {/* Main Overlay */}
+          <div className="absolute inset-0 bg-black/50" />
+          
+          {/* Fade to Black transition overlay */}
+          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
         </div>
 
-        <div className="relative z-10 max-w-[1440px] mx-auto w-full">
+        <div className="relative z-20 max-w-[1440px] mx-auto w-full">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
