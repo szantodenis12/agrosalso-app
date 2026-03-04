@@ -2,7 +2,7 @@
   "placeholderImages": [
     {
       "id": "hero-tractor",
-      "description": "Imagine principala tractor pe camp",
+      "description": "Imagine principala tractor pe camp (fallback)",
       "imageUrl": "/hero-tractor.jpg",
       "imageHint": "tractor field"
     },

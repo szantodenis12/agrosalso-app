@@ -22,7 +22,7 @@ export function HeroSection() {
           <source src="/hero-video-tractor.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        {/* Dark Overlay Gradient - Updated for better contrast with video */}
+        {/* Dark Overlay Gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 z-10" />
       </div>
@@ -61,7 +61,7 @@ export function HeroSection() {
         {/* Progress Slider Indicator */}
         <div className="flex gap-4 items-center scale-75 md:scale-100 origin-left">
            <div className="w-32 md:w-40 h-[2px] bg-white relative rounded-full">
-              <div className="absolute top-0 left-0 h-full w-1/2 bg-accent-lime rounded-full" />
+              <div className="absolute top-0 left-0 h-full w-1/3 bg-accent-lime rounded-full" />
            </div>
            <div className="w-32 md:w-40 h-[2px] bg-white/20 rounded-full" />
            <div className="w-32 md:w-40 h-[2px] bg-white/20 rounded-full" />
@@ -70,10 +70,10 @@ export function HeroSection() {
         {/* Thumbnails */}
         <div className="hidden lg:flex gap-4">
           {thumbs.map((thumb, idx) => (
-            <div key={idx} className="w-24 h-16 rounded-xl border border-white/20 overflow-hidden relative group cursor-pointer hover:border-accent-lime transition-all duration-300">
+            <div key={thumb.id} className="w-24 h-16 rounded-xl border border-white/20 overflow-hidden relative group cursor-pointer hover:border-accent-lime transition-all duration-300">
               <Image 
                 src={thumb.imageUrl} 
-                alt={`Slide ${idx + 1}`} 
+                alt={thumb.description} 
                 fill 
                 className="object-cover opacity-60 group-hover:opacity-100 transition-opacity" 
               />
