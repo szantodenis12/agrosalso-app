@@ -28,13 +28,13 @@ export function AboutSection() {
             className="space-y-6 md:space-y-8"
           >
             <div className="inline-block px-4 py-1.5 bg-accent-lime/10 text-accent-lime rounded-full text-[10px] font-bold uppercase tracking-widest">
-              Viziune
+              Povestea noastră
             </div>
             <h2 className="font-headline font-extrabold text-4xl md:text-5xl lg:text-6xl text-neutral-900 tracking-tighter leading-[1]">
               Despre noi
             </h2>
             <p className="text-neutral-500 text-base md:text-xl font-body leading-relaxed max-w-lg">
-              Un viitor în care fiecare fermă — mare sau mică — este condusă de date, ghidată de decizii inteligente și integrată în lanțuri de valoare transparente și reziliente.
+              Afacere de familie fondată în 2012, AgroSalso distribuie utilaje și piese de top direct de la producători europeni renumiți. Oferim calitate garantată și peste un deceniu de experiență în serviciul agriculturii românești.
             </p>
             <div className="pt-4">
               <Link href="/contact">
@@ -43,7 +43,7 @@ export function AboutSection() {
                   whileTap={{ scale: 0.98 }}
                   className="bg-neutral-900 hover:bg-black text-white rounded-full p-1.5 flex items-center justify-between transition-all duration-300 group/btn w-fit gap-10 shadow-2xl shadow-black/10"
                 >
-                  <span className="pl-6 text-sm font-bold uppercase tracking-widest">Începe acum</span>
+                  <span className="pl-6 text-sm font-bold uppercase tracking-widest">Află mai multe</span>
                   <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover/btn:rotate-45">
                     <ArrowUpRight size={20} className="text-black" strokeWidth={3} />
                   </div>
@@ -60,10 +60,10 @@ export function AboutSection() {
           >
             <Image 
               src="https://picsum.photos/seed/vision_farm/1200/900" 
-              alt="Viziunea AgroSalso" 
+              alt="Echipa AgroSalso" 
               fill 
               className="object-cover hover:scale-105 transition-transform duration-1000"
-              data-ai-hint="modern farming"
+              data-ai-hint="farming team"
             />
           </motion.div>
         </div>
@@ -78,7 +78,7 @@ export function AboutSection() {
             className="space-y-6 md:space-y-8"
           >
             <div className="inline-block px-4 py-1.5 bg-accent-lime/10 text-accent-lime rounded-full text-[10px] font-bold uppercase tracking-widest">
-              Valori
+              Valorile noastre
             </div>
             <h2 className="font-headline font-extrabold text-4xl md:text-5xl lg:text-6xl text-neutral-900 tracking-tighter leading-[1]">
               Misiune
@@ -86,9 +86,9 @@ export function AboutSection() {
           </motion.div>
           <div className="space-y-8 md:space-y-12 pt-0 lg:pt-16">
             {[
-              "Echiparea fermelor de orice mărime cu tehnologie inteligentă",
-              "Soluții sustenabile pentru a produce mai mult cu mai puțin",
-              "Reducerea risipei și protejarea fertilității solului"
+              "Parteneriate cu producători de top (Dexwal, Letak, MegaMetal, Turan)",
+              "Garanția calității și devotament față de fiecare client",
+              "Livrare promptă și consultanță bazată pe responsabilitate"
             ].map((text, i) => (
               <motion.div 
                 key={i} 
