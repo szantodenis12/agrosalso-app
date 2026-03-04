@@ -112,7 +112,7 @@ export default function CatalogPage() {
               </div>
 
               <div className={cn(
-                "grid gap-8",
+                "grid gap-10",
                 viewMode === 'grid' ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
               )}>
                 {MOCK_PRODUCTS.map((product, idx) => (
@@ -123,13 +123,13 @@ export default function CatalogPage() {
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.05 }}
                     className={cn(
-                      "bg-white group border border-neutral-100 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.08)] transition-all duration-500 overflow-hidden rounded-[2.5rem] p-4",
-                      viewMode === 'list' ? "flex flex-col md:flex-row gap-8" : "flex flex-col"
+                      "bg-white group border border-neutral-100 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.06)] transition-all duration-500 overflow-hidden rounded-[2.5rem] p-5 md:p-8 flex flex-col",
+                      viewMode === 'list' ? "md:flex-row gap-8" : ""
                     )}
                   >
                     <div className={cn(
                       "relative bg-neutral-100 overflow-hidden rounded-[2rem]",
-                      viewMode === 'list' ? "w-full md:w-[320px] h-[240px] shrink-0" : "aspect-[4/3]"
+                      viewMode === 'list' ? "w-full md:w-[320px] h-[240px] shrink-0" : "aspect-[4/3] mb-8"
                     )}>
                       <Image 
                         src={product.mainImage} 
@@ -146,26 +146,26 @@ export default function CatalogPage() {
                       </div>
                     </div>
                     
-                    <div className="p-4 md:p-6 flex flex-col flex-1">
+                    <div className="flex flex-col flex-1">
                       <div className="mb-4">
-                        <span className="text-green-500 font-extrabold text-[10px] uppercase tracking-[0.3em] block mb-2">{product.brand}</span>
+                        <span className="text-green-700 font-extrabold text-[10px] uppercase tracking-[0.3em] block mb-2">{product.brand}</span>
                         <h2 className="font-headline font-extrabold text-2xl text-neutral-900 group-hover:text-green-800 transition-colors tracking-tight leading-tight">{product.name}</h2>
                       </div>
                       
                       <p className="text-neutral-500 text-sm line-clamp-2 mb-8 font-body leading-relaxed">{product.shortDescription}</p>
                       
-                      <div className="mt-auto pt-6 border-t border-neutral-50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                      <div className="mt-auto pt-6 border-t border-neutral-100 flex items-center justify-between gap-4">
                          <div className="flex flex-col">
-                            <span className="text-[10px] font-extrabold text-neutral-300 uppercase tracking-widest mb-1">Preț estimativ</span>
-                            <span className="font-headline font-extrabold text-2xl text-neutral-900">
+                            <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest mb-1 leading-none">Preț estimativ</span>
+                            <span className="font-headline font-extrabold text-xl md:text-2xl text-neutral-900 tracking-tight">
                               {product.priceOnRequest ? "LA CERERE" : `${product.price.toLocaleString()} RON`}
                             </span>
                          </div>
-                         <Link href={`/produse/${product.slug}`} className="w-full sm:w-auto">
-                            <Button className="w-full sm:w-auto bg-neutral-900 hover:bg-black text-white rounded-full h-12 pl-6 pr-1.5 flex items-center justify-between transition-all group/btn gap-6 shadow-xl shadow-black/5">
-                              <span className="text-[10px] font-extrabold uppercase tracking-widest">VEZI DETALII</span>
+                         <Link href={`/produse/${product.slug}`}>
+                            <Button className="bg-neutral-900 hover:bg-black text-white rounded-full h-12 pl-5 pr-1.5 flex items-center gap-4 transition-all group/btn shadow-xl shadow-black/5 shrink-0">
+                              <span className="text-[9px] font-extrabold uppercase tracking-widest">VEZI DETALII</span>
                               <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center transition-transform group-hover/btn:rotate-45">
-                                <ArrowUpRight size={18} className="text-black" strokeWidth={3} />
+                                <ArrowUpRight size={16} className="text-black" strokeWidth={3} />
                               </div>
                             </Button>
                          </Link>
