@@ -1,3 +1,4 @@
+
 'use client';
 import { use, useEffect, useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -213,10 +214,10 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               </div>
 
               {/* Contact Form */}
-              <div className="bg-neutral-900 rounded-[3.5rem] p-10 md:p-14 text-white space-y-10 shadow-2xl shadow-black/20">
+              <div className="bg-white rounded-[3.5rem] p-10 md:p-14 text-neutral-900 space-y-10 shadow-xl border border-neutral-100">
                 <div className="space-y-4">
                   <h3 className="font-headline font-extrabold text-3xl tracking-tight">Solicită Ofertă</h3>
-                  <p className="text-white/50 text-sm font-medium">Un expert AgroSalso te va contacta în cel mai scurt timp pentru detalii și finanțare.</p>
+                  <p className="text-neutral-500 text-sm font-medium">Un expert AgroSalso te va contacta în cel mai scurt timp pentru detalii și finanțare.</p>
                 </div>
 
                 <form onSubmit={handleInquirySubmit} className="space-y-6">
@@ -225,7 +226,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                     value={inquiry.name}
                     onChange={(e) => setInquiry({...inquiry, name: e.target.value})}
                     required
-                    className="h-14 bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-2xl focus:ring-accent-lime"
+                    className="h-14 bg-neutral-50 border-neutral-100 text-neutral-900 placeholder:text-neutral-400 rounded-2xl focus:ring-accent-lime"
                   />
                   <div className="grid grid-cols-2 gap-4">
                     <Input 
@@ -234,7 +235,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                       value={inquiry.email}
                       onChange={(e) => setInquiry({...inquiry, email: e.target.value})}
                       required
-                      className="h-14 bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-2xl focus:ring-accent-lime"
+                      className="h-14 bg-neutral-50 border-neutral-100 text-neutral-900 placeholder:text-neutral-400 rounded-2xl focus:ring-accent-lime"
                     />
                     <Input 
                       type="tel" 
@@ -242,7 +243,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                       value={inquiry.phone}
                       onChange={(e) => setInquiry({...inquiry, phone: e.target.value})}
                       required
-                      className="h-14 bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-2xl focus:ring-accent-lime"
+                      className="h-14 bg-neutral-50 border-neutral-100 text-neutral-900 placeholder:text-neutral-400 rounded-2xl focus:ring-accent-lime"
                     />
                   </div>
                   <Textarea 
@@ -250,7 +251,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                     value={inquiry.message}
                     onChange={(e) => setInquiry({...inquiry, message: e.target.value})}
                     required
-                    className="min-h-[120px] bg-white/5 border-white/10 text-white placeholder:text-white/20 rounded-2xl focus:ring-accent-lime"
+                    className="min-h-[120px] bg-neutral-50 border-neutral-100 text-neutral-900 placeholder:text-neutral-400 rounded-2xl focus:ring-accent-lime"
                   />
 
                   <Button 
@@ -265,13 +266,13 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                   </Button>
                 </form>
 
-                <div className="flex flex-col gap-4 pt-4 border-t border-white/5">
-                   <a href="tel:+40751234567" className="flex items-center gap-4 text-white/60 hover:text-accent-lime transition-colors group">
-                     <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center group-hover:bg-accent-lime/20"><Phone size={16} /></div>
+                <div className="flex flex-col gap-4 pt-4 border-t border-neutral-50">
+                   <a href="tel:+40751234567" className="flex items-center gap-4 text-neutral-500 hover:text-accent-lime transition-colors group">
+                     <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center group-hover:bg-accent-lime/20"><Phone size={16} /></div>
                      <span className="text-xs font-bold">+40 751 234 567</span>
                    </a>
-                   <div className="flex items-center gap-4 text-white/60">
-                     <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center"><Info size={16} /></div>
+                   <div className="flex items-center gap-4 text-neutral-500">
+                     <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center"><Info size={16} /></div>
                      <span className="text-xs font-bold">Consultanță specializată gratuită</span>
                    </div>
                 </div>
