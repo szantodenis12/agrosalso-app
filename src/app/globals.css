@@ -5,26 +5,27 @@
 
 @layer base {
   :root {
-    --background: 80 20% 97%; /* #F8F9F6 - Neutral 50 */
-    --foreground: 0 0% 4%; /* #0A0A0A - Neutral 900 */
+    --background: 80 20% 97%;
+    --foreground: 0 0% 4%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 4%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 4%;
-    --primary: 144 49% 20%; /* #1A4D2E - Green 800 */
+    --primary: 144 49% 20%;
     --primary-foreground: 144 20% 98%;
     --secondary: 144 20% 94%;
     --secondary-foreground: 144 49% 20%;
     --muted: 210 20% 96%;
     --muted-foreground: 215 16% 47%;
-    --accent: 38 90% 55%; /* #F4A827 - Yellow 400 */
+    --accent: 38 90% 55%;
+    --accent-lime: 84 100% 59%; /* Lime color from image */
     --accent-foreground: 0 0% 4%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 92%;
     --input: 0 0% 92%;
     --ring: 144 49% 20%;
-    --radius: 0.75rem;
+    --radius: 1rem;
   }
 }
 
@@ -38,6 +39,14 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline;
   }
+}
+
+.text-accent-lime {
+  color: hsl(var(--accent-lime));
+}
+
+.bg-accent-lime {
+  background-color: hsl(var(--accent-lime));
 }
 
 @keyframes cardFloat {

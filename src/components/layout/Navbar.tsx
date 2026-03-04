@@ -3,18 +3,16 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Menu, X, Phone } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const NAV_LINKS = [
   { name: 'Produse', href: '/produse' },
-  { name: 'Categorii', href: '/categorii' },
-  { name: 'Marci', href: '/marci' },
-  { name: 'Promoții', href: '/promotii' },
   { name: 'Despre noi', href: '/despre' },
-  { name: 'Contact', href: '/contact' },
+  { name: 'Servicii', href: '/servicii' },
+  { name: 'Prețuri', href: '/preturi' },
+  { name: 'Blog', href: '/blog' },
 ];
 
 export function Navbar() {
@@ -23,7 +21,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -31,29 +29,29 @@ export function Navbar() {
   return (
     <nav 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4 md:px-14",
-        scrolled ? "bg-white shadow-md py-3" : "bg-transparent"
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-6 py-6 md:px-14",
+        scrolled ? "bg-black/80 backdrop-blur-md py-4" : "bg-transparent"
       )}
     >
       <div className="max-w-[1440px] mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 bg-green-800 flex items-center justify-center rounded-lg group-hover:bg-green-700 transition-colors">
-            <span className="font-headline font-extrabold text-white text-xl">A</span>
+          <div className="flex items-center gap-1">
+             <div className="w-6 h-4 bg-accent-lime rounded-sm rotate-12" />
+             <span className="font-headline font-extrabold text-2xl tracking-tighter text-white">
+               AgroSalso
+             </span>
           </div>
-          <span className="font-headline font-extrabold text-2xl tracking-tighter text-neutral-900">
-            AGROSALSO
-          </span>
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-10">
           {NAV_LINKS.map((link) => (
             <Link 
               key={link.name} 
               href={link.href}
               className={cn(
-                "text-sm font-medium uppercase tracking-wider transition-colors hover:text-green-800",
-                pathname === link.href ? "text-green-800 font-bold" : "text-neutral-500"
+                "text-sm font-medium transition-colors hover:text-accent-lime",
+                pathname === link.href ? "text-accent-lime" : "text-white/80"
               )}
             >
               {link.name}
@@ -62,17 +60,18 @@ export function Navbar() {
         </div>
 
         <div className="hidden lg:flex items-center gap-4">
-          <a href="tel:+40751234567" className="flex items-center gap-2 text-green-800 font-bold">
-            <Phone size={16} />
-            <span>0751 234 567</span>
-          </a>
-          <Button className="bg-green-800 hover:bg-green-700 text-white font-bold px-6">
-            SOLICITĂ OFERTĂ
-          </Button>
+          <Link href="/contact">
+            <button className="bg-accent-lime hover:bg-accent-lime/90 text-black font-bold px-6 py-3 rounded-full flex items-center gap-2 transition-all">
+              Contactează-ne
+              <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                <ArrowUpRight size={14} className="text-black" />
+              </div>
+            </button>
+          </Link>
         </div>
 
         {/* Mobile Toggle */}
-        <button className="lg:hidden text-neutral-900" onClick={() => setIsOpen(!isOpen)}>
+        <button className="lg:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
@@ -81,28 +80,25 @@ export function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 50 }}
-            className="fixed inset-0 top-[72px] bg-white z-40 lg:hidden p-8 flex flex-col gap-6"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 top-0 bg-neutral-900 z-40 lg:hidden p-8 flex flex-col pt-24"
           >
             {NAV_LINKS.map((link) => (
               <Link 
                 key={link.name} 
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="text-2xl font-headline font-bold text-neutral-900 border-b border-neutral-100 pb-4"
+                className="text-3xl font-headline font-bold text-white border-b border-white/5 py-6"
               >
                 {link.name}
               </Link>
             ))}
-            <div className="mt-auto flex flex-col gap-4">
-              <Button className="bg-green-800 w-full py-6 text-lg font-bold">
-                SOLICITĂ OFERTĂ
-              </Button>
-              <a href="tel:+40751234567" className="text-center text-xl font-bold text-green-800 flex items-center justify-center gap-2 py-4">
-                <Phone /> 0751 234 567
-              </a>
+            <div className="mt-auto">
+              <button className="bg-accent-lime w-full py-5 text-xl font-bold rounded-full flex items-center justify-center gap-3 text-black">
+                Contactează-ne <ArrowUpRight />
+              </button>
             </div>
           </motion.div>
         )}
