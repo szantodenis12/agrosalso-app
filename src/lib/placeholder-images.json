@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "hero-tractor",
-      "description": "Premium industrial tractor",
-      "imageUrl": "https://picsum.photos/seed/ag123/1920/1080",
-      "imageHint": "john deere tractor sunset"
+      "description": "Modern tractor working in a field at sunset",
+      "imageUrl": "https://picsum.photos/seed/tractorfield1/1920/1080",
+      "imageHint": "tractor field"
     },
     {
       "id": "combine-harvester",

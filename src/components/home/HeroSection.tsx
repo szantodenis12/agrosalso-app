@@ -1,3 +1,4 @@
+
 'use client';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -13,11 +14,12 @@ export function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image 
-          src={bgImage?.imageUrl || "https://picsum.photos/seed/ag123/1920/1080"} 
-          alt="Agriculture Background" 
+          src={bgImage?.imageUrl || "https://picsum.photos/seed/tractorfield1/1920/1080"} 
+          alt="Tractor in Field" 
           fill 
           className="object-cover"
           priority
+          data-ai-hint={bgImage?.imageHint || "tractor field"}
         />
         {/* Dark Overlay Gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
@@ -32,7 +34,7 @@ export function HeroSection() {
           transition={{ duration: 0.8 }}
           className="max-w-5xl"
         >
-          <h1 className="font-headline font-bold text-4xl md:text-7xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-10">
+          <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-8xl text-white leading-[1.05] tracking-tight mb-12">
             Smart. <span className="text-accent-lime">Sustainable.</span> <br className="hidden md:block" /> 
             <span className="text-accent-lime">Future-Ready</span> <br className="hidden md:block" />
             Farming.
