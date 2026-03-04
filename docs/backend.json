@@ -1,675 +1,86 @@
+
 {
   "entities": {
     "Product": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Product",
       "type": "object",
-      "description": "Represents an agricultural machine or equipment available for sale on the AgroSalso website.",
+      "description": "Represents an agricultural machine or equipment.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Product entity."
-        },
-        "name": {
-          "type": "string",
-          "description": "The name of the product."
-        },
-        "slug": {
-          "type": "string",
-          "description": "A URL-friendly unique identifier for the product, used in paths like /produse/[slug]."
-        },
-        "brand": {
-          "type": "string",
-          "description": "The name of the brand manufacturing this product. (De-normalized from Brand entity)"
-        },
-        "brandSlug": {
-          "type": "string",
-          "description": "The URL-friendly slug of the brand. (De-normalized from Brand entity)"
-        },
-        "category": {
-          "type": "string",
-          "description": "The primary category this product belongs to (e.g., 'tractoare', 'combine'). (De-normalized from Category entity)"
-        },
-        "subcategory": {
-          "type": "string",
-          "description": "A more specific subcategory within the main category."
-        },
-        "description": {
-          "type": "string",
-          "description": "A detailed description of the product, potentially including HTML rich text."
-        },
-        "shortDescription": {
-          "type": "string",
-          "description": "A brief summary of the product, typically for SEO meta descriptions or product cards (max 160 characters)."
-        },
-        "price": {
-          "type": "number",
-          "description": "The price of the product in RON. Set to 0 if 'priceOnRequest' is true."
-        },
-        "priceOnRequest": {
-          "type": "boolean",
-          "description": "Indicates if the price is not fixed and requires a direct inquiry."
-        },
-        "currency": {
-          "type": "string",
-          "description": "The currency in which the price is listed. Always 'RON'."
-        },
-        "images": {
-          "type": "array",
-          "description": "An array of URLs to product images stored in Firebase Storage.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "mainImage": {
-          "type": "string",
-          "description": "The URL of the primary image for the product, used for listings and previews."
-        },
-        "specifications": {
-          "type": "array",
-          "description": "An array of key-value pairs representing technical specifications of the product.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "inStock": {
-          "type": "boolean",
-          "description": "Indicates whether the product is currently in stock."
-        },
-        "stockQuantity": {
-          "type": "number",
-          "description": "The number of units currently available in stock."
-        },
-        "isNew": {
-          "type": "boolean",
-          "description": "Flag indicating if the product is considered new."
-        },
-        "isFeatured": {
-          "type": "boolean",
-          "description": "Flag indicating if the product should be featured on the homepage or in prominent sections."
-        },
-        "isOnSale": {
-          "type": "boolean",
-          "description": "Flag indicating if the product is currently part of a promotion or sale."
-        },
-        "salePercent": {
-          "type": "number",
-          "description": "The percentage discount if the product is 'isOnSale'."
-        },
-        "tags": {
-          "type": "array",
-          "description": "A list of keywords or tags associated with the product for search and filtering.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "relatedProductIds": {
-          "type": "array",
-          "description": "References to other Product entities that are related to this product. (Relationship: Product N:N Product)",
-          "items": {
-            "type": "string"
-          }
-        },
-        "metaTitle": {
-          "type": "string",
-          "description": "The SEO meta title for the product page."
-        },
-        "metaDescription": {
-          "type": "string",
-          "description": "The SEO meta description for the product page."
-        },
-        "createdAt": {
-          "type": "string",
-          "description": "Timestamp indicating when the product record was created.",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "description": "Timestamp indicating when the product record was last updated.",
-          "format": "date-time"
-        }
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "brand": { "type": "string" },
+        "brandSlug": { "type": "string" },
+        "category": { "type": "string" },
+        "shortDescription": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "priceOnRequest": { "type": "boolean" },
+        "currency": { "type": "string" },
+        "mainImage": { "type": "string" },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "specifications": { "type": "object" },
+        "inStock": { "type": "boolean" },
+        "stockQuantity": { "type": "number" },
+        "isNew": { "type": "boolean" },
+        "isFeatured": { "type": "boolean" },
+        "isOnSale": { "type": "boolean" },
+        "salePercent": { "type": "number" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "metaTitle": { "type": "string" },
+        "metaDescription": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
       },
-      "required": [
-        "id",
-        "name",
-        "slug",
-        "brand",
-        "brandSlug",
-        "category",
-        "shortDescription",
-        "price",
-        "priceOnRequest",
-        "currency",
-        "images",
-        "mainImage",
-        "specifications",
-        "inStock",
-        "stockQuantity",
-        "isNew",
-        "isFeatured",
-        "isOnSale",
-        "salePercent",
-        "tags",
-        "relatedProductIds",
-        "metaTitle",
-        "metaDescription",
-        "createdAt",
-        "updatedAt"
-      ]
+      "required": ["id", "name", "slug", "brand", "category", "shortDescription", "price", "mainImage"]
     },
     "Category": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Category",
       "type": "object",
-      "description": "Defines a category for agricultural products, used for organization and filtering.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Category entity."
-        },
-        "name": {
-          "type": "string",
-          "description": "The display name of the category (e.g., 'Tractoare')."
-        },
-        "slug": {
-          "type": "string",
-          "description": "A URL-friendly unique identifier for the category."
-        },
-        "description": {
-          "type": "string",
-          "description": "A brief description of the category."
-        },
-        "icon": {
-          "type": "string",
-          "description": "An emoji or character used as an icon for the category."
-        },
-        "image": {
-          "type": "string",
-          "description": "URL to an image representing the category."
-        },
-        "productCount": {
-          "type": "number",
-          "description": "The number of products associated with this category."
-        },
-        "order": {
-          "type": "number",
-          "description": "The display order of the category in lists."
-        },
-        "isActive": {
-          "type": "boolean",
-          "description": "Indicates if the category is currently active and visible on the site."
-        },
-        "createdAt": {
-          "type": "string",
-          "description": "Timestamp indicating when the category record was created.",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "description": "Timestamp indicating when the category record was last updated.",
-          "format": "date-time"
-        }
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "icon": { "type": "string" },
+        "description": { "type": "string" },
+        "productCount": { "type": "number" },
+        "order": { "type": "number" },
+        "isActive": { "type": "boolean" }
       },
-      "required": [
-        "id",
-        "name",
-        "slug",
-        "description",
-        "icon",
-        "image",
-        "productCount",
-        "order",
-        "isActive",
-        "createdAt",
-        "updatedAt"
-      ]
-    },
-    "Brand": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "Brand",
-      "type": "object",
-      "description": "Represents a brand of agricultural machinery or equipment.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Brand entity."
-        },
-        "name": {
-          "type": "string",
-          "description": "The official name of the brand."
-        },
-        "slug": {
-          "type": "string",
-          "description": "A URL-friendly unique identifier for the brand."
-        },
-        "logo": {
-          "type": "string",
-          "description": "The URL to the brand's logo image."
-        },
-        "description": {
-          "type": "string",
-          "description": "A brief description of the brand."
-        },
-        "isPartner": {
-          "type": "boolean",
-          "description": "Indicates if AgroSalso is an authorized partner for this brand."
-        },
-        "order": {
-          "type": "number",
-          "description": "The display order of the brand in lists."
-        },
-        "createdAt": {
-          "type": "string",
-          "description": "Timestamp indicating when the brand record was created.",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "description": "Timestamp indicating when the brand record was last updated.",
-          "format": "date-time"
-        }
-      },
-      "required": [
-        "id",
-        "name",
-        "slug",
-        "logo",
-        "description",
-        "isPartner",
-        "order",
-        "createdAt",
-        "updatedAt"
-      ]
-    },
-    "Promotion": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "Promotion",
-      "type": "object",
-      "description": "Details about a marketing promotion or special offer.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Promotion entity."
-        },
-        "title": {
-          "type": "string",
-          "description": "The title of the promotion."
-        },
-        "description": {
-          "type": "string",
-          "description": "A detailed description of the promotion."
-        },
-        "ctaText": {
-          "type": "string",
-          "description": "The call-to-action text for the promotion button."
-        },
-        "ctaLink": {
-          "type": "string",
-          "description": "The URL that the call-to-action button links to.",
-          "format": "uri"
-        },
-        "image": {
-          "type": "string",
-          "description": "URL to an image associated with the promotion."
-        },
-        "startDate": {
-          "type": "string",
-          "description": "The starting date and time of the promotion.",
-          "format": "date-time"
-        },
-        "endDate": {
-          "type": "string",
-          "description": "The ending date and time of the promotion.",
-          "format": "date-time"
-        },
-        "isActive": {
-          "type": "boolean",
-          "description": "Indicates if the promotion is currently active."
-        },
-        "createdAt": {
-          "type": "string",
-          "description": "Timestamp indicating when the promotion record was created.",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "description": "Timestamp indicating when the promotion record was last updated.",
-          "format": "date-time"
-        }
-      },
-      "required": [
-        "id",
-        "title",
-        "description",
-        "ctaText",
-        "ctaLink",
-        "image",
-        "startDate",
-        "endDate",
-        "isActive",
-        "createdAt",
-        "updatedAt"
-      ]
+      "required": ["id", "name", "slug"]
     },
     "Inquiry": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Inquiry",
       "type": "object",
-      "description": "Represents a customer's request for an offer or general inquiry.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Inquiry entity."
-        },
-        "name": {
-          "type": "string",
-          "description": "The full name of the person making the inquiry."
-        },
-        "email": {
-          "type": "string",
-          "description": "The email address of the inquirer.",
-          "format": "email"
-        },
-        "phone": {
-          "type": "string",
-          "description": "The phone number of the inquirer."
-        },
-        "message": {
-          "type": "string",
-          "description": "The detailed message or request from the inquirer."
-        },
-        "productId": {
-          "type": "string",
-          "description": "Reference to the Product entity if the inquiry is specific to a product. (Relationship: Product 1:N Inquiry)"
-        },
-        "productName": {
-          "type": "string",
-          "description": "The name of the product if `productId` is provided. (De-normalized from Product entity)"
-        },
-        "status": {
-          "type": "string",
-          "description": "The current status of the inquiry (e.g., 'new', 'read', 'replied')."
-        },
-        "createdAt": {
-          "type": "string",
-          "description": "Timestamp indicating when the inquiry was submitted.",
-          "format": "date-time"
-        }
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "message": { "type": "string" },
+        "productId": { "type": "string" },
+        "productName": { "type": "string" },
+        "status": { "type": "string", "enum": ["new", "read", "replied"] },
+        "createdAt": { "type": "string", "format": "date-time" }
       },
-      "required": [
-        "id",
-        "name",
-        "email",
-        "phone",
-        "message",
-        "status",
-        "createdAt"
-      ]
-    },
-    "SiteConfig": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "SiteConfig",
-      "type": "object",
-      "description": "Stores global configuration settings for the website.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the SiteConfig entity. Typically a singleton ('main')."
-        },
-        "companyName": {
-          "type": "string",
-          "description": "The official name of the company."
-        },
-        "phone": {
-          "type": "string",
-          "description": "The main contact phone number for the company."
-        },
-        "email": {
-          "type": "string",
-          "description": "The main contact email address for the company.",
-          "format": "email"
-        },
-        "address": {
-          "type": "string",
-          "description": "The physical address of the company."
-        },
-        "mapLink": {
-          "type": "string",
-          "description": "A URL to the company's location on a map service.",
-          "format": "uri"
-        },
-        "socialLinks": {
-          "type": "array",
-          "description": "An array of URLs for the company's social media profiles.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "heroTitle": {
-          "type": "string",
-          "description": "The main heading text displayed in the hero section of the homepage."
-        },
-        "heroSubtitle": {
-          "type": "string",
-          "description": "The subheading text displayed below the hero title."
-        },
-        "featuredProductIds": {
-          "type": "array",
-          "description": "References to Product entities selected to be featured on the homepage. (Relationship: Product N:N SiteConfig)",
-          "items": {
-            "type": "string"
-          }
-        },
-        "announcementBanner": {
-          "type": "array",
-          "description": "Details for a site-wide announcement banner.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "stats": {
-          "type": "array",
-          "description": "Key statistics about the company, displayed on the homepage.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "updatedAt": {
-          "type": "string",
-          "description": "Timestamp indicating when the site configuration was last updated.",
-          "format": "date-time"
-        }
-      },
-      "required": [
-        "id",
-        "companyName",
-        "phone",
-        "email",
-        "address",
-        "mapLink",
-        "socialLinks",
-        "heroTitle",
-        "heroSubtitle",
-        "featuredProductIds",
-        "announcementBanner",
-        "stats",
-        "updatedAt"
-      ]
-    },
-    "Testimonial": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "Testimonial",
-      "type": "object",
-      "description": "Represents a customer testimonial or review.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Testimonial entity."
-        },
-        "quote": {
-          "type": "string",
-          "description": "The actual testimonial text or quote."
-        },
-        "authorName": {
-          "type": "string",
-          "description": "The name of the person who gave the testimonial."
-        },
-        "authorRoleLocation": {
-          "type": "string",
-          "description": "The role and/or location of the author (e.g., 'Farmer, Cluj')."
-        },
-        "avatarEmoji": {
-          "type": "string",
-          "description": "An emoji representing the author's avatar."
-        },
-        "stars": {
-          "type": "number",
-          "description": "The rating given, typically 1 to 5 stars."
-        },
-        "createdAt": {
-          "type": "string",
-          "description": "Timestamp indicating when the testimonial was created.",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "description": "Timestamp indicating when the testimonial was last updated.",
-          "format": "date-time"
-        }
-      },
-      "required": [
-        "id",
-        "quote",
-        "authorName",
-        "authorRoleLocation",
-        "avatarEmoji",
-        "stars",
-        "createdAt",
-        "updatedAt"
-      ]
+      "required": ["name", "email", "phone", "message", "status"]
     }
   },
   "auth": {
-    "providers": [
-      "password",
-      "anonymous"
-    ]
+    "providers": ["password"]
   },
   "firestore": {
-    "structure": [
-      {
-        "path": "products/{productId}",
-        "definition": {
-          "entityName": "Product",
-          "schema": {
-            "$ref": "#/backend/entities/Product"
-          },
-          "description": "Collection of all agricultural products available for sale. Documents include denormalized 'brand', 'brandSlug', and 'category' fields for efficient public reads and admin-only writes. The 'specifications' field is structured as a map (Record<string, string>) despite the schema suggesting an array, to align with code usage. Supports product filtering, detail pages, and administrative CRUD operations.",
-          "params": [
-            {
-              "name": "productId",
-              "description": "Unique identifier for a specific product document."
-            }
-          ]
-        }
-      },
-      {
-        "path": "categories/{categoryId}",
-        "definition": {
-          "entityName": "Category",
-          "schema": {
-            "$ref": "#/backend/entities/Category"
-          },
-          "description": "Collection of product categories. Documents are publicly readable and admin-only writable. Used for product classification, filtering, and navigation throughout the website.",
-          "params": [
-            {
-              "name": "categoryId",
-              "description": "Unique identifier for a specific product category document."
-            }
-          ]
-        }
-      },
-      {
-        "path": "brands/{brandId}",
-        "definition": {
-          "entityName": "Brand",
-          "schema": {
-            "$ref": "#/backend/entities/Brand"
-          },
-          "description": "Collection of agricultural equipment brands. Documents are publicly readable and admin-only writable. Used for product filtering, displaying brand information, and managing authorized partners.",
-          "params": [
-            {
-              "name": "brandId",
-              "description": "Unique identifier for a specific brand document."
-            }
-          ]
-        }
-      },
-      {
-        "path": "promotions/{promotionId}",
-        "definition": {
-          "entityName": "Promotion",
-          "schema": {
-            "$ref": "#/backend/entities/Promotion"
-          },
-          "description": "Collection of marketing promotions and special offers. Documents are publicly readable for displaying current deals and admin-only writable for managing promotions.",
-          "params": [
-            {
-              "name": "promotionId",
-              "description": "Unique identifier for a specific promotion document."
-            }
-          ]
-        }
-      },
-      {
-        "path": "inquiries/{inquiryId}",
-        "definition": {
-          "entityName": "Inquiry",
-          "schema": {
-            "$ref": "#/backend/entities/Inquiry"
-          },
-          "description": "Collection storing customer inquiries and offer requests. Documents allow public creation (anonymous users), but only admin users can read, update, or delete them. Includes denormalized 'productName' if the inquiry is product-specific for authorization independence in the admin view.",
-          "params": [
-            {
-              "name": "inquiryId",
-              "description": "Unique identifier for a specific inquiry document."
-            }
-          ]
-        }
-      },
-      {
-        "path": "siteConfig/{configId}",
-        "definition": {
-          "entityName": "SiteConfig",
-          "schema": {
-            "$ref": "#/backend/entities/SiteConfig"
-          },
-          "description": "Singleton collection for global website configuration settings. The document, typically with ID 'main', is publicly readable and admin-only writable. Includes denormalized 'featuredProductIds' for authorization independence when displaying featured content.",
-          "params": [
-            {
-              "name": "configId",
-              "description": "Unique identifier for the site configuration document (e.g., 'main')."
-            }
-          ]
-        }
-      },
-      {
-        "path": "testimonials/{testimonialId}",
-        "definition": {
-          "entityName": "Testimonial",
-          "schema": {
-            "$ref": "#/backend/entities/Testimonial"
-          },
-          "description": "Collection for customer testimonials. Documents are publicly readable for display on the website and admin-only writable for management.",
-          "params": [
-            {
-              "name": "testimonialId",
-              "description": "Unique identifier for a specific testimonial document."
-            }
-          ]
-        }
-      }
-    ],
-    "reasoning": "The Firestore structure for AgroSalso is designed following core principles for security, scalability, and debuggability. All primary entities are organized into top-level collections: 'products', 'categories', 'brands', 'promotions', 'inquiries', 'siteConfig', and 'testimonials'. This flat hierarchy inherently minimizes complexity and avoids the need for recursive or deeply nested security rules.\n\n**Authorization Independence via Denormalization:**\n\nThis design prioritizes authorization independence, eliminating the need for 'get()' calls in security rules to fetch parent or related documents for access control decisions. This is achieved through strategic denormalization:\n\n*   **products/{productId}:** Each product document includes denormalized 'brand', 'brandSlug', and 'category' fields. This allows public read queries (e.g., filtering products by category or brand) to be executed directly on the 'products' collection without additional lookups to 'brands' or 'categories' for authorization or display. This simplifies security rules, makes queries more efficient, and ensures atomic operations during product creation or update.\n*   **inquiries/{inquiryId}:** When an inquiry pertains to a specific product, the 'productName' is denormalized and stored within the inquiry document. This allows administrators to view inquiry details, including the associated product's name, without requiring a 'get()' call to the 'products' collection. This makes each inquiry document largely self-contained for administrative read operations.\n*   **siteConfig/main:** The 'featuredProductIds' array directly stores the IDs of featured products. This prevents any security rule or client-side logic from needing to perform a 'get()' call to a 'products' document to determine if it should be displayed as featured, ensuring authorization independence for this configuration data.\n\n**QAPs (Rules Are Not Filters) & Structural Segregation:**\n\nTo support efficient and secure 'list' operations (QAPs), the structure employs clear structural segregation and consistent security postures:\n\n*   **Homogeneous Public Read Access:** Collections such as 'products', 'categories', 'brands', 'promotions', 'siteConfig', and 'testimonials' are designated for public read access. The security rule 'allow read: if true;' for these collections is robust, straightforward, and performs optimally. This ensures that client-side queries for displaying product catalogs, categories, brand lists, site configuration, or testimonials can retrieve all documents in these collections without requiring complex, performance-intensive filtering within the security rules.\n*   **Homogeneous Admin Write Access:** For all aforementioned collections, write, update, and delete operations are restricted to authenticated administrators. The current security rules leverage 'request.auth.token.email == 'admin@agrosalso.ro''. This provides a consistent, easily auditable access pattern for content management across the application.\n*   **Public Create, Admin Manage for Inquiries:** The 'inquiries' collection is designed to allow public 'create' operations ('allow create: if true;'), enabling any user to submit a contact or offer request. However, subsequent 'read', 'update', and 'delete' operations on these inquiries are restricted to administrators, maintaining data integrity and administrative control. This clear separation of concerns ensures efficient public submissions and secure internal management.\n\n**DBAC (Database-Backed Access Control) Compatibility:**\n\nWhile the provided security rules implement admin checks using 'request.auth.token.email', the overall data structure is fully compatible with a true DBAC model. If a 'roles_admin/{uid}' collection were to be introduced (storing administrator UIDs), the security rule could be easily updated to 'exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid))'. The existing top-level collections and denormalization strategy would seamlessly support this transition, ensuring that authorization decisions are based on data stored directly in the database and tied to the user's UID, rather than custom claims in the authentication token. This approach would centralize role management within Firestore, enhancing debuggability and maintainability."
+    "products/{productId}": {
+      "schema": { "$ref": "#/backend/entities/Product" },
+      "description": "Catalog of agricultural machinery."
+    },
+    "categories/{categoryId}": {
+      "schema": { "$ref": "#/backend/entities/Category" },
+      "description": "Product categories for classification."
+    },
+    "inquiries/{inquiryId}": {
+      "schema": { "$ref": "#/backend/entities/Inquiry" },
+      "description": "Customer lead submissions."
+    }
   }
 }
