@@ -4,14 +4,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 
-const SLIDE_DURATION = 8000; // 8 secunde per slide
+const SLIDE_DURATION = 8000;
 
 const BACKGROUNDS = [
   {
     id: 'bg-video',
     type: 'video',
     src: '/hero-video-tractor.mp4',
-    thumbnail: '/thumb-0.jpg'
+    thumbnail: '/thumb-1.jpg'
   },
   {
     id: 'bg-image-1',
@@ -66,6 +66,26 @@ export function HeroSection() {
 
   const currentBg = BACKGROUNDS[currentIndex];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+    },
+  };
+
   return (
     <section className="relative h-screen min-h-[700px] w-full flex flex-col justify-center px-6 md:px-14 overflow-hidden bg-black">
       {/* Background Media Layer */}
@@ -73,10 +93,10 @@ export function HeroSection() {
         <AnimatePresence mode="wait">
           <motion.div
             key={currentBg.id}
-            initial={{ opacity: 0, scale: 1.05 }}
+            initial={{ opacity: 0, scale: 1.1 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
+            exit={{ opacity: 0, scale: 1.05 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
             className="w-full h-full"
           >
             {currentBg.type === 'video' ? (
@@ -102,41 +122,58 @@ export function HeroSection() {
           </motion.div>
         </AnimatePresence>
         
-        {/* Dark Overlay Gradients */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 z-10" />
       </div>
 
       {/* Static Content Layer */}
       <div className="relative z-20 max-w-[1440px] mx-auto w-full">
-        <div className="max-w-4xl">
-          <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="max-w-4xl"
+        >
+          <motion.h1 
+            variants={itemVariants}
+            className="font-headline font-bold text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8"
+          >
             Smart. <span className="text-accent-lime">Sustainable.</span> <br className="hidden md:block" /> 
             <span className="text-accent-lime">Future-Ready</span> <br className="hidden md:block" />
             Farming.
-          </h1>
+          </motion.h1>
 
-          <p className="text-white/80 text-base md:text-lg max-w-xl mb-10 font-body leading-relaxed">
+          <motion.p 
+            variants={itemVariants}
+            className="text-white/80 text-base md:text-lg max-w-xl mb-10 font-body leading-relaxed"
+          >
             AgroSalso sprijină fermierii și afacerile agricole cu soluții inteligente și sustenabile, 
             care cresc productivitatea și profitabilitatea — protejând în același timp planeta.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row gap-6 items-start">
-            <button className="bg-white hover:bg-neutral-50 text-neutral-900 font-bold h-14 pl-8 pr-1.5 rounded-full flex items-center gap-8 transition-all text-base shadow-2xl group border border-white/20">
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-6 items-start">
+            <motion.button 
+              whileHover={{ scale: 1.05, x: 5 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-white hover:bg-neutral-50 text-neutral-900 font-bold h-14 pl-8 pr-1.5 rounded-full flex items-center gap-8 transition-all text-base shadow-2xl group border border-white/20"
+            >
               Începe Acum
-              <div className="w-11 h-11 bg-neutral-900 rounded-full flex items-center justify-center transition-transform group-hover:scale-95">
+              <div className="w-11 h-11 bg-neutral-900 rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
                 <ArrowUpRight size={20} className="text-white" strokeWidth={2.5} />
               </div>
-            </button>
-          </div>
-        </div>
+            </motion.button>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Interface Elements Layer */}
       <div className="absolute bottom-12 left-6 md:left-14 right-6 md:right-14 z-20 flex flex-col md:flex-row justify-between items-end gap-12">
-        
-        {/* Cumulative Progress Indicators (4 baruri) */}
-        <div className="flex gap-4 items-center scale-75 md:scale-100 origin-left">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.8 }}
+          className="flex gap-4 items-center scale-75 md:scale-100 origin-left"
+        >
           {BACKGROUNDS.map((_, index) => (
             <div 
               key={index} 
@@ -149,20 +186,26 @@ export function HeroSection() {
                 animate={{ 
                   width: index === currentIndex ? `${progress}%` : index < currentIndex ? "100%" : "0%" 
                 }}
-                transition={{ duration: index === currentIndex ? 0.1 : 0.5 }}
+                transition={{ duration: index === currentIndex ? 0.05 : 0.5 }}
               />
             </div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Thumbnails Carousel */}
-        <div className="hidden lg:flex gap-4">
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1.2, duration: 0.8 }}
+          className="hidden lg:flex gap-4"
+        >
           {BACKGROUNDS.map((item, index) => (
-            <div 
+            <motion.div 
               key={item.id} 
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => handleThumbnailClick(index)}
               className={`w-24 h-16 rounded-xl border-2 overflow-hidden relative group cursor-pointer transition-all duration-300 ${
-                index === currentIndex ? 'border-accent-lime scale-110' : 'border-white/20'
+                index === currentIndex ? 'border-accent-lime ring-4 ring-accent-lime/20' : 'border-white/20'
               }`}
             >
               <Image 
@@ -174,9 +217,9 @@ export function HeroSection() {
                 }`} 
                 sizes="100px"
               />
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
