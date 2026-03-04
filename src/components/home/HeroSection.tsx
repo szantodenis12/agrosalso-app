@@ -1,3 +1,4 @@
+
 'use client';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
@@ -5,6 +6,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
 
 export function HeroSection() {
+  // Filtram imaginile care incep cu "thumb-" pentru caruselul de jos
   const thumbs = PlaceHolderImages.filter(img => img.id.startsWith('thumb-'));
 
   return (
@@ -22,7 +24,7 @@ export function HeroSection() {
           <source src="/hero-video-tractor.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        {/* Dark Overlay Gradient */}
+        {/* Dark Overlay Gradient for contrast */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 z-10" />
       </div>
@@ -35,13 +37,13 @@ export function HeroSection() {
           transition={{ duration: 0.8 }}
           className="max-w-4xl"
         >
-          <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-8xl text-white leading-[1.05] tracking-tight mb-12">
+          <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8">
             Smart. <span className="text-accent-lime">Sustainable.</span> <br className="hidden md:block" /> 
             <span className="text-accent-lime">Future-Ready</span> <br className="hidden md:block" />
             Farming.
           </h1>
 
-          <p className="text-white/80 text-base md:text-xl max-w-2xl mb-12 font-body leading-relaxed">
+          <p className="text-white/80 text-base md:text-lg max-w-xl mb-10 font-body leading-relaxed">
             AgroSalso sprijină fermierii și afacerile agricole cu soluții inteligente și sustenabile, care cresc productivitatea și profitabilitatea — protejând în același timp planeta.
           </p>
 
@@ -67,15 +69,16 @@ export function HeroSection() {
            <div className="w-32 md:w-40 h-[2px] bg-white/20 rounded-full" />
         </div>
 
-        {/* Thumbnails */}
+        {/* Thumbnails Carousel */}
         <div className="hidden lg:flex gap-4">
-          {thumbs.map((thumb, idx) => (
+          {thumbs.map((thumb) => (
             <div key={thumb.id} className="w-24 h-16 rounded-xl border border-white/20 overflow-hidden relative group cursor-pointer hover:border-accent-lime transition-all duration-300">
               <Image 
                 src={thumb.imageUrl} 
                 alt={thumb.description} 
                 fill 
                 className="object-cover opacity-60 group-hover:opacity-100 transition-opacity" 
+                sizes="100px"
               />
             </div>
           ))}
