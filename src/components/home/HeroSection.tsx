@@ -1,4 +1,3 @@
-
 'use client';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -14,7 +13,7 @@ export function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image 
-          src={bgImage?.imageUrl || "https://picsum.photos/seed/tractor_field_99/1920/1080"} 
+          src={bgImage?.imageUrl || "/hero-tractor.jpg"} 
           alt="Tractor in Field" 
           fill 
           className="object-cover"
@@ -32,7 +31,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-5xl"
+          className="max-w-4xl"
         >
           <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-8xl text-white leading-[1.05] tracking-tight mb-12">
             Smart. <span className="text-accent-lime">Sustainable.</span> <br className="hidden md:block" /> 

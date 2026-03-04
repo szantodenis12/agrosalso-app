@@ -1,0 +1,28 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-tractor",
+      "description": "Imagine principala tractor pe camp",
+      "imageUrl": "/hero-tractor.jpg",
+      "imageHint": "tractor field"
+    },
+    {
+      "id": "thumb-1",
+      "description": "Miniatura 1 carusel",
+      "imageUrl": "/thumb-1.jpg",
+      "imageHint": "agricultural machinery"
+    },
+    {
+      "id": "thumb-2",
+      "description": "Miniatura 2 carusel",
+      "imageUrl": "/thumb-2.jpg",
+      "imageHint": "modern farming"
+    },
+    {
+      "id": "thumb-3",
+      "description": "Miniatura 3 carusel",
+      "imageUrl": "/thumb-3.jpg",
+      "imageHint": "harvesting season"
+    }
+  ]
+}
