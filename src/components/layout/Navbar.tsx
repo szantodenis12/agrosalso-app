@@ -80,7 +80,7 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile Toggle - Plasat pe un z-index mai mare pentru a fi mereu accesibil */}
+          {/* Mobile Toggle */}
           <button 
             className="lg:hidden text-white relative z-[70] p-2 hover:bg-white/10 rounded-full transition-colors" 
             onClick={() => setIsOpen(!isOpen)}
@@ -130,10 +130,10 @@ export function Navbar() {
               className="mt-auto pt-12"
             >
               <Link href="/contact" onClick={() => setIsOpen(false)}>
-                <button className="bg-accent-lime w-full h-16 pl-8 pr-1.5 rounded-full flex items-center justify-between transition-all text-xl font-bold text-black group">
+                <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-6 pr-1 rounded-full flex items-center gap-4 transition-all text-sm group">
                   Contactează-ne
-                  <div className="w-13 h-13 bg-white rounded-full flex items-center justify-center">
-                    <ArrowUpRight size={24} className="text-black" strokeWidth={2.5} />
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover:scale-95">
+                    <ArrowUpRight size={18} className="text-black" strokeWidth={2.5} />
                   </div>
                 </button>
               </Link>
