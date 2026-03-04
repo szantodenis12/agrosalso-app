@@ -31,7 +31,7 @@ export function AboutSection() {
               Viziune
             </div>
             <h2 className="font-headline font-extrabold text-4xl md:text-5xl lg:text-6xl text-neutral-900 tracking-tighter leading-[1]">
-              Viziune
+              Despre noi
             </h2>
             <p className="text-neutral-500 text-base md:text-xl font-body leading-relaxed max-w-lg">
               Un viitor în care fiecare fermă — mare sau mică — este condusă de date, ghidată de decizii inteligente și integrată în lanțuri de valoare transparente și reziliente.
