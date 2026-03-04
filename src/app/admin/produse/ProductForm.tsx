@@ -1,13 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useFirestore } from '@/firebase';
+import { useFirestore, useStorage } from '@/firebase';
 import { addProduct, updateProduct } from '@/lib/firestore/products';
+import { uploadImage } from '@/lib/firebase/storage';
 import { Product, ProductCategory } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Sparkles, Save, ChevronLeft, Trash2, Plus, Image as ImageIcon, X } from 'lucide-react';
+import { Sparkles, Save, ChevronLeft, Trash2, Plus, Image as ImageIcon, X, Upload, Loader2 } from 'lucide-react';
 import { adminProductDescriptionGenerator } from '@/ai/flows/admin-product-description-generator';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -31,8 +32,16 @@ interface Props {
 export default function ProductForm({ initialData, mode }: Props) {
   const router = useRouter();
   const db = useFirestore();
+  const storage = useStorage();
+  
+  const mainImageInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
+
   const [saving, setSaving] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [uploadingMain, setUploadingMain] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
+
   const [specs, setSpecs] = useState<{ key: string; value: string }[]>(
     initialData?.specifications
       ? Object.entries(initialData.specifications).map(([key, value]) => ({ key, value }))
@@ -40,8 +49,7 @@ export default function ProductForm({ initialData, mode }: Props) {
   );
 
   const [galleryImages, setGalleryImages] = useState<string[]>(initialData?.images ?? []);
-  const [newImageUrl, setNewImageUrl] = useState('');
-
+  
   const [form, setForm] = useState({
     name: initialData?.name ?? '',
     slug: initialData?.slug ?? '',
@@ -68,6 +76,39 @@ export default function ProductForm({ initialData, mode }: Props) {
 
   const set = (field: string, value: any) => setForm(prev => ({ ...prev, [field]: value }));
 
+  const handleMainImageFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingMain(true);
+    try {
+      const url = await uploadImage(storage, file);
+      set('mainImage', url);
+      toast({ title: "Imagine încărcată", description: "Poza principală a fost salvată." });
+    } catch (error) {
+      toast({ variant: "destructive", title: "Eroare upload", description: "Nu s-a putut încărca imaginea." });
+    } finally {
+      setUploadingMain(false);
+    }
+  };
+
+  const handleGalleryFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (files.length === 0) return;
+
+    setUploadingGallery(true);
+    try {
+      const uploadPromises = files.map(file => uploadImage(storage, file));
+      const urls = await Promise.all(uploadPromises);
+      setGalleryImages(prev => [...prev, ...urls]);
+      toast({ title: "Galerie actualizată", description: `Au fost încărcate ${urls.length} imagini.` });
+    } catch (error) {
+      toast({ variant: "destructive", title: "Eroare upload", description: "Unele imagini nu s-au putut încărca." });
+    } finally {
+      setUploadingGallery(false);
+    }
+  };
+
   const generateSlug = (name: string) => {
     return name.toLowerCase()
       .trim()
@@ -83,12 +124,6 @@ export default function ProductForm({ initialData, mode }: Props) {
     if (mode === 'create') {
       set('slug', generateSlug(name));
     }
-  };
-
-  const addImageToGallery = () => {
-    if (!newImageUrl) return;
-    setGalleryImages([...galleryImages, newImageUrl]);
-    setNewImageUrl('');
   };
 
   const removeImageFromGallery = (index: number) => {
@@ -164,6 +199,10 @@ export default function ProductForm({ initialData, mode }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-5xl mx-auto space-y-10 pb-20">
+      {/* Hidden Inputs for Files */}
+      <input type="file" ref={mainImageInputRef} onChange={handleMainImageFile} accept="image/*" className="hidden" />
+      <input type="file" ref={galleryInputRef} onChange={handleGalleryFiles} accept="image/*" multiple className="hidden" />
+
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button type="button" variant="ghost" size="icon" className="rounded-full bg-white shadow-sm" onClick={() => router.back()}>
@@ -231,33 +270,64 @@ export default function ProductForm({ initialData, mode }: Props) {
               <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Galerie Media
             </h3>
             
-            <div className="space-y-6">
-              <div>
-                <label className={labelClass}>Imagine Principală (URL)</label>
-                <Input value={form.mainImage} onChange={e => set('mainImage', e.target.value)} className={inputClass} placeholder="https://..." />
-              </div>
-
-              <div className="pt-4 border-t border-neutral-50">
-                <label className={labelClass}>Adaugă în Galerie (URL)</label>
-                <div className="flex gap-4">
-                  <Input value={newImageUrl} onChange={e => setNewImageUrl(e.target.value)} className={inputClass} placeholder="https://..." />
-                  <Button type="button" onClick={addImageToGallery} className="bg-neutral-900 text-white rounded-xl h-12 px-6"><Plus size={18} /></Button>
+            <div className="space-y-8">
+              {/* Main Image Upload */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div className="space-y-4">
+                  <label className={labelClass}>Imagine Principală</label>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    disabled={uploadingMain}
+                    onClick={() => mainImageInputRef.current?.click()}
+                    className="w-full h-14 border-dashed border-2 rounded-2xl flex items-center justify-center gap-3 hover:border-accent-lime hover:bg-accent-lime/5 transition-all"
+                  >
+                    {uploadingMain ? <Loader2 className="animate-spin" /> : <Upload size={18} />}
+                    {uploadingMain ? 'SE ÎNCARCĂ...' : 'ÎNCARCĂ POZĂ PRINCIPALĂ'}
+                  </Button>
+                  <p className="text-[10px] text-neutral-400 text-center uppercase tracking-tight">Format acceptat: JPG, PNG, WEBP</p>
                 </div>
+                {form.mainImage && (
+                  <div className="relative aspect-video rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-100">
+                    <Image src={form.mainImage} alt="Main Preview" fill className="object-cover" />
+                  </div>
+                )}
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-                {galleryImages.map((url, i) => (
-                  <div key={i} className="relative aspect-square rounded-xl overflow-hidden bg-neutral-100 group">
-                    <Image src={url} alt={`Gallery ${i}`} fill className="object-cover" />
-                    <button 
-                      type="button" 
-                      onClick={() => removeImageFromGallery(i)}
-                      className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <X size={14} />
-                    </button>
-                  </div>
-                ))}
+              <div className="pt-8 border-t border-neutral-50">
+                <div className="flex justify-between items-center mb-6">
+                  <label className={labelClass}>Galerie Foto</label>
+                  <Button 
+                    type="button" 
+                    size="sm"
+                    disabled={uploadingGallery}
+                    onClick={() => galleryInputRef.current?.click()}
+                    className="bg-neutral-900 text-white rounded-full h-10 px-5 gap-2"
+                  >
+                    {uploadingGallery ? <Loader2 className="animate-spin size-4" /> : <Plus size={16} />}
+                    ADAUGĂ POZE
+                  </Button>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {galleryImages.map((url, i) => (
+                    <div key={i} className="relative aspect-square rounded-xl overflow-hidden bg-neutral-50 border border-neutral-100 group">
+                      <Image src={url} alt={`Gallery ${i}`} fill className="object-cover" />
+                      <button 
+                        type="button" 
+                        onClick={() => removeImageFromGallery(i)}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ))}
+                  {uploadingGallery && (
+                    <div className="aspect-square rounded-xl bg-neutral-50 border border-dashed border-neutral-200 flex items-center justify-center">
+                      <Loader2 className="animate-spin text-neutral-300" />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -347,7 +417,7 @@ export default function ProductForm({ initialData, mode }: Props) {
 
           <Button 
             type="submit" 
-            disabled={saving}
+            disabled={saving || uploadingMain || uploadingGallery}
             className="w-full bg-neutral-900 hover:bg-black text-white font-extrabold h-16 rounded-3xl flex items-center justify-between pl-10 pr-2 group shadow-2xl shadow-black/20"
           >
             {saving ? 'SE SALVEAZĂ...' : 'SALVEAZĂ PRODUSUL'}
