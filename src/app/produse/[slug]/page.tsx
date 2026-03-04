@@ -1,5 +1,5 @@
 'use client';
-import { use, useEffect, useState } from 'react';
+import { use, useEffect, useState, useCallback } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { useFirestore } from '@/firebase';
@@ -7,19 +7,26 @@ import { collection, query, where, getDocs, limit, addDoc, serverTimestamp } fro
 import { Product } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, Send, Phone, Info, ShieldCheck, Truck, Cog, Sparkles, Star, Settings2 } from 'lucide-react';
+import { ChevronLeft, Send, Phone, Info, ShieldCheck, Truck, Cog, Sparkles, Star, Settings2, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import useEmblaCarousel from 'embla-carousel-react';
+import Autoplay from 'embla-carousel-autoplay';
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const db = useFirestore();
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
+    Autoplay({ delay: 5000, stopOnInteraction: false })
+  ]);
 
   const [inquiry, setInquiry] = useState({
     name: '',
@@ -27,6 +34,16 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
     phone: '',
     message: '',
   });
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setCurrentIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on('select', onSelect);
+  }, [emblaApi, onSelect]);
 
   useEffect(() => {
     async function loadProduct() {
@@ -87,22 +104,48 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
     );
   }
 
+  const galleryImages = product.images?.length > 0 ? product.images : [product.mainImage];
+
   return (
     <>
       <Navbar />
       <main className="bg-neutral-50 min-h-screen">
-        {/* Immersive Header */}
-        <section className="relative h-[55vh] md:h-[70vh] w-full overflow-hidden bg-neutral-900">
-          <Image 
-            src={product.mainImage || 'https://picsum.photos/seed/placeholder/1920/1080'} 
-            alt={product.name} 
-            fill 
-            className="object-cover opacity-70"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-50 via-black/20 to-black/40" />
+        {/* Immersive Gallery Hero */}
+        <section className="relative h-[65vh] md:h-[80vh] w-full overflow-hidden bg-neutral-900">
+          <div className="embla h-full" ref={emblaRef}>
+            <div className="embla__container h-full">
+              {galleryImages.map((img, index) => (
+                <div className="embla__slide relative flex-[0_0_100%] h-full" key={index}>
+                  <Image 
+                    src={img} 
+                    alt={`${product.name} gallery ${index}`} 
+                    fill 
+                    className="object-cover opacity-80"
+                    priority={index === 0}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="absolute inset-0 bg-gradient-to-t from-neutral-50 via-black/10 to-black/30 pointer-events-none" />
           
-          <div className="absolute bottom-0 left-0 right-0 max-w-[1440px] mx-auto px-6 md:px-14 pb-10 md:pb-16">
+          {/* Gallery Navigation Controls */}
+          {galleryImages.length > 1 && (
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
+              {galleryImages.map((_, i) => (
+                <button 
+                  key={i} 
+                  onClick={() => emblaApi?.scrollTo(i)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    currentIndex === i ? 'w-10 bg-accent-lime' : 'w-3 bg-white/40'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+
+          <div className="absolute bottom-0 left-0 right-0 max-w-[1440px] mx-auto px-6 md:px-14 pb-20 md:pb-24">
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -117,9 +160,9 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 {product.name}
               </h1>
               <div className="flex flex-wrap gap-3 pt-2 md:pt-4">
-                 {product.isNew && <span className="bg-blue-600 text-white text-[9px] md:text-[10px] font-extrabold px-5 py-2 rounded-full tracking-widest uppercase">Utilaj Nou</span>}
-                 {product.isOnSale && <span className="bg-yellow-400 text-black text-[9px] md:text-[10px] font-extrabold px-5 py-2 rounded-full tracking-widest uppercase">Ofertă Specială</span>}
-                 <div className="flex items-center gap-2 bg-white/90 backdrop-blur-md px-5 py-2 rounded-full border border-white shadow-sm">
+                 {product.isNew && <span className="bg-blue-600 text-white text-[9px] md:text-[10px] font-extrabold px-5 py-2 rounded-full tracking-widest uppercase shadow-lg">Utilaj Nou</span>}
+                 {product.isOnSale && <span className="bg-yellow-400 text-black text-[9px] md:text-[10px] font-extrabold px-5 py-2 rounded-full tracking-widest uppercase shadow-lg">Ofertă Specială</span>}
+                 <div className="flex items-center gap-2 bg-white/90 backdrop-blur-md px-5 py-2 rounded-full border border-white shadow-xl">
                    <Star size={12} className="fill-yellow-500 text-yellow-500" />
                    <span className="text-[9px] md:text-[10px] font-extrabold text-neutral-900 tracking-widest uppercase">Calitate Garantată</span>
                  </div>
@@ -128,7 +171,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
           </div>
         </section>
 
-        <div className="max-w-[1440px] mx-auto px-6 md:px-14 py-12 md:py-20">
+        <div className="max-w-[1440px] mx-auto px-6 md:px-14 py-12 md:py-20 -mt-10 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
             
             {/* Content Column */}
@@ -169,28 +212,30 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               </motion.div>
 
               {/* Dedicated Specs Section */}
-              <motion.div 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                className="bg-white rounded-[2.5rem] md:rounded-[3.5rem] p-8 md:p-14 border border-neutral-100 shadow-sm space-y-8 md:space-y-10"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 md:w-12 md:h-12 bg-neutral-900 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0">
-                    <Settings2 className="text-accent-lime w-5 h-5 md:w-6 md:h-6" />
-                  </div>
-                  <h2 className="font-headline font-extrabold text-2xl md:text-3xl text-neutral-900 tracking-tight">Specificații Tehnice</h2>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 md:gap-y-6">
-                  {Object.entries(product.specifications).map(([key, value]) => (
-                    <div key={key} className="flex justify-between items-center py-3 md:py-4 border-b border-neutral-50 group">
-                      <span className="text-xs md:text-sm font-bold text-neutral-400 uppercase tracking-widest">{key}</span>
-                      <span className="text-sm md:text-base font-extrabold text-neutral-900 text-right">{value}</span>
+              {product.specifications && Object.keys(product.specifications).length > 0 && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  className="bg-white rounded-[2.5rem] md:rounded-[3.5rem] p-8 md:p-14 border border-neutral-100 shadow-sm space-y-8 md:space-y-10"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 md:w-12 md:h-12 bg-neutral-900 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0">
+                      <Settings2 className="text-accent-lime w-5 h-5 md:w-6 md:h-6" />
                     </div>
-                  ))}
-                </div>
-              </motion.div>
+                    <h2 className="font-headline font-extrabold text-2xl md:text-3xl text-neutral-900 tracking-tight">Specificații Tehnice</h2>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 md:gap-y-6">
+                    {Object.entries(product.specifications).map(([key, value]) => (
+                      <div key={key} className="flex justify-between items-center py-3 md:py-4 border-b border-neutral-50 group">
+                        <span className="text-xs md:text-sm font-bold text-neutral-400 uppercase tracking-widest">{key}</span>
+                        <span className="text-sm md:text-base font-extrabold text-neutral-900 text-right">{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
             </div>
 
             {/* Sticky Action Column */}

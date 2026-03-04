@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -8,9 +7,10 @@ import { Product, ProductCategory } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Sparkles, Save, ChevronLeft, Trash2, Plus } from 'lucide-react';
+import { Sparkles, Save, ChevronLeft, Trash2, Plus, Image as ImageIcon, X } from 'lucide-react';
 import { adminProductDescriptionGenerator } from '@/ai/flows/admin-product-description-generator';
 import { toast } from '@/hooks/use-toast';
+import Image from 'next/image';
 
 const CATEGORIES: { value: ProductCategory; label: string }[] = [
   { value: 'tractoare', label: 'Tractoare' },
@@ -38,6 +38,9 @@ export default function ProductForm({ initialData, mode }: Props) {
       ? Object.entries(initialData.specifications).map(([key, value]) => ({ key, value }))
       : [{ key: '', value: '' }]
   );
+
+  const [galleryImages, setGalleryImages] = useState<string[]>(initialData?.images ?? []);
+  const [newImageUrl, setNewImageUrl] = useState('');
 
   const [form, setForm] = useState({
     name: initialData?.name ?? '',
@@ -80,6 +83,16 @@ export default function ProductForm({ initialData, mode }: Props) {
     if (mode === 'create') {
       set('slug', generateSlug(name));
     }
+  };
+
+  const addImageToGallery = () => {
+    if (!newImageUrl) return;
+    setGalleryImages([...galleryImages, newImageUrl]);
+    setNewImageUrl('');
+  };
+
+  const removeImageFromGallery = (index: number) => {
+    setGalleryImages(galleryImages.filter((_, i) => i !== index));
   };
 
   const handleAiGenerate = async () => {
@@ -128,7 +141,7 @@ export default function ProductForm({ initialData, mode }: Props) {
         tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
         specifications: specsObj,
         currency: 'RON' as const,
-        images: initialData?.images ?? [form.mainImage],
+        images: galleryImages.length > 0 ? galleryImages : [form.mainImage],
       };
 
       if (mode === 'create') {
@@ -208,6 +221,43 @@ export default function ProductForm({ initialData, mode }: Props) {
               <div>
                 <label className={labelClass}>Descriere Vizibilă (SEO - Pagina Produs)</label>
                 <Textarea value={form.detailedDescription} onChange={e => set('detailedDescription', e.target.value)} className="min-h-[250px] rounded-2xl bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm" placeholder="Această descriere va apărea proeminent pe pagina produsului..." />
+              </div>
+            </div>
+          </div>
+
+          {/* Media Gallery */}
+          <div className="bg-white rounded-[2.5rem] p-10 shadow-sm space-y-8 border border-neutral-100">
+             <h3 className="font-headline font-extrabold text-xl tracking-tight flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Galerie Media
+            </h3>
+            
+            <div className="space-y-6">
+              <div>
+                <label className={labelClass}>Imagine Principală (URL)</label>
+                <Input value={form.mainImage} onChange={e => set('mainImage', e.target.value)} className={inputClass} placeholder="https://..." />
+              </div>
+
+              <div className="pt-4 border-t border-neutral-50">
+                <label className={labelClass}>Adaugă în Galerie (URL)</label>
+                <div className="flex gap-4">
+                  <Input value={newImageUrl} onChange={e => setNewImageUrl(e.target.value)} className={inputClass} placeholder="https://..." />
+                  <Button type="button" onClick={addImageToGallery} className="bg-neutral-900 text-white rounded-xl h-12 px-6"><Plus size={18} /></Button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+                {galleryImages.map((url, i) => (
+                  <div key={i} className="relative aspect-square rounded-xl overflow-hidden bg-neutral-100 group">
+                    <Image src={url} alt={`Gallery ${i}`} fill className="object-cover" />
+                    <button 
+                      type="button" 
+                      onClick={() => removeImageFromGallery(i)}
+                      className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
