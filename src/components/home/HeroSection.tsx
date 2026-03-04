@@ -14,7 +14,7 @@ export function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image 
-          src={bgImage?.imageUrl || "https://picsum.photos/seed/tractorfield1/1920/1080"} 
+          src={bgImage?.imageUrl || "https://picsum.photos/seed/tractor_field_99/1920/1080"} 
           alt="Tractor in Field" 
           fill 
           className="object-cover"
