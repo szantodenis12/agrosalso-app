@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import { Facebook, Instagram, Youtube, Phone, Mail, MapPin } from 'lucide-react';
 
@@ -15,7 +14,7 @@ export function Footer() {
               <span className="font-headline font-extrabold text-xl tracking-tighter">AGROSALSO</span>
             </Link>
             <p className="text-neutral-500 mb-8 leading-relaxed max-w-xs font-body">
-              Expertiză în utilaje agricole din 2005. Oferim soluții complete pentru fermierii români.
+              Expertiză în utilaje agricole din 2012. Oferim soluții complete pentru fermierii români.
             </p>
             <div className="flex gap-4">
               <Link href="#" className="w-10 h-10 border border-white/10 flex items-center justify-center hover:bg-yellow-400 hover:text-neutral-900 transition-all">
@@ -55,7 +54,7 @@ export function Footer() {
             <ul className="flex flex-col gap-6">
               <li className="flex gap-4">
                 <MapPin className="text-yellow-400 shrink-0" size={20} />
-                <span className="text-neutral-500">Strada Principală nr. 42, <br /> Brăila, România</span>
+                <span className="text-neutral-500">Mădăras, Bihor, România</span>
               </li>
               <li className="flex gap-4">
                 <Phone className="text-yellow-400 shrink-0" size={20} />

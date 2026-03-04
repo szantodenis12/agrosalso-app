@@ -77,7 +77,7 @@ export function ContactSection() {
             { icon: <Mail size={20} className="text-accent-lime" />, title: "Email", value: "office@agrosalso.ro" },
             { icon: <Phone size={20} className="text-accent-lime" />, title: "Telefon", value: "+40 751 234 567" },
             { icon: <Clock size={20} className="text-accent-lime" />, title: "Program", value: "Luni-Vineri: 08:00 - 17:00" },
-            { icon: <MapPin size={20} className="text-accent-lime" />, title: "Sediu", value: "Brăila, România" }
+            { icon: <MapPin size={20} className="text-accent-lime" />, title: "Sediu", value: "Madaras, Bihor" }
           ].map((info, i) => (
             <motion.div
               key={i}
