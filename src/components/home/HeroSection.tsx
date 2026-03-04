@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'react-once'; // Folosim Framer Motion standard
-import { motion as framerMotion, AnimatePresence as FramerAnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 
@@ -40,22 +39,25 @@ export function HeroSection() {
 
   const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % BACKGROUNDS.length);
-    setProgress(0);
   }, []);
 
   useEffect(() => {
+    setProgress(0);
+    const startTime = Date.now();
+
     const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          nextSlide();
-          return 0;
-        }
-        return prev + (100 / (SLIDE_DURATION / 100));
-      });
-    }, 100);
+      const elapsed = Date.now() - startTime;
+      const newProgress = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
+      setProgress(newProgress);
+
+      if (elapsed >= SLIDE_DURATION) {
+        clearInterval(interval);
+        nextSlide();
+      }
+    }, 50);
 
     return () => clearInterval(interval);
-  }, [nextSlide]);
+  }, [currentIndex, nextSlide]);
 
   const handleThumbnailClick = (index: number) => {
     setCurrentIndex(index);
@@ -66,10 +68,10 @@ export function HeroSection() {
 
   return (
     <section className="relative h-screen min-h-[700px] w-full flex flex-col justify-center px-6 md:px-14 overflow-hidden bg-black">
-      {/* Background Media Layer - ACESTA ESTE SINGURUL CARE SE SCHIMBĂ */}
+      {/* Background Media Layer */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        <FramerAnimatePresence mode="wait">
-          <framerMotion.div
+        <AnimatePresence mode="wait">
+          <motion.div
             key={currentBg.id}
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -97,15 +99,15 @@ export function HeroSection() {
                 className="object-cover"
               />
             )}
-          </framerMotion.div>
-        </FramerAnimatePresence>
+          </motion.div>
+        </AnimatePresence>
         
-        {/* Dark Overlay Gradients pentru contrast */}
+        {/* Dark Overlay Gradients */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 z-10" />
       </div>
 
-      {/* Static Content Layer - RĂMÂNE FIX ÎN PERMANENȚĂ */}
+      {/* Static Content Layer */}
       <div className="relative z-20 max-w-[1440px] mx-auto w-full">
         <div className="max-w-4xl">
           <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8">
@@ -141,7 +143,7 @@ export function HeroSection() {
               className="w-24 md:w-32 h-[2px] bg-white/20 relative rounded-full overflow-hidden cursor-pointer"
               onClick={() => handleThumbnailClick(index)}
             >
-              <framerMotion.div 
+              <motion.div 
                 className="absolute top-0 left-0 h-full bg-accent-lime rounded-full"
                 initial={{ width: "0%" }}
                 animate={{ 
@@ -153,7 +155,7 @@ export function HeroSection() {
           ))}
         </div>
 
-        {/* Thumbnails Carousel - Sincronizat cu BACKGROUNDS */}
+        {/* Thumbnails Carousel */}
         <div className="hidden lg:flex gap-4">
           {BACKGROUNDS.map((item, index) => (
             <div 
