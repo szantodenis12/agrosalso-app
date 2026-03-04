@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFirestore, useStorage } from '@/firebase';
 import { addProduct, updateProduct } from '@/lib/firestore/products';
@@ -42,14 +42,16 @@ export default function ProductForm({ initialData, mode }: Props) {
   const [uploadingMain, setUploadingMain] = useState(false);
   const [uploadingGallery, setUploadingGallery] = useState(false);
 
+  // Folosim o stare unificată pentru imagini pentru a asigura re-randarea corectă
+  const [galleryImages, setGalleryImages] = useState<string[]>(initialData?.images ?? []);
+  const [mainImage, setMainImage] = useState<string>(initialData?.mainImage ?? '');
+
   const [specs, setSpecs] = useState<{ key: string; value: string }[]>(
     initialData?.specifications
       ? Object.entries(initialData.specifications).map(([key, value]) => ({ key, value }))
       : [{ key: '', value: '' }]
   );
 
-  const [galleryImages, setGalleryImages] = useState<string[]>(initialData?.images ?? []);
-  
   const [form, setForm] = useState({
     name: initialData?.name ?? '',
     slug: initialData?.slug ?? '',
@@ -71,7 +73,6 @@ export default function ProductForm({ initialData, mode }: Props) {
     tags: initialData?.tags?.join(', ') ?? '',
     metaTitle: initialData?.metaTitle ?? '',
     metaDescription: initialData?.metaDescription ?? '',
-    mainImage: initialData?.mainImage ?? 'https://picsum.photos/seed/machine/800/600',
   });
 
   const set = (field: string, value: any) => setForm(prev => ({ ...prev, [field]: value }));
@@ -80,15 +81,23 @@ export default function ProductForm({ initialData, mode }: Props) {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (!storage) {
+      toast({ variant: "destructive", title: "Eroare Storage", description: "Serviciul de stocare nu este disponibil." });
+      return;
+    }
+
     setUploadingMain(true);
     try {
       const url = await uploadImage(storage, file);
-      set('mainImage', url);
+      setMainImage(url);
       toast({ title: "Imagine încărcată", description: "Poza principală a fost salvată." });
-    } catch (error) {
-      toast({ variant: "destructive", title: "Eroare upload", description: "Nu s-a putut încărca imaginea." });
+    } catch (error: any) {
+      console.error("Main image upload error:", error);
+      toast({ variant: "destructive", title: "Eroare upload", description: error.message || "Nu s-a putut încărca imaginea." });
     } finally {
       setUploadingMain(false);
+      // Reset input value to allow selecting same file again
+      if (mainImageInputRef.current) mainImageInputRef.current.value = '';
     }
   };
 
@@ -96,16 +105,24 @@ export default function ProductForm({ initialData, mode }: Props) {
     const files = Array.from(e.target.files ?? []);
     if (files.length === 0) return;
 
+    if (!storage) {
+      toast({ variant: "destructive", title: "Eroare Storage", description: "Serviciul de stocare nu este disponibil." });
+      return;
+    }
+
     setUploadingGallery(true);
     try {
       const uploadPromises = files.map(file => uploadImage(storage, file));
       const urls = await Promise.all(uploadPromises);
       setGalleryImages(prev => [...prev, ...urls]);
       toast({ title: "Galerie actualizată", description: `Au fost încărcate ${urls.length} imagini.` });
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Gallery upload error:", error);
       toast({ variant: "destructive", title: "Eroare upload", description: "Unele imagini nu s-au putut încărca." });
     } finally {
       setUploadingGallery(false);
+      // Reset input value
+      if (galleryInputRef.current) galleryInputRef.current.value = '';
     }
   };
 
@@ -162,6 +179,11 @@ export default function ProductForm({ initialData, mode }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!mainImage && mode === 'create') {
+      toast({ variant: "destructive", title: "Lipsă imagine", description: "Vă rugăm încărcați o imagine principală." });
+      return;
+    }
+
     setSaving(true);
     try {
       const specsObj: Record<string, string> = {};
@@ -169,6 +191,7 @@ export default function ProductForm({ initialData, mode }: Props) {
 
       const data = {
         ...form,
+        mainImage,
         brandSlug: generateSlug(form.brand),
         price: parseFloat(form.price) || 0,
         stockQuantity: parseInt(form.stockQuantity) || 0,
@@ -176,7 +199,7 @@ export default function ProductForm({ initialData, mode }: Props) {
         tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
         specifications: specsObj,
         currency: 'RON' as const,
-        images: galleryImages.length > 0 ? galleryImages : [form.mainImage],
+        images: galleryImages.length > 0 ? galleryImages : [mainImage],
       };
 
       if (mode === 'create') {
@@ -187,7 +210,8 @@ export default function ProductForm({ initialData, mode }: Props) {
 
       toast({ title: "Succes!", description: "Produsul a fost salvat." });
       router.push('/admin/produse');
-    } catch (err) {
+    } catch (err: any) {
+      console.error("Submit error:", err);
       toast({ variant: "destructive", title: "Eroare", description: "Nu s-a putut salva produsul." });
     } finally {
       setSaving(false);
@@ -287,16 +311,21 @@ export default function ProductForm({ initialData, mode }: Props) {
                   </Button>
                   <p className="text-[10px] text-neutral-400 text-center uppercase tracking-tight">Format acceptat: JPG, PNG, WEBP</p>
                 </div>
-                {form.mainImage && (
+                {mainImage ? (
                   <div className="relative aspect-video rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-100">
-                    <Image src={form.mainImage} alt="Main Preview" fill className="object-cover" />
+                    <Image src={mainImage} alt="Main Preview" fill className="object-cover" />
+                  </div>
+                ) : (
+                  <div className="aspect-video rounded-2xl bg-neutral-50 border border-dashed border-neutral-200 flex flex-col items-center justify-center text-neutral-300">
+                    <ImageIcon size={32} strokeWidth={1} />
+                    <span className="text-[10px] font-bold mt-2">NICIO IMAGINE</span>
                   </div>
                 )}
               </div>
 
               <div className="pt-8 border-t border-neutral-50">
                 <div className="flex justify-between items-center mb-6">
-                  <label className={labelClass}>Galerie Foto</label>
+                  <label className={labelClass}>Galerie Foto ({galleryImages.length})</label>
                   <Button 
                     type="button" 
                     size="sm"
