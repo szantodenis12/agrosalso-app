@@ -1,3 +1,16 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-tractor",
+      "description": "Premium industrial tractor",
+      "imageUrl": "https://picsum.photos/seed/ag123/600/450",
+      "imageHint": "agricultural tractor"
+    },
+    {
+      "id": "combine-harvester",
+      "description": "High performance combine harvester",
+      "imageUrl": "https://images.unsplash.com/photo-1635174815469-6efd052297d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjb21iaW5lJTIwaGFydmVzdGVyfGVufDB8fHx8MTc3MjU3MzYzNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "combine harvester"
+    }
+  ]
 }

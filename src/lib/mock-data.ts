@@ -1,0 +1,145 @@
+
+import { Product, Category, Brand } from '@/types';
+
+export const MOCK_CATEGORIES: Category[] = [
+  { id: '1', name: 'Tractoare', slug: 'tractoare', description: 'Tractoare performante', icon: '🚜', image: 'https://picsum.photos/seed/1/400/300', productCount: 45, order: 1, isActive: true },
+  { id: '2', name: 'Combine', slug: 'combine', description: 'Combine de recoltat', icon: '🌾', image: 'https://picsum.photos/seed/2/400/300', productCount: 12, order: 2, isActive: true },
+  { id: '3', name: 'Sisteme Irigații', slug: 'irigatii', description: 'Soluții pentru apă', icon: '💧', image: 'https://picsum.photos/seed/3/400/300', productCount: 8, order: 3, isActive: true },
+  { id: '4', name: 'Semănători', slug: 'semanatori', description: 'Semănat precis', icon: '🌱', image: 'https://picsum.photos/seed/4/400/300', productCount: 15, order: 4, isActive: true },
+  { id: '5', name: 'Pluguri', slug: 'pluguri', description: 'Prelucrarea solului', icon: '⛏️', image: 'https://picsum.photos/seed/5/400/300', productCount: 22, order: 5, isActive: true },
+  { id: '6', name: 'Sprayere', slug: 'sprayere', description: 'Protecția plantelor', icon: '🧪', image: 'https://picsum.photos/seed/6/400/300', productCount: 9, order: 6, isActive: true },
+];
+
+export const MOCK_BRANDS: Brand[] = [
+  { id: 'b1', name: 'John Deere', slug: 'john-deere', logo: '', description: 'Lider mondial în utilaje', isPartner: true, order: 1 },
+  { id: 'b2', name: 'CLAAS', slug: 'claas', logo: '', description: 'Performanță germană', isPartner: true, order: 2 },
+  { id: 'b3', name: 'New Holland', slug: 'new-holland', logo: '', description: 'Inovație în agricultură', isPartner: true, order: 3 },
+  { id: 'b4', name: 'Case IH', slug: 'case-ih', logo: '', description: 'Putere pură', isPartner: true, order: 4 },
+  { id: 'b5', name: 'Fendt', slug: 'fendt', logo: '', description: 'Tehnologie premium', isPartner: true, order: 5 },
+];
+
+export const MOCK_PRODUCTS: Product[] = [
+  {
+    id: 'p1',
+    name: 'John Deere 6R 150',
+    slug: 'john-deere-6r-150',
+    brand: 'John Deere',
+    brandSlug: 'john-deere',
+    category: 'tractoare',
+    description: 'Un tractor versatil și puternic, perfect pentru ferme medii și mari.',
+    shortDescription: 'Tractor John Deere 6R 150 cu transmisie AutoPower și tehnologie de ultimă oră.',
+    price: 145000,
+    priceOnRequest: false,
+    currency: 'RON',
+    images: ['https://picsum.photos/seed/10/800/600', 'https://picsum.photos/seed/11/800/600'],
+    mainImage: 'https://picsum.photos/seed/10/800/600',
+    specifications: {
+      'Putere motor': '150 CP',
+      'Transmisie': 'AutoPower IVT',
+      'Ore funcționare': '1200',
+      'An fabricație': '2022'
+    },
+    inStock: true,
+    stockQuantity: 2,
+    isNew: true,
+    isFeatured: true,
+    isOnSale: false,
+    tags: ['tractor', '6r', 'john deere'],
+    metaTitle: 'John Deere 6R 150 - AgroSalso',
+    metaDescription: 'Cumpără tractorul John Deere 6R 150 de la AgroSalso. Performanță garantată.',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 'p2',
+    name: 'CLAAS Lexion 6600',
+    slug: 'claas-lexion-6600',
+    brand: 'CLAAS',
+    brandSlug: 'claas',
+    category: 'combine',
+    description: 'Combină de recoltat de înaltă performanță pentru cereale.',
+    shortDescription: 'CLAAS Lexion 6600 cu sistem APS Synflow Walker și heder de 7.7m.',
+    price: 320000,
+    priceOnRequest: true,
+    currency: 'RON',
+    images: ['https://picsum.photos/seed/20/800/600'],
+    mainImage: 'https://picsum.photos/seed/20/800/600',
+    specifications: {
+      'Putere motor': '408 CP',
+      'Sistem batere': 'Synflow Walker',
+      'Buncăr cereale': '11000 L',
+      'Lățime heder': '7.7 m'
+    },
+    inStock: false,
+    stockQuantity: 0,
+    isNew: false,
+    isFeatured: true,
+    isOnSale: true,
+    salePercent: 10,
+    tags: ['combina', 'recoltat', 'claas'],
+    metaTitle: 'CLAAS Lexion 6600 - AgroSalso',
+    metaDescription: 'Combină CLAAS Lexion 6600 disponibilă la cerere. Vezi detalii.',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 'p3',
+    name: 'Maschio Gaspardo Presto 400',
+    slug: 'maschio-gaspardo-presto-400',
+    brand: 'Maschio Gaspardo',
+    brandSlug: 'maschio-gaspardo',
+    category: 'pluguri',
+    description: 'Grapă cu discuri compactă pentru prelucrarea solului în condiții dificile.',
+    shortDescription: 'Grapă cu discuri Maschio Gaspardo Presto 400, lățime 4m.',
+    price: 45000,
+    priceOnRequest: false,
+    currency: 'RON',
+    images: ['https://picsum.photos/seed/30/800/600'],
+    mainImage: 'https://picsum.photos/seed/30/800/600',
+    specifications: {
+      'Lățime lucru': '4 m',
+      'Număr discuri': '32',
+      'Putere necesară': '140-180 CP'
+    },
+    inStock: true,
+    stockQuantity: 5,
+    isNew: false,
+    isFeatured: true,
+    isOnSale: false,
+    tags: ['grapa', 'discuri', 'maschio'],
+    metaTitle: 'Maschio Gaspardo Presto 400 - AgroSalso',
+    metaDescription: 'Grapă cu discuri Maschio Gaspardo la preț competitiv.',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 'p4',
+    name: 'Pivot Valley 8000',
+    slug: 'pivot-valley-8000',
+    brand: 'Valley',
+    brandSlug: 'valley',
+    category: 'irigatii',
+    description: 'Sistem central de irigații de înaltă eficiență.',
+    shortDescription: 'Sistem de irigații tip pivot Valley seria 8000 pentru suprafețe mari.',
+    price: 0,
+    priceOnRequest: true,
+    currency: 'RON',
+    images: ['https://picsum.photos/seed/40/800/600'],
+    mainImage: 'https://picsum.photos/seed/40/800/600',
+    specifications: {
+      'Tip sistem': 'Pivot Central',
+      'Material': 'Oțel galvanizat',
+      'Control': 'Digital Pro2'
+    },
+    inStock: true,
+    stockQuantity: 1,
+    isNew: true,
+    isFeatured: true,
+    isOnSale: false,
+    tags: ['irigatii', 'pivot', 'valley'],
+    metaTitle: 'Sisteme Irigații Valley - AgroSalso',
+    metaDescription: 'Soluții profesionale de irigații pentru fermieri.',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+];
