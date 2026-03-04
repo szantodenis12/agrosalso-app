@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -88,7 +87,7 @@ export default function CatalogPage() {
             <div className="flex-1">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 pb-8 border-b border-neutral-200/50">
                 <h1 className="font-headline font-extrabold text-4xl md:text-5xl text-neutral-900 tracking-tighter uppercase leading-none">
-                  Catalog <br className="md:hidden" /> <span className="text-neutral-300">Echipamente</span>
+                  Catalog <br className="md:hidden" /> <span className="text-accent-lime">Echipamente</span>
                 </h1>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center border border-neutral-100 bg-white rounded-xl p-1 shadow-sm overflow-hidden">
@@ -113,7 +112,7 @@ export default function CatalogPage() {
 
               <div className={cn(
                 "grid gap-10",
-                viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
+                viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-2" : "grid-cols-1"
               )}>
                 {MOCK_PRODUCTS.map((product, idx) => (
                   <motion.div 
@@ -162,7 +161,7 @@ export default function CatalogPage() {
                             </span>
                          </div>
                          <Link href={`/produse/${product.slug}`} className="shrink-0">
-                            <Button className="bg-neutral-900 hover:bg-black text-white rounded-full h-12 pl-5 pr-1.5 flex items-center gap-3 transition-all group/btn shadow-xl shadow-black/5">
+                            <Button className="bg-neutral-900 hover:bg-black text-white rounded-full h-12 pl-6 pr-1.5 flex items-center gap-8 transition-all group/btn shadow-xl shadow-black/5">
                               <span className="text-[9px] font-extrabold uppercase tracking-widest">VEZI DETALII</span>
                               <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center transition-transform group-hover/btn:rotate-45">
                                 <ArrowUpRight size={16} className="text-black" strokeWidth={3} />
