@@ -42,10 +42,10 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-16">
-            <Button className="bg-green-800 hover:bg-green-700 text-white font-bold h-14 px-8 text-lg rounded-none group">
+            <Button className="bg-green-800 hover:bg-green-700 text-white font-bold h-14 px-8 text-lg group">
               EXPLOREAZĂ CATALOGUL <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <Button variant="outline" className="border-green-800 text-green-800 font-bold h-14 px-8 text-lg rounded-none">
+            <Button variant="outline" className="border-green-800 text-green-800 font-bold h-14 px-8 text-lg">
               SOLICITĂ OFERTĂ
             </Button>
           </div>
@@ -79,9 +79,9 @@ export function HeroSection() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.2 }}
-          className="relative z-10 w-[420px] bg-white p-6 shadow-2xl rounded-sm animate-card-float"
+          className="relative z-10 w-[420px] bg-white p-6 shadow-2xl rounded-xl animate-card-float overflow-hidden"
         >
-          <div className="relative aspect-[4/3] bg-neutral-100 mb-6 overflow-hidden">
+          <div className="relative aspect-[4/3] bg-neutral-100 mb-6 overflow-hidden rounded-lg">
              <Image 
                src="https://picsum.photos/seed/ag123/600/450" 
                alt="Featured Machine" 
@@ -89,7 +89,7 @@ export function HeroSection() {
                className="object-cover"
                data-ai-hint="tractor agricultural"
              />
-             <div className="absolute top-4 left-4 bg-yellow-400 text-neutral-900 px-3 py-1 text-xs font-bold uppercase">
+             <div className="absolute top-4 left-4 bg-yellow-400 text-neutral-900 px-3 py-1 text-xs font-bold uppercase rounded-sm">
                RECOMANDAT
              </div>
           </div>
@@ -98,7 +98,7 @@ export function HeroSection() {
             <h3 className="font-headline font-bold text-2xl text-neutral-900 mb-2">Seria 6R - Putere pură</h3>
             <div className="flex items-center justify-between mt-4">
               <span className="text-neutral-900 font-extrabold text-2xl">De la 125.000 €</span>
-              <Button size="sm" className="bg-green-800 rounded-none">VEZI DETALII</Button>
+              <Button size="sm" className="bg-green-800">VEZI DETALII</Button>
             </div>
           </div>
         </motion.div>

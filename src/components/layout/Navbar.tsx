@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Menu, X, Phone, ShoppingCart, User } from 'lucide-react';
+import { Menu, X, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -37,7 +37,7 @@ export function Navbar() {
     >
       <div className="max-w-[1440px] mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 bg-green-800 flex items-center justify-center rounded-sm group-hover:bg-green-700 transition-colors">
+          <div className="w-10 h-10 bg-green-800 flex items-center justify-center rounded-lg group-hover:bg-green-700 transition-colors">
             <span className="font-headline font-extrabold text-white text-xl">A</span>
           </div>
           <span className="font-headline font-extrabold text-2xl tracking-tighter text-neutral-900">
@@ -66,7 +66,7 @@ export function Navbar() {
             <Phone size={16} />
             <span>0751 234 567</span>
           </a>
-          <Button className="bg-green-800 hover:bg-green-700 text-white font-bold rounded-none px-6">
+          <Button className="bg-green-800 hover:bg-green-700 text-white font-bold px-6">
             SOLICITĂ OFERTĂ
           </Button>
         </div>
