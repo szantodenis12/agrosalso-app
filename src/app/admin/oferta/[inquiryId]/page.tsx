@@ -11,8 +11,12 @@ import { Printer, Send, ChevronLeft, AlertTriangle, Loader2, CheckCircle2 } from
 import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
 type OfferType = 'standard' | 'afir' | 'urgent';
+
+const PLACEHOLDER_CUI = "CUI / CNP beneficiar...";
+const PLACEHOLDER_ADDRESS = "Adresă completă beneficiar...";
 
 export default function GenerateOfferPage({ params }: { params: Promise<{ inquiryId: string }> }) {
   const { inquiryId } = use(params);
@@ -34,8 +38,8 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const [paymentTerms, setPaymentTerms] = useState("Transfer Bancar / Ordin de plată la livrare");
 
   // Date editabile Beneficiar
-  const [beneficiaryCui, setBeneficiaryCui] = useState("CUI / CNP beneficiar...");
-  const [beneficiaryAddress, setBeneficiaryAddress] = useState("Adresă completă beneficiar...");
+  const [beneficiaryCui, setBeneficiaryCui] = useState(PLACEHOLDER_CUI);
+  const [beneficiaryAddress, setBeneficiaryAddress] = useState(PLACEHOLDER_ADDRESS);
 
   const today = useMemo(() => new Date(), []);
   const validityDate = useMemo(() => addDays(today, 15), [today]);
@@ -102,6 +106,10 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const tva = editPrice * 0.19;
   const total = editPrice + tva;
 
+  // Helpers pentru verificarea prezenței datelor la print
+  const showCuiOnPrint = beneficiaryCui && beneficiaryCui !== PLACEHOLDER_CUI && beneficiaryCui.trim() !== "";
+  const showAddressOnPrint = beneficiaryAddress && beneficiaryAddress !== PLACEHOLDER_ADDRESS && beneficiaryAddress.trim() !== "";
+
   return (
     <div className="min-h-screen bg-neutral-100 pb-20 print:bg-white print:pb-0 print:min-h-0">
       {/* Toolbar - Ascuns la Print */}
@@ -135,7 +143,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
       <div className="max-w-[210mm] mx-auto my-10 bg-white shadow-2xl min-h-[297mm] p-[15mm] print:m-0 print:shadow-none print:p-[10mm] relative border border-neutral-200 print:border-none flex flex-col justify-between overflow-hidden">
         
         <div>
-          {/* Header Layout nou bazat pe imagine */}
+          {/* Header Layout */}
           <div className="flex justify-between items-start mb-6">
             <div className="space-y-1">
                <div className="flex items-center gap-2">
@@ -182,16 +190,26 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                   <p 
                     contentEditable 
                     suppressContentEditableWarning={true}
-                    className="focus:outline-accent-lime inline-block min-w-[100px]"
+                    className={cn(
+                      "focus:outline-accent-lime inline-block min-w-[100px]",
+                      !showCuiOnPrint && "print:hidden",
+                      beneficiaryCui === PLACEHOLDER_CUI && "text-neutral-300 font-normal italic"
+                    )}
                     onBlur={e => setBeneficiaryCui(e.currentTarget.innerText)}
+                    onFocus={e => { if(beneficiaryCui === PLACEHOLDER_CUI) e.currentTarget.innerText = ""; }}
                   >
                     {beneficiaryCui}
                   </p>
                   <p 
                     contentEditable 
                     suppressContentEditableWarning={true}
-                    className="focus:outline-accent-lime block"
+                    className={cn(
+                      "focus:outline-accent-lime block",
+                      !showAddressOnPrint && "print:hidden",
+                      beneficiaryAddress === PLACEHOLDER_ADDRESS && "text-neutral-300 font-normal italic"
+                    )}
                     onBlur={e => setBeneficiaryAddress(e.currentTarget.innerText)}
+                    onFocus={e => { if(beneficiaryAddress === PLACEHOLDER_ADDRESS) e.currentTarget.innerText = ""; }}
                   >
                     {beneficiaryAddress}
                   </p>
@@ -252,7 +270,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                    <span 
                      contentEditable 
                      suppressContentEditableWarning={true}
-                     onBlur={(e) => setEditPrice(parseFloat(e.currentTarget.innerText.replace(/[^0-9]/g, '')) || 0)}
+                     onBlur={(e) => setEditPrice(parseFloat(e.target.innerText.replace(/[^0-9]/g, '')) || 0)}
                      className="font-headline font-extrabold text-xl text-neutral-900 focus:outline-accent-lime px-1 min-w-[50px] inline-block"
                    >
                      {editPrice.toLocaleString()}
