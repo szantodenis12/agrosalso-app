@@ -1,35 +1,37 @@
-
 'use client';
-import { useEffect, useState } from 'react';
-import { useFirestore } from '@/firebase';
-import { getProducts, deleteProduct } from '@/lib/firestore/products';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { deleteProduct } from '@/lib/firestore/products';
 import { Product } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Edit, Trash2, ExternalLink, Plus } from 'lucide-react';
+import { Edit, Trash2, ExternalLink, Plus, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from '@/hooks/use-toast';
+import { collection, query, orderBy } from 'firebase/firestore';
 
 export default function AdminProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
   const db = useFirestore();
 
-  async function load() {
-    setLoading(true);
-    const data = await getProducts(db);
-    setProducts(data);
-    setLoading(false);
-  }
+  // Folosim useCollection pentru a avea o lista reactiva. 
+  // Orice modificare in baza de date (sau cache local) se va reflecta imediat aici.
+  const productsQuery = useMemoFirebase(() => {
+    return query(collection(db, 'products'), orderBy('createdAt', 'desc'));
+  }, [db]);
 
-  useEffect(() => { load(); }, [db]);
+  const { data: products, isLoading } = useCollection<Product>(productsQuery);
 
-  const handleDelete = async (id: string, name: string) => {
+  const handleDelete = (id: string, name: string) => {
     if (!confirm(`Ștergi produsul "${name}"?`)) return;
-    await deleteProduct(db, id);
-    toast({ title: "Produs șters", description: `${name} a fost eliminat.` });
-    load();
+    
+    // Apelam functia de stergere. 
+    // Fiind non-blocking, UI-ul va reactiona imediat daca stergerea este pornita.
+    deleteProduct(db, id);
+    
+    toast({ 
+      title: "Acțiune inițiată", 
+      description: `Cererea de ștergere pentru ${name} a fost trimisă.` 
+    });
   };
 
   return (
@@ -52,7 +54,7 @@ export default function AdminProductsPage() {
       <div className="bg-white rounded-[2.5rem] shadow-sm overflow-hidden border border-neutral-100">
         <Table>
           <TableHeader className="bg-neutral-50">
-            <TableRow className="border-b border-neutral-100 h-16">
+            <TableRow className="border-b border-neutral-100 h-16 hover:bg-transparent">
               <TableHead className="pl-8 text-[10px] font-extrabold uppercase tracking-widest text-neutral-400">Imagine</TableHead>
               <TableHead className="text-[10px] font-extrabold uppercase tracking-widest text-neutral-400">Produs</TableHead>
               <TableHead className="text-[10px] font-extrabold uppercase tracking-widest text-neutral-400">Categorie</TableHead>
@@ -62,19 +64,30 @@ export default function AdminProductsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {loading ? (
+            {isLoading ? (
               <TableRow>
-                <TableCell colSpan={6} className="h-40 text-center text-neutral-300 font-bold uppercase tracking-widest text-xs">Se încarcă catalogul...</TableCell>
+                <TableCell colSpan={6} className="h-40 text-center">
+                  <div className="flex flex-col items-center gap-3">
+                    <Loader2 className="animate-spin text-accent-lime" size={32} />
+                    <span className="text-neutral-300 font-bold uppercase tracking-widest text-xs">Se încarcă catalogul...</span>
+                  </div>
+                </TableCell>
               </TableRow>
-            ) : products.length === 0 ? (
+            ) : !products || products.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="h-40 text-center text-neutral-300 font-bold uppercase tracking-widest text-xs">Niciun produs găsit.</TableCell>
               </TableRow>
             ) : products.map((product) => (
               <TableRow key={product.id} className="hover:bg-neutral-50/50 transition-colors border-b border-neutral-50">
                 <TableCell className="pl-8 py-4">
-                  <div className="relative w-16 h-12 rounded-lg overflow-hidden bg-neutral-100">
-                    {product.mainImage && <Image src={product.mainImage} alt={product.name} fill className="object-cover" />}
+                  <div className="relative w-16 h-12 rounded-lg overflow-hidden bg-neutral-100 border border-neutral-100">
+                    {product.mainImage ? (
+                      <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-neutral-300">
+                        <Plus size={16} />
+                      </div>
+                    )}
                   </div>
                 </TableCell>
                 <TableCell>
@@ -101,14 +114,15 @@ export default function AdminProductsPage() {
                 <TableCell className="pr-8 text-right">
                   <div className="flex justify-end gap-2">
                     <Link href={`/produse/${product.slug}`} target="_blank">
-                      <Button size="icon" variant="ghost" className="rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all"><ExternalLink size={18} /></Button>
+                      <Button size="icon" variant="ghost" title="Vezi pe site" className="rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all"><ExternalLink size={18} /></Button>
                     </Link>
                     <Link href={`/admin/produse/${product.id}`}>
-                      <Button size="icon" variant="ghost" className="rounded-xl hover:bg-accent-lime hover:text-black transition-all"><Edit size={18} /></Button>
+                      <Button size="icon" variant="ghost" title="Editează" className="rounded-xl hover:bg-accent-lime hover:text-black transition-all"><Edit size={18} /></Button>
                     </Link>
                     <Button 
                       size="icon" 
                       variant="ghost" 
+                      title="Șterge"
                       className="rounded-xl hover:bg-red-50 hover:text-red-600 transition-all"
                       onClick={() => handleDelete(product.id, product.name)}
                     >

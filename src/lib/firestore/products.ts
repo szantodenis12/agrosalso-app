@@ -1,20 +1,17 @@
-
 'use client';
 import { 
   collection, 
   doc, 
   getDocs, 
-  getDoc, 
   addDoc, 
   updateDoc, 
   deleteDoc,
   query, 
-  where, 
   orderBy, 
-  limit, 
   serverTimestamp,
   type Firestore,
-  type QueryConstraint
+  type QueryConstraint,
+  where
 } from 'firebase/firestore';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -93,10 +90,14 @@ export async function updateProduct(db: Firestore, id: string, data: any) {
 
 /**
  * Deletes a product.
+ * Uses a non-blocking pattern internally to ensure UI responsiveness.
  */
-export async function deleteProduct(db: Firestore, id: string) {
+export function deleteProduct(db: Firestore, id: string) {
   const docRef = doc(db, 'products', id);
-  return deleteDoc(docRef).catch(async (err) => {
+  
+  // Initiem stergerea fara await pentru a permite cache-ului local sa updateze UI-ul instant
+  deleteDoc(docRef).catch(async (err) => {
+    // Daca esueaza (ex: permisiuni), emitem eroarea pentru a fi captata de listener-ul global
     errorEmitter.emit('permission-error', new FirestorePermissionError({
       path: docRef.path,
       operation: 'delete'
