@@ -280,41 +280,41 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             </div>
           </div>
 
-          {/* Calcul Preț - Redesigned for symmetry and premium feel */}
+          {/* Calcul Preț - Clean layout with delimiters */}
           <div className="flex justify-end mb-12">
-            <div className="w-[340px] border border-neutral-100 rounded-[2.5rem] overflow-hidden shadow-sm">
-               <div className="p-8 space-y-4">
-                 <div className="flex justify-between items-center">
-                   <span className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-[0.2em]">Preț Unitar (Net)</span>
-                   <div className="flex items-center gap-1.5">
-                     <span 
-                       contentEditable 
-                       suppressContentEditableWarning={true}
-                       onBlur={(e) => setEditPrice(parseFloat(e.currentTarget.innerText.replace(/[^0-9]/g, '')) || 0)}
-                       className="font-headline font-extrabold text-xl text-neutral-900 focus:bg-neutral-50 focus:outline-accent-lime px-2 rounded-lg transition-colors cursor-pointer"
-                     >
-                       {editPrice.toLocaleString()}
-                     </span>
-                     <span className="font-bold text-[10px] text-neutral-400">RON</span>
-                   </div>
-                 </div>
-                 
-                 <div className="flex justify-between items-center">
-                   <span className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-[0.2em]">TVA (19%)</span>
-                   <div className="flex items-center gap-1.5">
-                     <span className="font-bold text-sm text-neutral-600">{tva.toLocaleString()}</span>
-                     <span className="font-bold text-[10px] text-neutral-400">RON</span>
-                   </div>
-                 </div>
-               </div>
+            <div className="w-[320px] space-y-4">
+              <div className="flex justify-between items-end pb-2 border-b border-neutral-100">
+                <span className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț Unitar (Net)</span>
+                <div className="text-right">
+                  <span 
+                    contentEditable 
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => setEditPrice(parseFloat(e.currentTarget.innerText.replace(/[^0-9]/g, '')) || 0)}
+                    className="font-headline font-extrabold text-xl text-neutral-900 focus:outline-accent-lime"
+                  >
+                    {editPrice.toLocaleString()}
+                  </span>
+                  <span className="ml-1.5 font-bold text-[10px] text-neutral-400">RON</span>
+                </div>
+              </div>
 
-               <div className="bg-neutral-900 p-8 flex justify-between items-center">
-                 <span className="text-[10px] font-extrabold text-accent-lime uppercase tracking-[0.3em]">Total de plată</span>
-                 <div className="flex items-center gap-2 text-white">
-                   <span className="font-headline font-extrabold text-2xl tracking-tighter">{total.toLocaleString()}</span>
-                   <span className="font-bold text-xs opacity-40">RON</span>
-                 </div>
-               </div>
+              <div className="flex justify-between items-end pb-2 border-b border-neutral-100">
+                <span className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest">TVA (19%)</span>
+                <div className="text-right">
+                  <span className="font-bold text-sm text-neutral-600">{tva.toLocaleString()}</span>
+                  <span className="ml-1.5 font-bold text-[10px] text-neutral-400">RON</span>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-end pt-2">
+                <span className="text-[10px] font-extrabold text-neutral-900 uppercase tracking-[0.2em]">Total de plată</span>
+                <div className="text-right">
+                  <span className="font-headline font-extrabold text-2xl text-accent-lime tracking-tight">
+                    {total.toLocaleString()}
+                  </span>
+                  <span className="ml-2 font-bold text-xs text-neutral-400">RON</span>
+                </div>
+              </div>
             </div>
           </div>
 
