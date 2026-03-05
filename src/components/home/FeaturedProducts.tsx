@@ -4,26 +4,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, Loader2 } from 'lucide-react';
-import { useState, useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { useMemo } from 'react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, where, limit } from 'firebase/firestore';
 import { Product } from '@/types';
 
-// Tab-urile de pe Home mapate pe slug-urile reale din PRODUCT_CATEGORIES
-const CATEGORIES = ['Toate', 'Terradisc', 'Plug', 'Semănătoare', 'Echipamente'];
-
 export function FeaturedProducts() {
-  const [activeCategory, setActiveCategory] = useState('Toate');
   const db = useFirestore();
 
-  // Interogăm produsele recomandate. Am scos orderBy pentru a evita eroarea de index lipsă.
-  // Sortarea o facem local pe client pentru a fi siguri că datele apar imediat.
+  // Interogăm produsele recomandate.
+  // Luăm 10 pentru a asigura o sortare locală corectă a celor mai recente 3.
   const featuredQuery = useMemoFirebase(() => {
     return query(
       collection(db, 'products'),
       where('isFeatured', '==', true),
-      limit(12) // Luăm mai multe pentru a putea filtra local dacă e cazul
+      limit(10)
     );
   }, [db]);
 
@@ -49,30 +44,18 @@ export function FeaturedProducts() {
     }
   };
 
-  // Filtrare și sortare locală
+  // Sortare locală și limitare la 3 produse
   const filteredProducts = useMemo(() => {
     if (!products) return [];
     
-    // Sortăm manual după data creării (cele mai noi primele)
-    let result = [...products].sort((a, b) => {
-      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-      return dateB - dateA;
-    });
-
-    if (activeCategory === 'Toate') return result.slice(0, 3);
-    
-    // Mapare tab-uri -> slug-uri reale
-    const catMap: Record<string, string> = {
-      'Terradisc': 'terradisc',
-      'Plug': 'plug',
-      'Semănătoare': 'semanatoare-paioase',
-      'Echipamente': 'combinator'
-    };
-    
-    const targetSlug = catMap[activeCategory];
-    return result.filter(p => p.category === targetSlug).slice(0, 3);
-  }, [products, activeCategory]);
+    return [...products]
+      .sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+      })
+      .slice(0, 3);
+  }, [products]);
 
   return (
     <section className="py-24 px-6 md:px-14 bg-white overflow-hidden">
@@ -96,32 +79,6 @@ export function FeaturedProducts() {
           >
             Produse Recomandate
           </motion.h2>
-
-          {/* Category Filters */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="flex flex-wrap justify-center gap-2 md:gap-4 bg-neutral-50 p-2 rounded-full w-fit mx-auto border border-neutral-100 mb-16"
-          >
-            {CATEGORIES.map((cat) => (
-              <motion.button
-                key={cat}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setActiveCategory(cat)}
-                className={cn(
-                  "px-6 py-2.5 md:px-8 md:py-3 rounded-full text-xs md:text-sm font-bold transition-all duration-300",
-                  activeCategory === cat 
-                    ? "bg-accent-lime text-black shadow-lg shadow-accent-lime/20" 
-                    : "text-neutral-500 hover:text-neutral-900"
-                )}
-              >
-                {cat}
-              </motion.button>
-            ))}
-          </motion.div>
         </div>
 
         {/* Product Grid */}
@@ -132,7 +89,7 @@ export function FeaturedProducts() {
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-20 bg-neutral-50 rounded-[3rem] border border-dashed border-neutral-200">
-             <p className="text-neutral-400 font-bold uppercase tracking-widest text-sm">Niciun produs recomandat în această secțiune.</p>
+             <p className="text-neutral-400 font-bold uppercase tracking-widest text-sm">Niciun produs recomandat momentan.</p>
           </div>
         ) : (
           <motion.div 
