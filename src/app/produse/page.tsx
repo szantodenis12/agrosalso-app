@@ -19,6 +19,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Cele mai noi' },
@@ -40,6 +46,10 @@ export default function CatalogPage() {
     resetFilters, 
     activeFilterCount 
   } = useProducts();
+
+  const activeCategoryName = filters.category && filters.category !== 'toate' 
+    ? PRODUCT_CATEGORIES.find(c => c.slug === filters.category)?.name 
+    : 'Toate Produsele';
 
   return (
     <>
@@ -110,27 +120,47 @@ export default function CatalogPage() {
                 </div>
               </div>
 
-              {/* Categories Dropdown */}
-              <div className="space-y-4">
-                <h3 className="font-headline font-extrabold text-[12px] uppercase tracking-widest text-neutral-900">Categorie</h3>
-                <Select 
-                  value={filters.category || 'toate'} 
-                  onValueChange={(val) => updateFilter('category', val)}
-                >
-                  <SelectTrigger className="w-full h-14 bg-white border-none rounded-2xl px-6 text-sm font-bold shadow-sm focus:ring-2 focus:ring-accent-lime outline-none">
-                    <SelectValue placeholder="Alege Categoria" />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-2xl border-none shadow-xl max-h-[400px]">
-                    <SelectItem value="toate" className="font-bold text-neutral-900 focus:bg-accent-lime/20">
-                      Toate Produsele
-                    </SelectItem>
-                    {PRODUCT_CATEGORIES.map(cat => (
-                      <SelectItem key={cat.slug} value={cat.slug} className="font-medium focus:bg-accent-lime/10">
-                        {cat.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              {/* Categories Accordion (Inline Dropdown) */}
+              <div className="space-y-4 bg-white p-6 rounded-[2.5rem] shadow-sm border border-neutral-100">
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="categories" className="border-none">
+                    <AccordionTrigger className="hover:no-underline py-0 group">
+                      <div className="flex flex-col items-start text-left">
+                        <h3 className="font-headline font-extrabold text-[12px] uppercase tracking-widest text-neutral-900 mb-1">Categorie</h3>
+                        <p className="text-accent-lime text-[11px] font-bold uppercase">{activeCategoryName}</p>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-6">
+                      <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                        <button
+                          onClick={() => updateFilter('category', 'toate')}
+                          className={cn(
+                            "text-left px-4 py-3 rounded-xl text-xs font-bold transition-all",
+                            (!filters.category || filters.category === 'toate') 
+                              ? "bg-neutral-900 text-white" 
+                              : "text-neutral-500 hover:bg-neutral-50 hover:text-neutral-900"
+                          )}
+                        >
+                          Toate Produsele
+                        </button>
+                        {PRODUCT_CATEGORIES.map((cat) => (
+                          <button
+                            key={cat.slug}
+                            onClick={() => updateFilter('category', cat.slug)}
+                            className={cn(
+                              "text-left px-4 py-3 rounded-xl text-xs font-bold transition-all",
+                              filters.category === cat.slug 
+                                ? "bg-neutral-900 text-white" 
+                                : "text-neutral-500 hover:bg-neutral-50 hover:text-neutral-900"
+                            )}
+                          >
+                            {cat.name}
+                          </button>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </div>
 
               {/* Status Filters */}
