@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -8,7 +9,7 @@ import { Product, ProductCategory, SpecTable, SpecTableRow } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Sparkles, Save, ChevronLeft, Trash2, Plus, Image as ImageIcon, X, Upload, Loader2, Table as TableIcon, Star, Info } from 'lucide-react';
+import { Sparkles, Save, ChevronLeft, Trash2, Plus, Image as ImageIcon, X, Upload, Loader2, Table as TableIcon, Star, Info, ShieldCheck } from 'lucide-react';
 import { adminProductDescriptionGenerator } from '@/ai/flows/admin-product-description-generator';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -56,6 +57,7 @@ export default function ProductForm({ initialData, mode }: Props) {
     shortDescription: initialData?.shortDescription ?? '',
     description: initialData?.description ?? '',
     detailedDescription: initialData?.detailedDescription ?? '',
+    whyBrand: initialData?.whyBrand ?? '',
     price: initialData?.price?.toString() ?? '0',
     priceOnRequest: initialData?.priceOnRequest ?? false,
     inStock: initialData?.inStock ?? true,
@@ -201,10 +203,11 @@ export default function ProductForm({ initialData, mode }: Props) {
 
       set('shortDescription', response.shortDescription);
       set('detailedDescription', response.detailedDescription);
+      set('whyBrand', response.whyBrand);
       set('metaDescription', response.shortDescription);
       set('metaTitle', `${form.name} | AgroSalso România`);
       
-      toast({ title: "Conținut generat!", description: "AI-ul a creat descrierile pentru tine." });
+      toast({ title: "Conținut generat!", description: "AI-ul a creat descrierile și secțiunea de brand." });
     } catch (error) {
       toast({ variant: "destructive", title: "Eroare AI", description: "Nu s-a putut genera conținutul." });
     } finally {
@@ -313,9 +316,24 @@ export default function ProductForm({ initialData, mode }: Props) {
                 <Input value={form.shortDescription} onChange={e => set('shortDescription', e.target.value)} className={inputClass} maxLength={160} />
               </div>
               <div>
-                <label className={labelClass}>Descriere Vizibilă (SEO - Pagina Produs)</label>
+                <label className={labelClass}>Descriere Vizibilă (Pagina Produs)</label>
                 <Textarea value={form.detailedDescription} onChange={e => set('detailedDescription', e.target.value)} className="min-h-[250px] rounded-2xl bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm" placeholder="Această descriere va apărea proeminent pe pagina produsului..." />
               </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-[2.5rem] p-10 shadow-sm space-y-8 border border-neutral-100">
+             <h3 className="font-headline font-extrabold text-xl tracking-tight flex items-center gap-2 text-accent-lime">
+              <ShieldCheck size={22} /> Secțiunea Brand (De ce {form.brand || 'Marca'}?)
+            </h3>
+            <div className="space-y-4">
+               <label className={labelClass}>Argumente Brand & Fiabilitate</label>
+               <Textarea 
+                value={form.whyBrand} 
+                onChange={e => set('whyBrand', e.target.value)} 
+                className="min-h-[200px] rounded-2xl bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm text-sm" 
+                placeholder="Explică de ce acest producător este o alegere sigură pentru fermieri..." 
+               />
             </div>
           </div>
 
@@ -389,7 +407,6 @@ export default function ProductForm({ initialData, mode }: Props) {
             </div>
           </div>
 
-          {/* TABEL TEHNIC (MODELE) */}
           <div className="bg-white rounded-[2.5rem] p-10 shadow-sm space-y-8 border border-neutral-100 overflow-hidden">
             <div className="flex justify-between items-center">
               <h3 className="font-headline font-extrabold text-xl tracking-tight flex items-center gap-2">

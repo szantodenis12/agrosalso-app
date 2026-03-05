@@ -1,3 +1,4 @@
+
 'use client';
 import { use, useEffect, useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -7,7 +8,7 @@ import { collection, query, where, getDocs, limit, addDoc, serverTimestamp } fro
 import { Product } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, Send, ShieldCheck, Truck, Cog, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { ChevronLeft, Send, ShieldCheck, Truck, Cog, Sparkles, Image as ImageIcon, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -96,7 +97,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
   }
 
   // Identificăm imaginile suplimentare specifice acestui produs pentru galeria de jos
-  // Folosim un Set pentru a evita duplicatele și filtrăm imaginea principală
   const extraImages = Array.from(new Set(product.images || []))
     .filter(img => img !== product.mainImage);
 
@@ -148,7 +148,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
             <div className="lg:col-span-12 space-y-12">
               
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                <div className="lg:col-span-7 space-y-10">
+                <div className="lg:col-span-7 space-y-12">
                   {/* Detailed Content */}
                   <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-neutral-100 shadow-sm space-y-8">
                     <div className="flex items-center gap-3">
@@ -162,6 +162,21 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                       className="prose prose-neutral max-w-none text-neutral-600 font-body leading-relaxed text-base md:text-lg"
                       dangerouslySetInnerHTML={{ __html: product.detailedDescription || product.description }}
                     />
+
+                    {/* WHY BRAND SECTION */}
+                    {product.whyBrand && (
+                      <div className="pt-10 border-t border-neutral-50">
+                         <div className="flex items-center gap-3 mb-6">
+                            <div className="w-10 h-10 bg-neutral-900 rounded-xl flex items-center justify-center">
+                              <CheckCircle2 className="text-accent-lime w-5 h-5" />
+                            </div>
+                            <h3 className="font-headline font-extrabold text-xl text-neutral-900 tracking-tight">De ce {product.brand}?</h3>
+                         </div>
+                         <div className="bg-neutral-50 p-8 rounded-[2rem] border border-neutral-100 italic text-neutral-600 leading-relaxed font-medium">
+                            {product.whyBrand}
+                         </div>
+                      </div>
+                    )}
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 border-t border-neutral-50">
                        {[
@@ -310,7 +325,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 </div>
               )}
 
-              {/* Gallery Section - Afișată DOAR dacă produsul are imagini suplimentare */}
+              {/* Gallery Section */}
               {extraImages.length > 0 && (
                 <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-neutral-100 shadow-sm space-y-8">
                    <div className="flex items-center gap-3">

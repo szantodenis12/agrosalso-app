@@ -40,6 +40,7 @@ export interface Product {
   description: string;
   detailedDescription: string;
   shortDescription: string;
+  whyBrand?: string;
   price: number;
   priceOnRequest: boolean;
   currency: 'RON';

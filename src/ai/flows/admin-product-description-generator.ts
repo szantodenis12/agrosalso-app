@@ -1,6 +1,7 @@
+
 'use server';
 /**
- * @fileOverview A Genkit flow for generating detailed and short product descriptions.
+ * @fileOverview A Genkit flow for generating detailed, short product descriptions and brand reasoning.
  *
  * - adminProductDescriptionGenerator - A function that handles the generation process.
  * - AdminProductDescriptionGeneratorInput - The input type for the function.
@@ -35,6 +36,11 @@ const AdminProductDescriptionGeneratorOutputSchema = z.object({
     .describe(
       'A concise product description, maximum 160 characters, optimized for SEO and intended for meta descriptions.'
     ),
+  whyBrand: z
+    .string()
+    .describe(
+      'A compelling section titled "Why [brandName]?" highlighting the legacy, reliability, and technological strengths of the manufacturer for the Romanian market.'
+    ),
 });
 export type AdminProductDescriptionGeneratorOutput = z.infer<
   typeof AdminProductDescriptionGeneratorOutputSchema
@@ -50,9 +56,9 @@ const adminProductDescriptionGeneratorPrompt = ai.definePrompt({
   name: 'adminProductDescriptionGeneratorPrompt',
   input: {schema: AdminProductDescriptionGeneratorInputSchema},
   output: {schema: AdminProductDescriptionGeneratorOutputSchema},
-  prompt: `You are an expert copywriter for AgroSalso, a premium B2B distributor of agricultural machinery in Romania. Your goal is to create compelling, industrial-precise, and professional product descriptions. The target audience is Romanian agricultural businesses.
+  prompt: `You are an expert copywriter for AgroSalso, a premium B2B distributor of agricultural machinery in Romania. Your goal is to create compelling, industrial-precise, and professional product content. The target audience is Romanian agricultural businesses.
 
-Based on the following product information, generate two descriptions in Romanian.
+Based on the following product information, generate the descriptions in Romanian.
 
 Product Name: {{{productName}}}
 Brand: {{{brandName}}}
@@ -64,7 +70,12 @@ Key Specifications:
 {{/each}}
 {{/if}}
 
-Please output a JSON object with two fields: "detailedDescription" and "shortDescription". Ensure the "shortDescription" is a maximum of 160 characters.`,
+Please output a JSON object with three fields: 
+1. "detailedDescription": The full product presentation.
+2. "shortDescription": A concise 160-char SEO meta.
+3. "whyBrand": A persuasive section about the manufacturer (Legacy, Quality, Tech).
+
+The "whyBrand" section should be written in a way that builds massive trust for Romanian farmers.`,
 });
 
 const adminProductDescriptionGeneratorFlow = ai.defineFlow(
