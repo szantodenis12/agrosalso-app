@@ -179,7 +179,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-neutral-100 shadow-sm space-y-8">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-neutral-900 rounded-xl flex items-center justify-center">
-                      <Star className="text-accent-lime w-5 h-5" />
+                      < Star className="text-accent-lime w-5 h-5" />
                     </div>
                     <h2 className="font-headline font-extrabold text-xl md:text-2xl text-neutral-900 tracking-tight">Specificații Tehnice</h2>
                   </div>
@@ -199,8 +199,8 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               {extraImages.length > 0 && (
                 <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-neutral-100 shadow-sm space-y-8">
                    <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-neutral-50 rounded-xl flex items-center justify-center">
-                      <ImageIcon className="text-neutral-400 w-5 h-5" />
+                    <div className="w-10 h-10 bg-accent-lime rounded-xl flex items-center justify-center">
+                      <ImageIcon className="text-black w-5 h-5" />
                     </div>
                     <h2 className="font-headline font-extrabold text-xl md:text-2xl text-neutral-900 tracking-tight">Galerie Foto</h2>
                   </div>
