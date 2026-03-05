@@ -1,8 +1,8 @@
+
 'use client';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { useFirestore } from '@/firebase';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, LayoutGrid, List, ArrowUpRight, FilterX, ChevronDown } from 'lucide-react';
@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useProducts } from '@/hooks/useProducts';
 import { useState } from 'react';
+import { PRODUCT_CATEGORIES } from '@/lib/constants';
 
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Cele mai noi' },
@@ -22,12 +23,7 @@ const SORT_OPTIONS = [
 
 export default function CatalogPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const db = useFirestore();
   
-  // Categorii dinamice din Firestore
-  const categoriesQuery = useMemoFirebase(() => query(collection(db, 'categories'), orderBy('order', 'asc')), [db]);
-  const { data: categories } = useCollection(categoriesQuery);
-
   const { 
     products, 
     isLoading, 
@@ -65,7 +61,7 @@ export default function CatalogPage() {
                   onChange={(e) => setSort(e.target.value)}
                   className="w-full h-14 bg-white border-none rounded-2xl px-6 text-sm font-bold appearance-none shadow-sm focus:ring-2 focus:ring-accent-lime outline-none cursor-pointer"
                 >
-                  {SORT_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                  {SORT_OPTIONS.map(opt => <option key={opt.value} value={opt.label}>{opt.label}</option>)}
                 </select>
                 <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
               </div>
@@ -107,29 +103,29 @@ export default function CatalogPage() {
               {/* Categories */}
               <div className="space-y-4">
                 <h3 className="font-headline font-extrabold text-[12px] uppercase tracking-widest text-neutral-900">Categorii</h3>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
                   <button 
                     onClick={() => updateFilter('category', 'toate')}
                     className={cn(
-                      "flex items-center justify-between px-5 py-4 rounded-2xl text-sm font-bold transition-all",
-                      !filters.category || filters.category === 'toate' ? "bg-accent-lime text-black" : "bg-white text-neutral-500 hover:bg-white/80"
+                      "flex items-center justify-between px-5 py-4 rounded-2xl text-sm font-bold transition-all shrink-0",
+                      !filters.category || filters.category === 'toate' ? "bg-accent-lime text-black shadow-lg shadow-accent-lime/20" : "bg-white text-neutral-500 hover:bg-white/80"
                     )}
                   >
                     <span>Toate Produsele</span>
                     {!filters.category || filters.category === 'toate' ? <div className="w-1.5 h-1.5 bg-black rounded-full" /> : null}
                   </button>
-                  {categories?.map(cat => (
+                  {PRODUCT_CATEGORIES.map(cat => (
                     <button 
-                      key={cat.id}
+                      key={cat.slug}
                       onClick={() => updateFilter('category', cat.slug)}
                       className={cn(
-                        "flex items-center justify-between px-5 py-4 rounded-2xl text-sm font-bold transition-all",
-                        filters.category === cat.slug ? "bg-accent-lime text-black" : "bg-white text-neutral-500 hover:bg-white/80"
+                        "flex items-center justify-between px-5 py-4 rounded-2xl text-sm font-bold transition-all shrink-0",
+                        filters.category === cat.slug ? "bg-accent-lime text-black shadow-lg shadow-accent-lime/20" : "bg-white text-neutral-500 hover:bg-white/80"
                       )}
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-lg">{cat.icon}</span>
-                        <span>{cat.name}</span>
+                        <span className="text-left leading-tight">{cat.name}</span>
                       </div>
                       {filters.category === cat.slug ? <div className="w-1.5 h-1.5 bg-black rounded-full" /> : null}
                     </button>
@@ -174,7 +170,7 @@ export default function CatalogPage() {
             <div className="flex-1">
               {isLoading ? (
                 <div className={cn("grid gap-10", viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1")}>
-                  {[1, 2, 4, 6].map(i => (
+                  {[1, 2, 3, 4].map(i => (
                     <div key={i} className="bg-white rounded-[2.5rem] h-[500px] animate-pulse border border-neutral-100" />
                   ))}
                 </div>

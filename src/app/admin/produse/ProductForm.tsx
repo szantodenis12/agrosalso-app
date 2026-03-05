@@ -1,6 +1,6 @@
 
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFirestore, useStorage } from '@/firebase';
 import { addProduct, updateProduct } from '@/lib/firestore/products';
@@ -13,25 +13,7 @@ import { Sparkles, Save, ChevronLeft, Trash2, Plus, Image as ImageIcon, X, Uploa
 import { adminProductDescriptionGenerator } from '@/ai/flows/admin-product-description-generator';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
-
-const CATEGORIES: { value: ProductCategory; label: string }[] = [
-  { value: 'terradisc', label: 'Terradisc' },
-  { value: 'combinator', label: 'Combinator' },
-  { value: 'gruber', label: 'Gruber' },
-  { value: 'distribuitor-ingrasamant', label: 'Distribuitor de ingrasamant' },
-  { value: 'freza-pamant', label: 'Freza de pamant' },
-  { value: 'plug', label: 'Plug' },
-  { value: 'semanatoare-paioase', label: 'Semanatoare paioase' },
-  { value: 'masina-plantat-usturoi', label: 'Masina de plantat usturoi' },
-  { value: 'tavalug-neted', label: 'Tavalug neted' },
-  { value: 'scalificator', label: 'Scalificator' },
-  { value: 'masina-recoltat', label: 'Masina de recoltat usturoi, ceapa, cartofi' },
-  { value: 'tocatoare-resturi', label: 'Tocatoare resturi vegetale' },
-  { value: 'instalatie-erbicidat', label: 'Instalatie de erbicidat' },
-  { value: 'plantator-cartofi', label: 'Plantator cartofi' },
-  { value: 'cultivator-prasitoare', label: 'Cultivator intre randuri (Prasitoare)' },
-  { value: 'altele', label: 'Altele' },
-];
+import { PRODUCT_CATEGORIES } from '@/lib/constants';
 
 interface Props {
   initialData?: Product;
@@ -101,7 +83,6 @@ export default function ProductForm({ initialData, mode }: Props) {
       setMainImage(url);
       toast({ title: "Imagine încărcată", description: "Poza principală a fost salvată." });
     } catch (error: any) {
-      console.error("Main image upload error:", error);
       toast({ variant: "destructive", title: "Eroare upload", description: error.message || "Nu s-a putut încărca imaginea." });
     } finally {
       setUploadingMain(false);
@@ -125,7 +106,6 @@ export default function ProductForm({ initialData, mode }: Props) {
       setGalleryImages(prev => [...prev, ...urls]);
       toast({ title: "Galerie actualizată", description: `Au fost încărcate ${urls.length} imagini.` });
     } catch (error: any) {
-      console.error("Gallery upload error:", error);
       toast({ variant: "destructive", title: "Eroare upload", description: "Unele imagini nu s-au putut încărca." });
     } finally {
       setUploadingGallery(false);
@@ -196,7 +176,6 @@ export default function ProductForm({ initialData, mode }: Props) {
       const specsObj: Record<string, string> = {};
       specs.filter(s => s.key && s.value).forEach(s => { specsObj[s.key] = s.value; });
 
-      // Asigurăm că poza principală este prima în array-ul de imagini
       const finalImages = [mainImage, ...galleryImages.filter(img => img !== mainImage)];
 
       const data = {
@@ -221,7 +200,6 @@ export default function ProductForm({ initialData, mode }: Props) {
       toast({ title: "Succes!", description: "Produsul a fost salvat." });
       router.push('/admin/produse');
     } catch (err: any) {
-      console.error("Submit error:", err);
       toast({ variant: "destructive", title: "Eroare", description: "Nu s-a putut salva produsul." });
     } finally {
       setSaving(false);
@@ -279,7 +257,7 @@ export default function ProductForm({ initialData, mode }: Props) {
               <div>
                 <label className={labelClass}>Categorie</label>
                 <select className="w-full h-12 rounded-xl bg-neutral-50 border-none px-4 text-sm font-bold focus:ring-2 focus:ring-accent-lime outline-none shadow-sm" value={form.category} onChange={e => set('category', e.target.value)}>
-                  {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                  {PRODUCT_CATEGORIES.map(c => <option key={c.slug} value={c.slug}>{c.name}</option>)}
                 </select>
               </div>
             </div>
@@ -315,7 +293,6 @@ export default function ProductForm({ initialData, mode }: Props) {
                     {uploadingMain ? <Loader2 className="animate-spin" /> : <Upload size={18} />}
                     {uploadingMain ? 'SE ÎNCARCĂ...' : 'ÎNCARCĂ POZĂ PRINCIPALĂ'}
                   </Button>
-                  <p className="text-[10px] text-neutral-400 text-center uppercase tracking-tight">Aceasta va fi prima poză în galerie.</p>
                 </div>
                 {mainImage ? (
                   <div className="relative aspect-video rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-100">
@@ -442,7 +419,7 @@ export default function ProductForm({ initialData, mode }: Props) {
                </div>
                <div>
                  <label className={labelClass}>Tags (virgulă)</label>
-                 <Input value={form.tags} onChange={e => set('tags', e.target.value)} placeholder="tractor, john deere, nou" className={inputClass} />
+                 <Input value={form.tags} onChange={e => set('tags', e.target.value)} placeholder="tractor, nou" className={inputClass} />
                </div>
             </div>
           </div>
