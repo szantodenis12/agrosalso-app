@@ -311,7 +311,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               )}
 
               {/* WHY BRAND SECTION (STYLE MODIFIED) */}
-              {product.whyBrand && product.whyBrand.length > 0 && (
+              {Array.isArray(product.whyBrand) && product.whyBrand.length > 0 && (
                 <section className="pt-20 pb-10">
                   <div className="max-w-4xl mx-auto space-y-12">
                      <div className="text-center space-y-4">

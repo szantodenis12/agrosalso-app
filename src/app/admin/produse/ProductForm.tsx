@@ -56,7 +56,9 @@ export default function ProductForm({ initialData, mode }: Props) {
     shortDescription: initialData?.shortDescription ?? '',
     description: initialData?.description ?? '',
     detailedDescription: initialData?.detailedDescription ?? '',
-    whyBrand: initialData?.whyBrand?.join('\n') ?? '',
+    whyBrand: Array.isArray(initialData?.whyBrand) 
+      ? initialData?.whyBrand.join('\n') 
+      : (typeof initialData?.whyBrand === 'string' ? initialData.whyBrand : ''),
     price: initialData?.price?.toString() ?? '0',
     priceOnRequest: initialData?.priceOnRequest ?? false,
     inStock: initialData?.inStock ?? true,
