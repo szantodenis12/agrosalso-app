@@ -2,15 +2,30 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { MOCK_PRODUCTS } from '@/lib/mock-data';
-import { ArrowUpRight } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowUpRight, Loader2 } from 'lucide-react';
+import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, where, orderBy, limit } from 'firebase/firestore';
+import { Product } from '@/types';
 
 const CATEGORIES = ['Toate', 'Tractoare', 'Combine', 'Irigații', 'Echipamente'];
 
 export function FeaturedProducts() {
   const [activeCategory, setActiveCategory] = useState('Toate');
+  const db = useFirestore();
+
+  // Interogăm produsele recomandate direct din Firestore
+  const featuredQuery = useMemoFirebase(() => {
+    return query(
+      collection(db, 'products'),
+      where('isFeatured', '==', true),
+      orderBy('createdAt', 'desc'),
+      limit(3) // Limităm la 3 produse pentru a nu strica layout-ul
+    );
+  }, [db]);
+
+  const { data: products, isLoading } = useCollection<Product>(featuredQuery);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -31,6 +46,23 @@ export function FeaturedProducts() {
       transition: { duration: 0.6, ease: "easeOut" }
     }
   };
+
+  // Filtrare locală opțională bazată pe tab-uri (dacă este cazul)
+  const filteredProducts = useMemo(() => {
+    if (!products) return [];
+    if (activeCategory === 'Toate') return products;
+    
+    // Notă: Categoriile din Firestore sunt slugs (ex: 'plug'), 
+    // tab-urile de aici sunt nume prietenoase. Mapăm simplist pentru demo.
+    const catMap: Record<string, string> = {
+      'Tractoare': 'tractor',
+      'Combine': 'masina-recoltat',
+      'Irigații': 'instalatie-erbicidat',
+      'Echipamente': 'combinator'
+    };
+    
+    return products.filter(p => p.category.includes(catMap[activeCategory] || activeCategory.toLowerCase()));
+  }, [products, activeCategory]);
 
   return (
     <section className="py-24 px-6 md:px-14 bg-white overflow-hidden">
@@ -83,64 +115,75 @@ export function FeaturedProducts() {
         </div>
 
         {/* Product Grid */}
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
-        >
-          {MOCK_PRODUCTS.slice(0, 3).map((product) => (
-            <motion.div
-              key={product.id}
-              variants={cardVariants}
-              whileHover={{ y: -10 }}
-              className="group flex flex-col h-full bg-white rounded-[2.5rem] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.03)] border border-neutral-100 hover:shadow-[0_30px_70px_rgba(0,0,0,0.08)] transition-all duration-500"
-            >
-              {/* Image Container */}
-              <div className="relative aspect-[4/3] w-full rounded-[2rem] overflow-hidden mb-8">
-                <Image 
-                  src={product.mainImage} 
-                  alt={product.name} 
-                  fill 
-                  className="object-cover group-hover:scale-110 transition-transform duration-1000"
-                />
-                <div className="absolute top-5 left-5 flex items-center gap-2 bg-neutral-900/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
-                  <div className="w-2 h-2 bg-accent-lime rounded-full animate-pulse" />
-                  <span className="text-white text-[10px] font-bold uppercase tracking-widest">Inovație</span>
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <Loader2 className="w-10 h-10 animate-spin text-accent-lime" />
+            <p className="mt-4 text-neutral-400 font-bold uppercase tracking-widest text-xs">Se încarcă recomandările...</p>
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="text-center py-20 bg-neutral-50 rounded-[3rem] border border-dashed border-neutral-200">
+             <p className="text-neutral-400 font-bold uppercase tracking-widest text-sm">Niciun produs recomandat momentan.</p>
+          </div>
+        ) : (
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+          >
+            {filteredProducts.map((product) => (
+              <motion.div
+                key={product.id}
+                variants={cardVariants}
+                whileHover={{ y: -10 }}
+                className="group flex flex-col h-full bg-white rounded-[2.5rem] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.03)] border border-neutral-100 hover:shadow-[0_30px_70px_rgba(0,0,0,0.08)] transition-all duration-500"
+              >
+                {/* Image Container */}
+                <div className="relative aspect-[4/3] w-full rounded-[2rem] overflow-hidden mb-8">
+                  <Image 
+                    src={product.mainImage || 'https://picsum.photos/seed/placeholder/800/600'} 
+                    alt={product.name} 
+                    fill 
+                    className="object-cover group-hover:scale-110 transition-transform duration-1000"
+                  />
+                  <div className="absolute top-5 left-5 flex items-center gap-2 bg-neutral-900/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+                    <div className="w-2 h-2 bg-accent-lime rounded-full animate-pulse" />
+                    <span className="text-white text-[10px] font-bold uppercase tracking-widest">Inovație</span>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Content */}
-              <div className="px-4 pb-4 flex flex-col flex-1">
-                <h3 className="font-headline font-extrabold text-2xl md:text-3xl text-neutral-900 mb-4 group-hover:text-accent-lime transition-colors leading-tight">
-                  {product.name}
-                </h3>
                 
-                <p className="text-neutral-500 text-sm mb-10 font-body leading-relaxed line-clamp-3">
-                  {product.shortDescription}
-                </p>
-                
-                <div className="mt-auto">
-                  <Link href={`/produse/${product.slug}`}>
-                    <motion.div 
-                      whileHover={{ x: 5 }}
-                      className="bg-neutral-900 hover:bg-black text-white rounded-full p-1.5 flex items-center justify-between transition-all duration-300 group/btn shadow-xl shadow-black/10"
-                    >
-                      <span className="pl-6 text-[12px] font-bold uppercase tracking-wider">Vezi detalii</span>
+                {/* Content */}
+                <div className="px-4 pb-4 flex flex-col flex-1">
+                  <h3 className="font-headline font-extrabold text-2xl md:text-3xl text-neutral-900 mb-4 group-hover:text-accent-lime transition-colors leading-tight">
+                    {product.name}
+                  </h3>
+                  
+                  <p className="text-neutral-500 text-sm mb-10 font-body leading-relaxed line-clamp-3">
+                    {product.shortDescription}
+                  </p>
+                  
+                  <div className="mt-auto">
+                    <Link href={`/produse/${product.slug}`}>
                       <motion.div 
-                        whileHover={{ rotate: 45 }}
-                        className="w-11 h-11 bg-white rounded-full flex items-center justify-center transition-transform"
+                        whileHover={{ x: 5 }}
+                        className="bg-neutral-900 hover:bg-black text-white rounded-full p-1.5 flex items-center justify-between transition-all duration-300 group/btn shadow-xl shadow-black/10"
                       >
-                        <ArrowUpRight size={20} className="text-black" strokeWidth={3} />
+                        <span className="pl-6 text-[12px] font-bold uppercase tracking-wider">Vezi detalii</span>
+                        <motion.div 
+                          whileHover={{ rotate: 45 }}
+                          className="w-11 h-11 bg-white rounded-full flex items-center justify-center transition-transform"
+                        >
+                          <ArrowUpRight size={20} className="text-black" strokeWidth={3} />
+                        </motion.div>
                       </motion.div>
-                    </motion.div>
-                  </Link>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
       </div>
     </section>
   );
