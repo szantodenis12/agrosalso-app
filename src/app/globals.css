@@ -72,19 +72,50 @@
 @media print {
   @page {
     margin: 0;
-    size: auto;
+    size: A4;
   }
-  body {
+  
+  html, body {
+    height: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
     background: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
+
   .print-hidden {
     display: none !important;
   }
-  nav, footer, aside, button {
+
+  nav, footer, aside, button, .toolbar {
     display: none !important;
   }
+
   main {
-    margin-left: 0 !important;
+    margin: 0 !important;
     padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Force display of background colors in print */
+  .bg-accent-lime {
+    background-color: #A3E635 !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  .bg-neutral-900 {
+    background-color: #0A0A0A !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  .bg-red-600 {
+    background-color: #DC2626 !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  .bg-neutral-50 {
+    background-color: #F8F9F6 !important;
+    -webkit-print-color-adjust: exact !important;
   }
 }
