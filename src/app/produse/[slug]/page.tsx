@@ -1,5 +1,5 @@
 'use client';
-import { use, useEffect, useState, useCallback } from 'react';
+import { use, useEffect, useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { useFirestore } from '@/firebase';
@@ -7,12 +7,11 @@ import { collection, query, where, getDocs, limit, addDoc, serverTimestamp } fro
 import { Product } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, Send, Phone, Info, ShieldCheck, Truck, Cog, Sparkles, Star, Settings2, Image as ImageIcon, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, Send, ShieldCheck, Truck, Cog, Sparkles, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
-import { motion } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { Badge } from '@/components/ui/badge';
@@ -96,8 +95,10 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
     );
   }
 
-  // Identificăm imaginile suplimentare pentru galeria de jos
-  const extraImages = product.images?.filter(img => img !== product.mainImage) || [];
+  // Identificăm imaginile suplimentare specifice acestui produs pentru galeria de jos
+  // Folosim un Set pentru a evita duplicatele și filtrăm imaginea principală
+  const extraImages = Array.from(new Set(product.images || []))
+    .filter(img => img !== product.mainImage);
 
   return (
     <>
@@ -309,7 +310,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 </div>
               )}
 
-              {/* Gallery Section */}
+              {/* Gallery Section - Afișată DOAR dacă produsul are imagini suplimentare */}
               {extraImages.length > 0 && (
                 <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-neutral-100 shadow-sm space-y-8">
                    <div className="flex items-center gap-3">
@@ -324,7 +325,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                       {extraImages.map((img, index) => (
                         <div className="embla__slide flex-[0_0_80%] md:flex-[0_0_45%] min-w-0 pl-4" key={index}>
                           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-neutral-100">
-                            <Image src={img} alt={`Gallery ${index}`} fill className="object-cover" />
+                            <Image src={img} alt={`${product.name} - Gallery ${index}`} fill className="object-cover" />
                           </div>
                         </div>
                       ))}
