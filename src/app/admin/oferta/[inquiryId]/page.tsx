@@ -87,7 +87,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
         }),
       });
 
-      if (!response.ok) throw new Error('Eroare trimitere');
+      if (!response.ok) throw new Error('Ereare trimitere');
 
       toast({ title: "Ofertă trimisă!", description: "Clientul va primi email-ul în curând." });
       router.push('/admin/cereri');
@@ -309,7 +309,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
               <div className="flex justify-between items-end pt-2">
                 <span className="text-[10px] font-extrabold text-neutral-900 uppercase tracking-[0.2em]">Total de plată</span>
                 <div className="text-right">
-                  <span className="font-headline font-extrabold text-2xl text-accent-lime tracking-tight">
+                  <span className="font-headline font-extrabold text-2xl text-neutral-900 tracking-tight">
                     {total.toLocaleString()}
                   </span>
                   <span className="ml-2 font-bold text-xs text-neutral-400">RON</span>
