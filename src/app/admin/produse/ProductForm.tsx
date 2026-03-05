@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -57,7 +56,7 @@ export default function ProductForm({ initialData, mode }: Props) {
     shortDescription: initialData?.shortDescription ?? '',
     description: initialData?.description ?? '',
     detailedDescription: initialData?.detailedDescription ?? '',
-    whyBrand: initialData?.whyBrand ?? '',
+    whyBrand: initialData?.whyBrand?.join('\n') ?? '',
     price: initialData?.price?.toString() ?? '0',
     priceOnRequest: initialData?.priceOnRequest ?? false,
     inStock: initialData?.inStock ?? true,
@@ -203,11 +202,11 @@ export default function ProductForm({ initialData, mode }: Props) {
 
       set('shortDescription', response.shortDescription);
       set('detailedDescription', response.detailedDescription);
-      set('whyBrand', response.whyBrand);
+      set('whyBrand', response.whyBrand.join('\n'));
       set('metaDescription', response.shortDescription);
       set('metaTitle', `${form.name} | AgroSalso România`);
       
-      toast({ title: "Conținut generat!", description: "AI-ul a creat descrierile și secțiunea de brand." });
+      toast({ title: "Conținut generat!", description: "AI-ul a creat descrierile și punctele cheie de brand." });
     } catch (error) {
       toast({ variant: "destructive", title: "Eroare AI", description: "Nu s-a putut genera conținutul." });
     } finally {
@@ -229,6 +228,7 @@ export default function ProductForm({ initialData, mode }: Props) {
       const data = {
         ...form,
         mainImage,
+        whyBrand: form.whyBrand.split('\n').map(p => p.trim()).filter(Boolean),
         brandSlug: generateSlug(form.brand),
         price: parseFloat(form.price) || 0,
         stockQuantity: parseInt(form.stockQuantity) || 0,
@@ -324,16 +324,17 @@ export default function ProductForm({ initialData, mode }: Props) {
 
           <div className="bg-white rounded-[2.5rem] p-10 shadow-sm space-y-8 border border-neutral-100">
              <h3 className="font-headline font-extrabold text-xl tracking-tight flex items-center gap-2 text-accent-lime">
-              <ShieldCheck size={22} /> Secțiunea Brand (De ce {form.brand || 'Marca'}?)
+              <ShieldCheck size={22} /> Secțiunea Brand (Argumente cheie {form.brand || 'Marca'})
             </h3>
             <div className="space-y-4">
-               <label className={labelClass}>Argumente Brand & Fiabilitate</label>
+               <label className={labelClass}>Puncte forte brand (unul pe rând)</label>
                <Textarea 
                 value={form.whyBrand} 
                 onChange={e => set('whyBrand', e.target.value)} 
-                className="min-h-[200px] rounded-2xl bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm text-sm" 
-                placeholder="Explică de ce acest producător este o alegere sigură pentru fermieri..." 
+                className="min-h-[150px] rounded-2xl bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm text-sm" 
+                placeholder="Ex: Experiență de peste 30 de ani&#10;Tehnologie de ultimă oră&#10;Service rapid autorizat" 
                />
+               <p className="text-[10px] text-neutral-400 font-bold italic">*Fiecare rând va deveni un punct în listă pe pagina produsului.</p>
             </div>
           </div>
 

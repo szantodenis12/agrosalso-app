@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview A Genkit flow for generating detailed, short product descriptions and brand reasoning.
@@ -37,9 +36,9 @@ const AdminProductDescriptionGeneratorOutputSchema = z.object({
       'A concise product description, maximum 160 characters, optimized for SEO and intended for meta descriptions.'
     ),
   whyBrand: z
-    .string()
+    .array(z.string())
     .describe(
-      'A compelling section titled "Why [brandName]?" highlighting the legacy, reliability, and technological strengths of the manufacturer for the Romanian market.'
+      'A list of 3-5 concise, compelling bullet points highlighting the legacy, reliability, and technological strengths of the manufacturer for the Romanian market.'
     ),
 });
 export type AdminProductDescriptionGeneratorOutput = z.infer<
@@ -71,11 +70,11 @@ Key Specifications:
 {{/if}}
 
 Please output a JSON object with three fields: 
-1. "detailedDescription": The full product presentation.
+1. "detailedDescription": The full product presentation (HTML allowed for paragraphs).
 2. "shortDescription": A concise 160-char SEO meta.
-3. "whyBrand": A persuasive section about the manufacturer (Legacy, Quality, Tech).
+3. "whyBrand": An array of 3 to 5 very short and powerful sentences (max 15 words each) about why a farmer should trust this manufacturer (Legacy, Quality, Tech).
 
-The "whyBrand" section should be written in a way that builds massive trust for Romanian farmers.`,
+The "whyBrand" points should be written in a way that builds massive trust for Romanian farmers, focusing on durability and local service.`,
 });
 
 const adminProductDescriptionGeneratorFlow = ai.defineFlow(

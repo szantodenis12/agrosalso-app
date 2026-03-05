@@ -1,4 +1,3 @@
-
 'use client';
 import { use, useEffect, useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -8,7 +7,7 @@ import { collection, query, where, getDocs, limit, addDoc, serverTimestamp } fro
 import { Product } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, Send, ShieldCheck, Truck, Cog, Sparkles, Image as ImageIcon, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, Send, ShieldCheck, Truck, Cog, Sparkles, Image as ImageIcon, CheckCircle2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,6 +16,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -163,21 +163,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                       dangerouslySetInnerHTML={{ __html: product.detailedDescription || product.description }}
                     />
 
-                    {/* WHY BRAND SECTION */}
-                    {product.whyBrand && (
-                      <div className="pt-10 border-t border-neutral-50">
-                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 bg-neutral-900 rounded-xl flex items-center justify-center">
-                              <CheckCircle2 className="text-accent-lime w-5 h-5" />
-                            </div>
-                            <h3 className="font-headline font-extrabold text-xl text-neutral-900 tracking-tight">De ce {product.brand}?</h3>
-                         </div>
-                         <div className="bg-neutral-50 p-8 rounded-[2rem] border border-neutral-100 italic text-neutral-600 leading-relaxed font-medium">
-                            {product.whyBrand}
-                         </div>
-                      </div>
-                    )}
-
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 border-t border-neutral-50">
                        {[
                          { icon: <ShieldCheck className="w-8 h-8" />, title: "Garanție RO", sub: "Service autorizat" },
@@ -323,6 +308,42 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                     </p>
                   )}
                 </div>
+              )}
+
+              {/* WHY BRAND SECTION (STYLE MODIFIED) */}
+              {product.whyBrand && product.whyBrand.length > 0 && (
+                <section className="pt-20 pb-10">
+                  <div className="max-w-4xl mx-auto space-y-12">
+                     <div className="text-center space-y-4">
+                        <div className="inline-block px-4 py-1.5 bg-accent-lime/10 text-accent-lime rounded-full text-[10px] font-bold uppercase tracking-widest">
+                          Expertiză și Fiabilitate
+                        </div>
+                        <h2 className="font-headline font-extrabold text-3xl md:text-5xl text-neutral-900 tracking-tight">
+                          De ce <span className="text-accent-lime">{product.brand}</span>?
+                        </h2>
+                     </div>
+
+                     <div className="grid grid-cols-1 gap-8">
+                        {product.whyBrand.map((text, i) => (
+                          <motion.div 
+                            key={i} 
+                            initial={{ opacity: 0, x: 20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1, duration: 0.6 }}
+                            className="flex items-start gap-6 group"
+                          >
+                            <div className="mt-1 w-10 h-10 rounded-full bg-accent-lime flex items-center justify-center shrink-0 shadow-lg shadow-accent-lime/20 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                              <Check size={20} className="text-black" strokeWidth={4} />
+                            </div>
+                            <p className="font-headline font-bold text-xl md:text-2xl text-neutral-900 leading-tight tracking-tight pt-1">
+                              {text}
+                            </p>
+                          </motion.div>
+                        ))}
+                     </div>
+                  </div>
+                </section>
               )}
 
               {/* Gallery Section */}
