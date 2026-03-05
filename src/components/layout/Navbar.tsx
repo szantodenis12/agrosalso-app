@@ -1,4 +1,3 @@
-
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -12,7 +11,6 @@ const NAV_LINKS = [
   { name: 'Despre noi', href: '/despre' },
   { name: 'Servicii', href: '/servicii' },
   { name: 'Prețuri', href: '/preturi' },
-  { name: 'Blog', href: '/blog' },
 ];
 
 export function Navbar() {
