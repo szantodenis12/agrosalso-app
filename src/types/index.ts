@@ -1,13 +1,20 @@
 
 export type ProductCategory = 
-  | 'tractoare' 
-  | 'combine' 
-  | 'irigatii' 
-  | 'semanatori' 
-  | 'pluguri' 
-  | 'sprayere' 
-  | 'fertilizare' 
-  | 'piese' 
+  | 'terradisc'
+  | 'combinator'
+  | 'gruber'
+  | 'distribuitor-ingrasamant'
+  | 'freza-pamant'
+  | 'plug'
+  | 'semanatoare-paioase'
+  | 'masina-plantat-usturoi'
+  | 'tavalug-neted'
+  | 'scalificator'
+  | 'masina-recoltat'
+  | 'tocatoare-resturi'
+  | 'instalatie-erbicidat'
+  | 'plantator-cartofi'
+  | 'cultivator-prasitoare'
   | 'altele';
 
 export interface Product {

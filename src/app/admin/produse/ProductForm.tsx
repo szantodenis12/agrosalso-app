@@ -15,14 +15,22 @@ import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
 
 const CATEGORIES: { value: ProductCategory; label: string }[] = [
-  { value: 'tractoare', label: 'Tractoare' },
-  { value: 'combine', label: 'Combine & Recoltat' },
-  { value: 'semanatori', label: 'Semănători' },
-  { value: 'irigatii', label: 'Irigații' },
-  { value: 'pluguri', label: 'Pluguri & Lucrări Sol' },
-  { value: 'sprayere', label: 'Sprayere & Protecție' },
-  { value: 'fertilizare', label: 'Fertilizare' },
-  { value: 'piese', label: 'Piese & Accesorii' },
+  { value: 'terradisc', label: 'Terradisc' },
+  { value: 'combinator', label: 'Combinator' },
+  { value: 'gruber', label: 'Gruber' },
+  { value: 'distribuitor-ingrasamant', label: 'Distribuitor de ingrasamant' },
+  { value: 'freza-pamant', label: 'Freza de pamant' },
+  { value: 'plug', label: 'Plug' },
+  { value: 'semanatoare-paioase', label: 'Semanatoare paioase' },
+  { value: 'masina-plantat-usturoi', label: 'Masina de plantat usturoi' },
+  { value: 'tavalug-neted', label: 'Tavalug neted' },
+  { value: 'scalificator', label: 'Scalificator' },
+  { value: 'masina-recoltat', label: 'Masina de recoltat usturoi, ceapa, cartofi' },
+  { value: 'tocatoare-resturi', label: 'Tocatoare resturi vegetale' },
+  { value: 'instalatie-erbicidat', label: 'Instalatie de erbicidat' },
+  { value: 'plantator-cartofi', label: 'Plantator cartofi' },
+  { value: 'cultivator-prasitoare', label: 'Cultivator intre randuri (Prasitoare)' },
+  { value: 'altele', label: 'Altele' },
 ];
 
 interface Props {
@@ -58,7 +66,7 @@ export default function ProductForm({ initialData, mode }: Props) {
     slug: initialData?.slug ?? '',
     brand: initialData?.brand ?? '',
     brandSlug: initialData?.brandSlug ?? '',
-    category: initialData?.category ?? 'tractoare' as ProductCategory,
+    category: initialData?.category ?? 'terradisc' as ProductCategory,
     subcategory: initialData?.subcategory ?? '',
     shortDescription: initialData?.shortDescription ?? '',
     description: initialData?.description ?? '',

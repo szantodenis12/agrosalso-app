@@ -3,12 +3,22 @@
 import { doc, setDoc, serverTimestamp, type Firestore } from 'firebase/firestore';
 
 const CATEGORIES = [
-  { id: 'tractoare', name: 'Tractoare', slug: 'tractoare', icon: '🚜', order: 1, productCount: 45, isActive: true, description: 'Tractoare performante pentru orice fermă.' },
-  { id: 'combine', name: 'Combine', slug: 'combine', icon: '🌾', order: 2, productCount: 12, isActive: true, description: 'Combine de recoltat de înaltă eficiență.' },
-  { id: 'irigatii', name: 'Irigații', slug: 'irigatii', icon: '💧', order: 3, productCount: 8, isActive: true, description: 'Sisteme de irigații inteligente.' },
-  { id: 'semanatori', name: 'Semănători', slug: 'semanatori', icon: '🌱', order: 4, productCount: 15, isActive: true, description: 'Semănat precis pentru recolte bogate.' },
-  { id: 'pluguri', name: 'Pluguri', slug: 'pluguri', icon: '⛏️', order: 5, productCount: 22, isActive: true, description: 'Soluții pentru prelucrarea solului.' },
-  { id: 'sprayere', name: 'Sprayere', slug: 'sprayere', icon: '🧪', order: 6, productCount: 9, isActive: true, description: 'Protecția plantelor la cel mai înalt nivel.' },
+  { id: 'terradisc', name: 'Terradisc', slug: 'terradisc', icon: '🚜', order: 1, productCount: 0, isActive: true, description: 'Utilaje pentru prelucrarea solului.' },
+  { id: 'combinator', name: 'Combinator', slug: 'combinator', icon: '🚜', order: 2, productCount: 0, isActive: true, description: 'Combinatoare agricole performante.' },
+  { id: 'gruber', name: 'Gruber', slug: 'gruber', icon: '🚜', order: 3, productCount: 0, isActive: true, description: 'Grubere pentru scarificare.' },
+  { id: 'distribuitor-ingrasamant', name: 'Distribuitor de ingrasamant', slug: 'distribuitor-ingrasamant', icon: '🌱', order: 4, productCount: 0, isActive: true, description: 'Echipamente pentru fertilizare.' },
+  { id: 'freza-pamant', name: 'Freza de pamant', slug: 'freza-pamant', icon: '⛏️', order: 5, productCount: 0, isActive: true, description: 'Freze pentru pregătirea patului germinativ.' },
+  { id: 'plug', name: 'Plug', slug: 'plug', icon: '⛏️', order: 6, productCount: 0, isActive: true, description: 'Pluguri pentru arătură.' },
+  { id: 'semanatoare-paioase', name: 'Semanatoare paioase', slug: 'semanatoare-paioase', icon: '🌾', order: 7, productCount: 0, isActive: true, description: 'Semănători de precizie.' },
+  { id: 'masina-plantat-usturoi', name: 'Masina de plantat usturoi', slug: 'masina-plantat-usturoi', icon: '🧄', order: 8, productCount: 0, isActive: true, description: 'Echipamente specializate pentru usturoi.' },
+  { id: 'tavalug-neted', name: 'Tavalug neted', slug: 'tavalug-neted', icon: '🚜', order: 9, productCount: 0, isActive: true, description: 'Tăvăluguri pentru nivelarea solului.' },
+  { id: 'scalificator', name: 'Scalificator', slug: 'scalificator', icon: '🚜', order: 10, productCount: 0, isActive: true, description: 'Utilaje pentru scarificare profundă.' },
+  { id: 'masina-recoltat', name: 'Masina de recoltat usturoi, ceapa, cartofi', slug: 'masina-recoltat', icon: '🥔', order: 11, productCount: 0, isActive: true, description: 'Recoltatoare specializate.' },
+  { id: 'tocatoare-resturi', name: 'Tocatoare resturi vegetale', slug: 'tocatoare-resturi', icon: '🌿', order: 12, productCount: 0, isActive: true, description: 'Tocători de resturi vegetale.' },
+  { id: 'instalatie-erbicidat', name: 'Instalatie de erbicidat', slug: 'instalatie-erbicidat', icon: '💧', order: 13, productCount: 0, isActive: true, description: 'Echipamente pentru protecția culturilor.' },
+  { id: 'plantator-cartofi', name: 'Plantator cartofi', slug: 'plantator-cartofi', icon: '🥔', order: 14, productCount: 0, isActive: true, description: 'Sisteme de plantare cartofi.' },
+  { id: 'cultivator-prasitoare', name: 'Cultivator intre randuri (Prasitoare)', slug: 'cultivator-prasitoare', icon: '🌿', order: 15, productCount: 0, isActive: true, description: 'Utilaje pentru întreținerea culturilor.' },
+  { id: 'altele', name: 'Altele', slug: 'altele', icon: '📦', order: 16, productCount: 0, isActive: true, description: 'Alte utilaje și accesorii.' },
 ];
 
 const PRODUCTS = [
@@ -18,7 +28,7 @@ const PRODUCTS = [
     slug: 'john-deere-6r-150',
     brand: 'John Deere',
     brandSlug: 'john-deere',
-    category: 'tractoare',
+    category: 'terradisc',
     description: 'Un tractor versatil și puternic, perfect pentru ferme medii și mari.',
     detailedDescription: 'Tractorul John Deere 6R 150 reprezintă vârful tehnologiei pentru fermele medii din România. Echipat cu motorul PowerTech™ EWL de 150 CP, acesta oferă un echilibru perfect între putere și eficiență. Cabina CommandView™ III asigură un confort de neegalat pentru operator, în timp ce transmisia AutoPower IVT optimizează fiecare litru de combustibil consumat.',
     shortDescription: 'Tractor John Deere 6R 150 cu transmisie AutoPower și tehnologie de ultimă oră.',
