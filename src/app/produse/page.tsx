@@ -218,13 +218,13 @@ export default function CatalogPage() {
                   onClick={() => setViewMode('grid')}
                   className={cn("p-2 md:p-3 rounded-lg md:rounded-xl transition-all", viewMode === 'grid' ? "bg-neutral-900 text-white shadow-lg" : "text-neutral-400 hover:bg-neutral-50")}
                 >
-                  <LayoutGrid size={18} md:size={20} />
+                  <LayoutGrid size={20} />
                 </button>
                 <button 
                   onClick={() => setViewMode('list')}
                   className={cn("p-2 md:p-3 rounded-lg md:rounded-xl transition-all", viewMode === 'list' ? "bg-neutral-900 text-white shadow-lg" : "text-neutral-400 hover:bg-neutral-50")}
                 >
-                  <List size={18} md:size={20} />
+                  <List size={20} />
                 </button>
               </div>
             </div>
@@ -251,7 +251,7 @@ export default function CatalogPage() {
                   className="flex flex-col items-center justify-center py-24 md:py-40 text-center bg-white rounded-[2rem] md:rounded-[3rem] border border-dashed border-neutral-200"
                 >
                   <div className="w-16 h-16 md:w-24 md:h-24 bg-neutral-100 rounded-full flex items-center justify-center mb-6 md:mb-8">
-                    <FilterX size={30} md:size={40} className="text-neutral-300" />
+                    <FilterX size={40} className="text-neutral-300" />
                   </div>
                   <h2 className="font-headline font-extrabold text-2xl md:text-3xl text-neutral-900 mb-3 md:mb-4">Niciun utilaj găsit</h2>
                   <p className="text-neutral-500 font-medium mb-8 md:mb-10 max-w-xs text-sm md:text-base px-6">Încercați să ajustați filtrele sau căutarea pentru a găsi ceea ce doriți.</p>
@@ -318,7 +318,7 @@ export default function CatalogPage() {
                                 <Button className="bg-neutral-900 hover:bg-black text-white rounded-full h-11 md:h-14 pl-5 md:pl-8 pr-1 md:pr-1.5 flex items-center gap-6 md:gap-10 transition-all group/btn shadow-xl shadow-black/5">
                                   <span className="text-[9px] md:text-[10px] font-extrabold uppercase tracking-widest">DETALII</span>
                                   <div className="w-9 h-9 md:w-11 md:h-11 bg-white rounded-full flex items-center justify-center transition-transform group-hover/btn:rotate-45">
-                                    <ArrowUpRight size={16} md:size={20} className="text-black" strokeWidth={3} />
+                                    <ArrowUpRight size={20} className="text-black" strokeWidth={3} />
                                   </div>
                                 </Button>
                              </Link>
