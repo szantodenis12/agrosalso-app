@@ -146,7 +146,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             <div className="space-y-1">
                <div className="flex items-center gap-2">
                   <div className="w-6 h-4 bg-accent-lime rounded-sm rotate-12" />
-                  <span className="font-headline font-extrabold text-2xl tracking-tighter uppercase">Agro Salso</span>
+                  <span className="font-headline font-extrabold text-2xl tracking-tighter uppercase text-neutral-900">Agro Salso</span>
                </div>
                <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">
                  Dealer Utilaje Agricole din 2012 — Bihor, România
@@ -234,9 +234,9 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             </div>
           )}
 
-          {/* Detalii Utilaj - Redesigned Layout */}
+          {/* Detalii Utilaj */}
           <div className="space-y-6 mb-12">
-            {/* Product Image - Full Width Styled */}
+            {/* Product Image */}
             <div className="relative w-full aspect-[16/8] rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-100 shadow-sm">
               <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
             </div>
@@ -244,13 +244,13 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             {/* Product Name and Badge */}
             <div className="flex items-center justify-between gap-4 pt-2">
               <h3 className="font-headline font-extrabold text-3xl tracking-tight leading-none uppercase">
-                <span className="text-destructive mr-2">{product.brand}</span>
+                <span className="text-accent-lime mr-3">{product.brand}</span>
                 <span className="text-neutral-900">{product.name}</span>
               </h3>
               
               {/* Status Badge */}
-              <div className="flex items-center gap-2 bg-[#E9F5E1] text-[#22633B] px-4 py-2 rounded-full border border-[#D1E9C2] shrink-0">
-                <div className="w-2 h-2 bg-[#3A8C58] rounded-full" />
+              <div className="flex items-center gap-2 bg-neutral-50 text-neutral-900 px-4 py-2 rounded-full border border-neutral-100 shrink-0">
+                <div className="w-2 h-2 bg-accent-lime rounded-full" />
                 <span className="text-[10px] font-extrabold uppercase tracking-widest">
                   {product.inStock ? "Pe stoc — livrare imediată" : "La comandă"}
                 </span>
