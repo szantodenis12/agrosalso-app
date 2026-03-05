@@ -28,7 +28,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const [sending, setSending] = useState(false);
   const [offerType, setOfferType] = useState<OfferType>('standard');
 
-  // Date editabile Furnizor/Contact
+  // Date editabile Furnizor/Contact/Preț
   const [editPrice, setEditPrice] = useState<number>(0);
   const [contactPerson, setContactPerson] = useState("Doru Salso");
   const [contactPosition, setContactPosition] = useState("Manager Vânzări");
@@ -104,7 +104,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const tva = editPrice * 0.19;
   const total = editPrice + tva;
 
-  // Helpers pentru verificarea prezenței datelor la print
   const showCuiOnPrint = beneficiaryCui && beneficiaryCui !== PLACEHOLDER_CUI && beneficiaryCui.trim() !== "";
   const showAddressOnPrint = beneficiaryAddress && beneficiaryAddress !== PLACEHOLDER_ADDRESS && beneficiaryAddress.trim() !== "";
 
@@ -192,7 +191,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                     contentEditable 
                     suppressContentEditableWarning={true}
                     className={cn(
-                      "focus:outline-accent-lime inline-block min-w-[100px]",
+                      "focus:outline-accent-lime inline-block min-w-[100px] hover:bg-neutral-50 cursor-pointer px-1 rounded transition-colors",
                       !showCuiOnPrint && "print:hidden",
                       beneficiaryCui === PLACEHOLDER_CUI && "text-neutral-300 font-normal italic"
                     )}
@@ -205,7 +204,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                     contentEditable 
                     suppressContentEditableWarning={true}
                     className={cn(
-                      "focus:outline-accent-lime block",
+                      "focus:outline-accent-lime block hover:bg-neutral-50 cursor-pointer px-1 rounded transition-colors",
                       !showAddressOnPrint && "print:hidden",
                       beneficiaryAddress === PLACEHOLDER_ADDRESS && "text-neutral-300 font-normal italic"
                     )}
@@ -236,19 +235,16 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
 
           {/* Detalii Utilaj */}
           <div className="space-y-6 mb-12">
-            {/* Product Image */}
             <div className="relative w-full aspect-[16/8] rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-100 shadow-sm">
               <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
             </div>
 
-            {/* Product Name and Badge */}
             <div className="flex items-center justify-between gap-4 pt-2">
               <h3 className="font-headline font-extrabold text-3xl tracking-tight leading-none uppercase">
                 <span className="text-accent-lime mr-3">{product.brand}</span>
                 <span className="text-neutral-900">{product.name}</span>
               </h3>
               
-              {/* Status Badge - Dynamic based on inStock status */}
               <div className="flex items-center gap-2 bg-neutral-50 text-neutral-900 px-4 py-2 rounded-full border border-neutral-100 shrink-0">
                 <div className={cn("w-2 h-2 rounded-full", product.inStock ? "bg-accent-lime" : "bg-neutral-300")} />
                 <span className="text-[10px] font-extrabold uppercase tracking-widest">
@@ -259,14 +255,12 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
               </div>
             </div>
 
-            {/* Product Description */}
             <div className="prose prose-neutral max-w-none">
               <p className="text-sm text-neutral-600 leading-relaxed font-medium">
                 {product.detailedDescription || product.description}
               </p>
             </div>
 
-            {/* Specifications Table (Models) - If exists */}
             {product.specTable && product.specTable.rows.length > 0 && (
               <div className="pt-4 space-y-3">
                 <h4 className="font-headline font-bold text-sm uppercase tracking-tight border-b border-neutral-100 pb-1.5">Specificații Tehnice Modele</h4>
@@ -297,17 +291,24 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             )}
           </div>
 
-          {/* Calcul Preț - Clean layout with delimiters */}
+          {/* Calcul Preț */}
           <div className="flex justify-end mb-12">
             <div className="w-[320px] space-y-4">
               <div className="flex justify-between items-end pb-2 border-b border-neutral-100">
-                <span className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț Unitar (Net)</span>
+                <div className="flex flex-col">
+                  <span className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț Unitar (Net)</span>
+                  <span className="text-[8px] text-accent-lime font-bold uppercase tracking-widest opacity-0 hover:opacity-100 transition-opacity">Editează direct →</span>
+                </div>
                 <div className="text-right">
                   <span 
                     contentEditable 
                     suppressContentEditableWarning={true}
-                    onBlur={(e) => setEditPrice(parseFloat(e.currentTarget.innerText.replace(/[^0-9]/g, '')) || 0)}
-                    className="font-headline font-extrabold text-xl text-neutral-900 focus:outline-accent-lime"
+                    onBlur={(e) => {
+                      const val = parseFloat(e.currentTarget.innerText.replace(/[^0-9]/g, '')) || 0;
+                      setEditPrice(val);
+                      e.currentTarget.innerText = val.toLocaleString();
+                    }}
+                    className="font-headline font-extrabold text-xl text-neutral-900 focus:outline-accent-lime hover:bg-neutral-50 cursor-pointer px-2 py-0.5 rounded transition-colors"
                   >
                     {editPrice.toLocaleString()}
                   </span>
@@ -371,7 +372,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                    <p 
                       contentEditable 
                       suppressContentEditableWarning={true}
-                      className="text-[11px] font-bold text-neutral-900 focus:outline-accent-lime inline-block" 
+                      className="text-[11px] font-bold text-neutral-900 focus:outline-accent-lime inline-block hover:bg-neutral-50 cursor-pointer px-1 rounded transition-colors" 
                       onBlur={e => setDeliveryTerm(e.currentTarget.innerText)}
                    >
                       {deliveryTerm}
@@ -382,7 +383,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                    <p 
                       contentEditable 
                       suppressContentEditableWarning={true}
-                      className="text-[11px] font-bold text-neutral-900 focus:outline-accent-lime inline-block" 
+                      className="text-[11px] font-bold text-neutral-900 focus:outline-accent-lime inline-block hover:bg-neutral-50 cursor-pointer px-1 rounded transition-colors" 
                       onBlur={e => setPaymentTerms(e.currentTarget.innerText)}
                    >
                       {paymentTerms}
@@ -396,7 +397,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                  <p 
                     contentEditable 
                     suppressContentEditableWarning={true}
-                    className="font-headline font-extrabold text-sm text-neutral-900 focus:outline-accent-lime" 
+                    className="font-headline font-extrabold text-sm text-neutral-900 focus:outline-accent-lime hover:bg-neutral-50 cursor-pointer px-1 rounded transition-colors" 
                     onBlur={e => setContactPerson(e.currentTarget.innerText)}
                  >
                     {contactPerson}
@@ -404,7 +405,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                  <p 
                     contentEditable 
                     suppressContentEditableWarning={true}
-                    className="text-[9px] font-bold text-neutral-400 uppercase focus:outline-accent-lime" 
+                    className="text-[9px] font-bold text-neutral-400 uppercase focus:outline-accent-lime hover:bg-neutral-50 cursor-pointer px-1 rounded transition-colors" 
                     onBlur={e => setContactPosition(e.currentTarget.innerText)}
                  >
                     {contactPosition}
@@ -412,7 +413,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                  <p 
                     contentEditable 
                     suppressContentEditableWarning={true}
-                    className="text-[11px] font-bold text-neutral-700 mt-1.5 focus:outline-accent-lime" 
+                    className="text-[11px] font-bold text-neutral-700 mt-1.5 focus:outline-accent-lime hover:bg-neutral-50 cursor-pointer px-1 rounded transition-colors" 
                     onBlur={e => setContactPhone(e.currentTarget.innerText)}
                  >
                     {contactPhone}
