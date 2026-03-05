@@ -4,7 +4,7 @@ import { use, useEffect, useState, useMemo } from 'react';
 import { useFirestore } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { Inquiry, Product } from '@/types';
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 import { ro } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { Printer, Send, ChevronLeft, AlertTriangle, Loader2, CheckCircle2 } from 'lucide-react';
@@ -25,7 +25,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const [sending, setSending] = useState(false);
   const [offerType, setOfferType] = useState<OfferType>('standard');
 
-  // Date editabile
+  // Date editabile Furnizor/Contact
   const [editPrice, setEditPrice] = useState<number>(0);
   const [contactPerson, setContactPerson] = useState("Doru Salso");
   const [contactPosition, setContactPosition] = useState("Manager Vânzări");
@@ -33,8 +33,13 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const [deliveryTerm, setDeliveryTerm] = useState("2-5 zile lucrătoare");
   const [paymentTerms, setPaymentTerms] = useState("Transfer Bancar / Ordin de plată la livrare");
 
+  // Date editabile Beneficiar
+  const [beneficiaryCui, setBeneficiaryCui] = useState("CUI / CNP beneficiar...");
+  const [beneficiaryAddress, setBeneficiaryAddress] = useState("Adresă completă beneficiar...");
+
   const today = useMemo(() => new Date(), []);
-  const offerNumber = useMemo(() => `AS-${format(today, 'yyyy-MMdd')}-${inquiryId.slice(0, 4).toUpperCase()}`, [today, inquiryId]);
+  const validityDate = useMemo(() => addDays(today, 15), [today]);
+  const offerNumber = useMemo(() => `AS-${format(today, 'yyyy')}-${format(today, 'MMdd')}`, [today]);
 
   useEffect(() => {
     async function load() {
@@ -130,25 +135,72 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
       <div className="max-w-[210mm] mx-auto my-10 bg-white shadow-2xl min-h-[297mm] p-[15mm] print:m-0 print:shadow-none print:p-[10mm] relative border border-neutral-200 print:border-none flex flex-col justify-between overflow-hidden">
         
         <div>
-          {/* Header Oferta */}
-          <div className="flex justify-between items-start mb-12">
-            <div className="space-y-4">
+          {/* Header Layout nou bazat pe imagine */}
+          <div className="flex justify-between items-start mb-6">
+            <div className="space-y-1">
                <div className="flex items-center gap-2">
-                  <div className="w-8 h-5 bg-accent-lime rounded-sm rotate-12" />
-                  <span className="font-headline font-extrabold text-3xl tracking-tighter">AgroSalso</span>
+                  <div className="w-6 h-4 bg-accent-lime rounded-sm rotate-12" />
+                  <span className="font-headline font-extrabold text-2xl tracking-tighter uppercase">Agro Salso</span>
                </div>
-               <div className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest leading-relaxed">
-                 <p className="text-neutral-900">AGRO SALSO SRL</p>
-                 <p>DN79, Mădăras 417330, Județul Bihor</p>
-                 <p>CUI: 30425879 | Reg. Com.: J05/1234/2012</p>
-                 <p>office@agrosalso.ro | www.agrosalso.ro</p>
+               <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">
+                 Dealer Utilaje Agricole din 2012 — Bihor, România
+               </p>
+            </div>
+            <div className="text-right flex flex-col items-end gap-1">
+               <div className="bg-neutral-900 text-accent-lime px-4 py-1 rounded text-[10px] font-extrabold uppercase tracking-widest mb-1">
+                 Ofertă de Preț
+               </div>
+               <div className="text-[11px] font-bold text-neutral-900">
+                 Nr. <span className="font-extrabold">{offerNumber}-{inquiryId.slice(0, 4).toUpperCase()}</span>
+               </div>
+               <div className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">
+                 Data: {format(today, 'dd.MM.yyyy')}
                </div>
             </div>
-            <div className="text-right">
-               <h2 className="font-headline font-extrabold text-4xl text-neutral-900 uppercase tracking-tighter mb-2">Ofertă Preț</h2>
-               <p className="text-sm font-bold text-neutral-400">Nr. {offerNumber}</p>
-               <p className="text-sm font-bold text-neutral-400">Data emiterii: {format(today, 'dd.MM.yyyy')}</p>
-               <p className="text-sm font-bold text-accent-lime mt-1 uppercase tracking-widest text-[10px]">Valabilitate: 15 zile</p>
+          </div>
+
+          <div className="w-full h-px bg-neutral-100 mb-8" />
+
+          {/* Furnizor vs Beneficiar */}
+          <div className="grid grid-cols-2 gap-12 mb-12">
+            <div>
+              <h4 className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest mb-4">Furnizor</h4>
+              <div className="space-y-1">
+                <p className="font-headline font-extrabold text-sm text-neutral-900 leading-tight">AGRO SALSO SRL</p>
+                <div className="text-[11px] font-bold text-neutral-500 space-y-0.5">
+                  <p>CUI: 30425879 | Reg. Com.: J05/1234/2012</p>
+                  <p>DN79, Mădăras 417330, Bihor</p>
+                  <p className="text-neutral-900">office@agrosalso.ro</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest mb-4">Beneficiar</h4>
+              <div className="space-y-1">
+                <p className="font-headline font-extrabold text-sm text-neutral-900 leading-tight uppercase">{inquiry.name}</p>
+                <div className="text-[11px] font-bold text-neutral-500 space-y-1">
+                  <p 
+                    contentEditable 
+                    suppressContentEditableWarning={true}
+                    className="focus:outline-accent-lime inline-block min-w-[100px]"
+                    onBlur={e => setBeneficiaryCui(e.currentTarget.innerText)}
+                  >
+                    {beneficiaryCui}
+                  </p>
+                  <p 
+                    contentEditable 
+                    suppressContentEditableWarning={true}
+                    className="focus:outline-accent-lime block"
+                    onBlur={e => setBeneficiaryAddress(e.currentTarget.innerText)}
+                  >
+                    {beneficiaryAddress}
+                  </p>
+                  <div className="flex gap-4">
+                    <p className="text-neutral-900">{inquiry.phone}</p>
+                    <p>{inquiry.email}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -163,57 +215,39 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             </div>
           )}
 
-          {/* Date Client */}
-          <div className="grid grid-cols-2 gap-10 mb-12 border-t border-b border-neutral-100 py-8">
-            <div>
-              <h4 className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest mb-4">Destinatar:</h4>
-              <div className="space-y-1">
-                <p className="font-headline font-extrabold text-xl text-neutral-900">{inquiry.name}</p>
-                <p className="text-sm text-neutral-500">{inquiry.email}</p>
-                <p className="text-sm text-neutral-500">{inquiry.phone}</p>
-              </div>
-            </div>
-            <div className="bg-neutral-50 p-6 rounded-2xl">
-               <h4 className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest mb-2">Referință Mesaj:</h4>
-               <p className="text-xs text-neutral-600 italic leading-relaxed">"{inquiry.message}"</p>
-            </div>
-          </div>
-
           {/* Detalii Utilaj */}
           <div className="space-y-8 mb-12">
-            <div className="flex gap-10">
-               <div className="relative w-[180px] h-[120px] bg-neutral-100 rounded-2xl overflow-hidden border border-neutral-100 shrink-0">
+            <div className="flex gap-8 items-center bg-neutral-50/50 p-6 rounded-3xl border border-neutral-50">
+               <div className="relative w-[160px] h-[110px] bg-white rounded-2xl overflow-hidden border border-neutral-100 shrink-0 shadow-sm">
                  <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
                </div>
-               <div className="flex-1 space-y-3">
-                 <div className="space-y-1">
-                   <span className="text-[10px] font-extrabold text-accent-lime uppercase tracking-widest">{product.brand}</span>
+               <div className="flex-1 space-y-2">
+                 <div className="space-y-0.5">
+                   <span className="text-[9px] font-extrabold text-accent-lime uppercase tracking-widest">{product.brand}</span>
                    <h3 className="font-headline font-extrabold text-2xl text-neutral-900 tracking-tight leading-none">{product.name}</h3>
                  </div>
-                 <p className="text-sm text-neutral-600 leading-relaxed font-medium">{product.shortDescription}</p>
+                 <p className="text-[11px] text-neutral-600 leading-relaxed font-medium">{product.shortDescription}</p>
                </div>
             </div>
 
             <div className="space-y-4">
-              <h4 className="font-headline font-bold text-lg border-b border-neutral-100 pb-2">Specificații Tehnice</h4>
-              <table className="w-full text-sm">
-                <tbody>
-                  {Object.entries(product.specifications).map(([key, value]) => (
-                    <tr key={key} className="border-b border-neutral-50 h-8">
-                      <td className="font-bold text-neutral-400 uppercase text-[9px] tracking-widest w-1/3">{key}</td>
-                      <td className="font-bold text-neutral-900">{value}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <h4 className="font-headline font-bold text-base border-b border-neutral-100 pb-2">Specificații Tehnice</h4>
+              <div className="grid grid-cols-2 gap-x-12 gap-y-1 text-[11px]">
+                {Object.entries(product.specifications).map(([key, value]) => (
+                  <div key={key} className="flex justify-between items-center py-1.5 border-b border-neutral-50">
+                    <span className="font-bold text-neutral-400 uppercase text-[8px] tracking-widest">{key}</span>
+                    <span className="font-bold text-neutral-900">{value}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Calcul Preț */}
           <div className="flex justify-end mb-12">
-            <div className="w-[320px] space-y-3">
+            <div className="w-[300px] space-y-2">
                <div className="flex justify-between items-center py-2 border-b border-neutral-100">
-                 <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Preț Unitar (Net)</span>
+                 <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Preț Unitar (Net)</span>
                  <div className="flex items-baseline gap-1">
                    <span 
                      contentEditable 
@@ -223,15 +257,15 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                    >
                      {editPrice.toLocaleString()}
                    </span>
-                   <span className="font-bold text-xs">RON</span>
+                   <span className="font-bold text-[10px]">RON</span>
                  </div>
                </div>
                <div className="flex justify-between items-center py-2 border-b border-neutral-100">
-                 <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest">TVA (19%)</span>
-                 <span className="font-bold text-sm text-neutral-900">{tva.toLocaleString()} RON</span>
+                 <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">TVA (19%)</span>
+                 <span className="font-bold text-xs text-neutral-900">{tva.toLocaleString()} RON</span>
                </div>
-               <div className="flex justify-between items-center py-4 bg-accent-lime/10 px-6 rounded-2xl mt-2">
-                 <span className="text-xs font-extrabold text-neutral-900 uppercase tracking-widest">Total de plată</span>
+               <div className="flex justify-between items-center py-4 bg-accent-lime/10 px-6 rounded-2xl mt-4">
+                 <span className="text-[10px] font-extrabold text-neutral-900 uppercase tracking-widest">Total de plată</span>
                  <span className="font-headline font-extrabold text-2xl text-neutral-900">{total.toLocaleString()} RON</span>
                </div>
             </div>
@@ -241,8 +275,8 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
           {offerType === 'afir' && (
             <div className="bg-neutral-50 p-6 rounded-[2rem] mb-12 border border-neutral-100 space-y-4">
               <div className="flex items-center gap-3">
-                <CheckCircle2 className="text-green-600 size-5" />
-                <h4 className="font-headline font-extrabold text-base">Criterii Conformitate AFIR</h4>
+                <CheckCircle2 className="text-green-600 size-4" />
+                <h4 className="font-headline font-extrabold text-sm uppercase tracking-tight">Criterii Conformitate AFIR</h4>
               </div>
               <div className="grid grid-cols-1 gap-2">
                 {[
@@ -253,38 +287,38 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                   "Garanția și service-ul post-vânzare sunt asigurate de AgroSalso."
                 ].map((text, i) => (
                   <div key={i} className="flex items-start gap-3">
-                     <div className="w-4 h-4 rounded border-2 border-green-600 shrink-0 mt-0.5 flex items-center justify-center">
-                       <div className="w-1.5 h-1.5 bg-green-600 rounded-sm" />
+                     <div className="w-3 h-3 rounded border border-green-600 shrink-0 mt-0.5 flex items-center justify-center">
+                       <div className="w-1 h-1 bg-green-600 rounded-sm" />
                      </div>
-                     <p className="text-xs font-medium text-neutral-700">{text}</p>
+                     <p className="text-[10px] font-medium text-neutral-700">{text}</p>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Condiții comerciale (Editable) */}
-          <div className="grid grid-cols-2 gap-10">
+          {/* Condiții comerciale */}
+          <div className="grid grid-cols-2 gap-12 pt-8 border-t border-neutral-100">
             <div className="space-y-4">
-               <h4 className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Condiții comerciale:</h4>
+               <h4 className="text-[8px] font-extrabold text-neutral-400 uppercase tracking-widest">Condiții comerciale:</h4>
                <div className="space-y-3">
                  <div>
-                   <p className="text-[9px] font-bold text-neutral-400 uppercase mb-0.5">Termen de livrare:</p>
+                   <p className="text-[8px] font-bold text-neutral-400 uppercase mb-0.5">Termen de livrare:</p>
                    <p 
                       contentEditable 
                       suppressContentEditableWarning={true}
-                      className="text-xs font-bold text-neutral-900 focus:outline-accent-lime inline-block" 
+                      className="text-[11px] font-bold text-neutral-900 focus:outline-accent-lime inline-block" 
                       onBlur={e => setDeliveryTerm(e.currentTarget.innerText)}
                    >
                       {deliveryTerm}
                    </p>
                  </div>
                  <div>
-                   <p className="text-[9px] font-bold text-neutral-400 uppercase mb-0.5">Condiții de plată:</p>
+                   <p className="text-[8px] font-bold text-neutral-400 uppercase mb-0.5">Condiții de plată:</p>
                    <p 
                       contentEditable 
                       suppressContentEditableWarning={true}
-                      className="text-xs font-bold text-neutral-900 focus:outline-accent-lime inline-block" 
+                      className="text-[11px] font-bold text-neutral-900 focus:outline-accent-lime inline-block" 
                       onBlur={e => setPaymentTerms(e.currentTarget.innerText)}
                    >
                       {paymentTerms}
@@ -293,12 +327,12 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                </div>
             </div>
             <div className="space-y-4">
-               <h4 className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Persoană de contact:</h4>
+               <h4 className="text-[8px] font-extrabold text-neutral-400 uppercase tracking-widest">Persoană de contact:</h4>
                <div className="space-y-0.5">
                  <p 
                     contentEditable 
                     suppressContentEditableWarning={true}
-                    className="font-headline font-extrabold text-base text-neutral-900 focus:outline-accent-lime" 
+                    className="font-headline font-extrabold text-sm text-neutral-900 focus:outline-accent-lime" 
                     onBlur={e => setContactPerson(e.currentTarget.innerText)}
                  >
                     {contactPerson}
@@ -306,7 +340,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                  <p 
                     contentEditable 
                     suppressContentEditableWarning={true}
-                    className="text-[10px] font-bold text-neutral-400 uppercase focus:outline-accent-lime" 
+                    className="text-[9px] font-bold text-neutral-400 uppercase focus:outline-accent-lime" 
                     onBlur={e => setContactPosition(e.currentTarget.innerText)}
                  >
                     {contactPosition}
@@ -314,7 +348,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                  <p 
                     contentEditable 
                     suppressContentEditableWarning={true}
-                    className="text-xs font-bold text-neutral-700 mt-1.5 focus:outline-accent-lime" 
+                    className="text-[11px] font-bold text-neutral-700 mt-1.5 focus:outline-accent-lime" 
                     onBlur={e => setContactPhone(e.currentTarget.innerText)}
                  >
                     {contactPhone}
@@ -325,10 +359,10 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
         </div>
 
         {/* Footer Pagina */}
-        <div className="border-t border-neutral-100 pt-6 flex justify-between items-center text-[8px] font-bold text-neutral-300 uppercase tracking-widest mt-8">
+        <div className="border-t border-neutral-50 pt-6 flex justify-between items-center text-[7px] font-bold text-neutral-300 uppercase tracking-widest mt-8">
            <div>© {new Date().getFullYear()} AGRO SALSO SRL — BIHOR, ROMÂNIA</div>
            <div className="flex gap-6">
-             <span>WWWW.AGROSALSO.RO</span>
+             <span>WWW.AGROSALSO.RO</span>
              <span className="text-neutral-200">TEHNOLOGIE PENTRU AGRICULTURĂ</span>
            </div>
         </div>
