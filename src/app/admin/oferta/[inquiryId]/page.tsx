@@ -164,6 +164,9 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                <div className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">
                  Data: {format(today, 'dd.MM.yyyy')}
                </div>
+               <div className="text-[10px] text-neutral-900 font-extrabold uppercase tracking-widest mt-0.5">
+                 Valabilitate: {format(validityDate, 'dd.MM.yyyy')}
+               </div>
             </div>
           </div>
 
