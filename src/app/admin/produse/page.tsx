@@ -1,9 +1,28 @@
+
 'use client';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { deleteProduct } from '@/lib/firestore/products';
 import { Product } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+import { 
+  Table, 
+  TableHeader, 
+  TableBody, 
+  TableRow, 
+  TableHead, 
+  TableCell 
+} from '@/components/ui/table';
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Edit, Trash2, ExternalLink, Plus, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -21,16 +40,13 @@ export default function AdminProductsPage() {
 
   const { data: products, isLoading } = useCollection<Product>(productsQuery);
 
-  const handleDelete = (id: string, name: string) => {
-    if (!confirm(`Ștergi produsul "${name}"?`)) return;
-    
-    // Apelam functia de stergere. 
-    // Fiind non-blocking, UI-ul va reactiona imediat daca stergerea este pornita.
+  const confirmDelete = (id: string, name: string) => {
+    // Apelam functia de stergere din librarie
     deleteProduct(db, id);
     
     toast({ 
-      title: "Acțiune inițiată", 
-      description: `Cererea de ștergere pentru ${name} a fost trimisă.` 
+      title: "Produs șters", 
+      description: `Utilajul "${name}" a fost eliminat din sistem.` 
     });
   };
 
@@ -119,15 +135,36 @@ export default function AdminProductsPage() {
                     <Link href={`/admin/produse/${product.id}`}>
                       <Button size="icon" variant="ghost" title="Editează" className="rounded-xl hover:bg-accent-lime hover:text-black transition-all"><Edit size={18} /></Button>
                     </Link>
-                    <Button 
-                      size="icon" 
-                      variant="ghost" 
-                      title="Șterge"
-                      className="rounded-xl hover:bg-red-50 hover:text-red-600 transition-all"
-                      onClick={() => handleDelete(product.id, product.name)}
-                    >
-                      <Trash2 size={18} />
-                    </Button>
+                    
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          title="Șterge"
+                          className="rounded-xl hover:bg-red-50 hover:text-red-600 transition-all"
+                        >
+                          <Trash2 size={18} />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="rounded-[2.5rem] border-none shadow-2xl">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="font-headline font-bold text-xl">Ștergi acest produs?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Această acțiune este ireversibilă. Produsul "{product.name}" va fi eliminat definitiv din catalog, din baza de date și din paginile publice ale site-ului.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="gap-2">
+                          <AlertDialogCancel className="rounded-xl font-bold border-none bg-neutral-100 hover:bg-neutral-200">Anulează</AlertDialogCancel>
+                          <AlertDialogAction 
+                            onClick={() => confirmDelete(product.id, product.name)}
+                            className="bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold"
+                          >
+                            Da, șterge produsul
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </TableCell>
               </TableRow>
