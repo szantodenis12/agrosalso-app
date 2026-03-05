@@ -266,18 +266,35 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
               </p>
             </div>
 
-            {/* Specifications Table */}
-            <div className="pt-4 space-y-3">
-              <h4 className="font-headline font-bold text-sm uppercase tracking-tight border-b border-neutral-100 pb-1.5">Specificații Tehnice</h4>
-              <div className="grid grid-cols-2 gap-x-12 gap-y-1.5 text-[11px]">
-                {Object.entries(product.specifications).map(([key, value]) => (
-                  <div key={key} className="flex justify-between items-center py-1.5 border-b border-neutral-50">
-                    <span className="font-bold text-neutral-400 uppercase text-[8px] tracking-widest">{key}</span>
-                    <span className="font-bold text-neutral-900">{value}</span>
-                  </div>
-                ))}
+            {/* Specifications Table (Models) - If exists */}
+            {product.specTable && product.specTable.rows.length > 0 && (
+              <div className="pt-4 space-y-3">
+                <h4 className="font-headline font-bold text-sm uppercase tracking-tight border-b border-neutral-100 pb-1.5">Specificații Tehnice Modele</h4>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-[10px] border-collapse">
+                    <thead className="bg-neutral-50">
+                      <tr>
+                        {product.specTable.headers.map((h, i) => (
+                          <th key={i} className="p-2 font-extrabold uppercase tracking-widest border border-neutral-100">{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {product.specTable.rows.map((row, ri) => (
+                        <tr key={ri} className={row.isPopular ? "bg-accent-lime/5" : ""}>
+                          {row.values.map((v, ci) => (
+                            <td key={ci} className="p-2 border border-neutral-100 font-bold">{v}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {product.specTable.footerNote && (
+                  <p className="text-[8px] text-neutral-400 italic">{product.specTable.footerNote}</p>
+                )}
               </div>
-            </div>
+            )}
           </div>
 
           {/* Calcul Preț - Clean layout with delimiters */}

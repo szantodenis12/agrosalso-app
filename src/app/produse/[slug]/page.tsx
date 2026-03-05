@@ -251,7 +251,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 </div>
               </div>
 
-              {/* TABEL SPECIFICAȚII (MODELE) - EXACT CA ÎN IMAGINE */}
+              {/* TABEL SPECIFICAȚII (MODELE) */}
               {product.specTable && product.specTable.rows.length > 0 && (
                 <div className="space-y-8 pt-10">
                   <div className="text-center space-y-4">
@@ -306,27 +306,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                       {product.specTable.footerNote}
                     </p>
                   )}
-                </div>
-              )}
-
-              {/* Quick Specifications (Key/Value) */}
-              {product.specifications && Object.keys(product.specifications).length > 0 && (
-                <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-neutral-100 shadow-sm space-y-8">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-neutral-900 rounded-xl flex items-center justify-center">
-                      < Star className="text-accent-lime w-5 h-5" />
-                    </div>
-                    <h2 className="font-headline font-extrabold text-xl md:text-2xl text-neutral-900 tracking-tight">Specificații Tehnice</h2>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-1">
-                    {Object.entries(product.specifications).map(([key, value]) => (
-                      <div key={key} className="flex justify-between items-center py-4 border-b border-neutral-50">
-                        <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-widest">{key}</span>
-                        <span className="text-sm font-extrabold text-neutral-900">{value}</span>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               )}
 

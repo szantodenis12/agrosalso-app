@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -37,12 +36,6 @@ export default function ProductForm({ initialData, mode }: Props) {
   // Stările pentru imagini
   const [galleryImages, setGalleryImages] = useState<string[]>(initialData?.images?.filter(img => img !== initialData?.mainImage) ?? []);
   const [mainImage, setMainImage] = useState<string>(initialData?.mainImage ?? '');
-
-  const [specs, setSpecs] = useState<{ key: string; value: string }[]>(
-    initialData?.specifications
-      ? Object.entries(initialData.specifications).map(([key, value]) => ({ key, value }))
-      : [{ key: '', value: '' }]
-  );
 
   // Stare pentru Tabelul Tehnic (Modele)
   const [specTable, setSpecTable] = useState<SpecTable>(
@@ -200,14 +193,10 @@ export default function ProductForm({ initialData, mode }: Props) {
     }
     setGenerating(true);
     try {
-      const specsObj: Record<string, string> = {};
-      specs.filter(s => s.key && s.value).forEach(s => { specsObj[s.key] = s.value; });
-
       const response = await adminProductDescriptionGenerator({
         productName: form.name,
         brandName: form.brand,
         categoryName: form.category,
-        specifications: specsObj
       });
 
       set('shortDescription', response.shortDescription);
@@ -232,9 +221,6 @@ export default function ProductForm({ initialData, mode }: Props) {
 
     setSaving(true);
     try {
-      const specsObj: Record<string, string> = {};
-      specs.filter(s => s.key && s.value).forEach(s => { specsObj[s.key] = s.value; });
-
       const finalImages = [mainImage, ...galleryImages.filter(img => img !== mainImage)];
 
       const data = {
@@ -245,7 +231,6 @@ export default function ProductForm({ initialData, mode }: Props) {
         stockQuantity: parseInt(form.stockQuantity) || 0,
         salePercent: parseInt(form.salePercent) || 0,
         tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
-        specifications: specsObj,
         specTable: specTable.rows.length > 0 ? specTable : null,
         currency: 'RON' as const,
         images: finalImages,
@@ -480,36 +465,6 @@ export default function ProductForm({ initialData, mode }: Props) {
                 onChange={e => setSpecTable({...specTable, footerNote: e.target.value})} 
                 className={inputClass} 
               />
-            </div>
-          </div>
-
-          <div className="bg-white rounded-[2.5rem] p-10 shadow-sm space-y-8 border border-neutral-100">
-            <div className="flex justify-between items-center">
-              <h3 className="font-headline font-extrabold text-xl tracking-tight flex items-center gap-2">
-                <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Specificații Rapide (Key/Value)
-              </h3>
-              <Button type="button" variant="ghost" size="sm" onClick={() => setSpecs([...specs, { key: '', value: '' }])} className="text-accent-lime font-extrabold gap-2">
-                <Plus size={16} /> ADAUGĂ
-              </Button>
-            </div>
-            <div className="space-y-4">
-              {specs.map((spec, i) => (
-                <div key={i} className="flex gap-4">
-                  <Input placeholder="Cheie (ex: Putere)" value={spec.key} onChange={e => {
-                    const updated = [...specs];
-                    updated[i].key = e.target.value;
-                    setSpecs(updated);
-                  }} className={inputClass} />
-                  <Input placeholder="Valoare (ex: 150 CP)" value={spec.value} onChange={e => {
-                    const updated = [...specs];
-                    updated[i].value = e.target.value;
-                    setSpecs(updated);
-                  }} className={inputClass} />
-                  <Button type="button" variant="ghost" size="icon" onClick={() => setSpecs(specs.filter((_, j) => j !== i))} className="text-red-400 hover:bg-red-50 rounded-xl shrink-0">
-                    <Trash2 size={18} />
-                  </Button>
-                </div>
-              ))}
             </div>
           </div>
         </div>
