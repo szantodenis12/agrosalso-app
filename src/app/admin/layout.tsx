@@ -1,10 +1,9 @@
-
 'use client';
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useUser } from '@/firebase';
 import Link from 'next/link';
-import { LayoutDashboard, Package, PlusCircle, Database, LogOut, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, Package, PlusCircle, LogOut, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 function AdminShell({ children }: { children: React.ReactNode }) {
@@ -46,7 +45,6 @@ function AdminShell({ children }: { children: React.ReactNode }) {
             { name: 'Cereri Ofertă', href: '/admin/cereri', icon: <MessageSquare size={18} /> },
             { name: 'Produse', href: '/admin/produse', icon: <Package size={18} /> },
             { name: 'Adaugă Produs', href: '/admin/produse/nou', icon: <PlusCircle size={18} /> },
-            { name: 'Seed DB', href: '/admin/seed', icon: <Database size={18} /> },
           ].map((item) => (
             <Link 
               key={item.name} 
