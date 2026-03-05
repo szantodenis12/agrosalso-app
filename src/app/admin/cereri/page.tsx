@@ -115,13 +115,43 @@ export default function AdminInquiriesPage() {
                 </TableCell>
                 <TableCell className="pr-8 text-right">
                   <div className="flex justify-end gap-2">
-                    {inq.status === 'replied' && (
-                      <Link href={`/admin/oferta/${inq.id}`} onClick={(e) => e.stopPropagation()}>
-                        <Button size="icon" variant="ghost" className="rounded-xl hover:bg-accent-lime/10 text-accent-lime">
-                          <Eye size={18} />
+                    <Link href={`/admin/oferta/${inq.id}`} onClick={(e) => e.stopPropagation()}>
+                      <Button size="icon" variant="ghost" title="Vezi/Generează Ofertă" className="rounded-xl hover:bg-accent-lime/10 text-accent-lime">
+                        <Eye size={18} />
+                      </Button>
+                    </Link>
+                    
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          className="rounded-xl hover:bg-red-50 text-neutral-300 hover:text-red-500 transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Trash2 size={18} />
                         </Button>
-                      </Link>
-                    )}
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="rounded-[2rem] border-none shadow-2xl">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="font-headline font-bold text-xl">Ștergi această cerere?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Această acțiune este ireversibilă. Toate datele asociate acestui lead vor fi șterse definitiv.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="gap-2">
+                          <AlertDialogCancel className="rounded-xl font-bold">Anulează</AlertDialogCancel>
+                          <AlertDialogAction 
+                            onClick={() => handleDeleteInquiry(inq.id)}
+                            className="bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold"
+                            disabled={isDeleting}
+                          >
+                            {isDeleting ? 'Se șterge...' : 'Da, șterge'}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+
                     <Button size="icon" variant="ghost" className="rounded-xl group-hover:translate-x-1 transition-transform">
                       <ArrowRight size={18} />
                     </Button>
