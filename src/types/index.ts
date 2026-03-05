@@ -17,6 +17,18 @@ export type ProductCategory =
   | 'cultivator-prasitoare'
   | 'altele';
 
+export interface SpecTableRow {
+  values: string[];
+  isPopular?: boolean;
+  note?: string;
+}
+
+export interface SpecTable {
+  headers: string[];
+  rows: SpecTableRow[];
+  footerNote?: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -34,6 +46,7 @@ export interface Product {
   images: string[];
   mainImage: string;
   specifications: Record<string, string>;
+  specTable?: SpecTable;
   inStock: boolean;
   stockQuantity: number;
   isNew: boolean;

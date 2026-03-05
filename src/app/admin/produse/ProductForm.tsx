@@ -5,15 +5,16 @@ import { useRouter } from 'next/navigation';
 import { useFirestore, useStorage } from '@/firebase';
 import { addProduct, updateProduct } from '@/lib/firestore/products';
 import { uploadImage } from '@/lib/firebase/storage';
-import { Product, ProductCategory } from '@/types';
+import { Product, ProductCategory, SpecTable, SpecTableRow } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Sparkles, Save, ChevronLeft, Trash2, Plus, Image as ImageIcon, X, Upload, Loader2 } from 'lucide-react';
+import { Sparkles, Save, ChevronLeft, Trash2, Plus, Image as ImageIcon, X, Upload, Loader2, Table as TableIcon, Star, Info } from 'lucide-react';
 import { adminProductDescriptionGenerator } from '@/ai/flows/admin-product-description-generator';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import { PRODUCT_CATEGORIES } from '@/lib/constants';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface Props {
   initialData?: Product;
@@ -41,6 +42,15 @@ export default function ProductForm({ initialData, mode }: Props) {
     initialData?.specifications
       ? Object.entries(initialData.specifications).map(([key, value]) => ({ key, value }))
       : [{ key: '', value: '' }]
+  );
+
+  // Stare pentru Tabelul Tehnic (Modele)
+  const [specTable, setSpecTable] = useState<SpecTable>(
+    initialData?.specTable ?? {
+      headers: ['MODEL', 'LĂȚIME', 'VITEZĂ', 'EFICIENȚĂ', 'NR. DISCURI', 'PUTERE NECESARĂ'],
+      rows: [],
+      footerNote: '*Puterea necesară depinde de tipul de tăvălug utilizat.'
+    }
   );
 
   const [form, setForm] = useState({
@@ -134,6 +144,55 @@ export default function ProductForm({ initialData, mode }: Props) {
     setGalleryImages(galleryImages.filter((_, i) => i !== index));
   };
 
+  // Logica Tabel Modele
+  const addTableHeader = () => {
+    setSpecTable(prev => ({
+      ...prev,
+      headers: [...prev.headers, 'COLOANĂ NOUĂ'],
+      rows: prev.rows.map(row => ({ ...row, values: [...row.values, ''] }))
+    }));
+  };
+
+  const removeTableHeader = (index: number) => {
+    setSpecTable(prev => ({
+      ...prev,
+      headers: prev.headers.filter((_, i) => i !== index),
+      rows: prev.rows.map(row => ({ ...row, values: row.values.filter((_, i) => i !== index) }))
+    }));
+  };
+
+  const updateHeader = (index: number, val: string) => {
+    const next = [...specTable.headers];
+    next[index] = val;
+    setSpecTable({ ...specTable, headers: next });
+  };
+
+  const addTableRow = () => {
+    setSpecTable(prev => ({
+      ...prev,
+      rows: [...prev.rows, { values: prev.headers.map(() => ''), isPopular: false }]
+    }));
+  };
+
+  const updateRowValue = (rowIndex: number, colIndex: number, val: string) => {
+    const nextRows = [...specTable.rows];
+    nextRows[rowIndex].values[colIndex] = val;
+    setSpecTable({ ...specTable, rows: nextRows });
+  };
+
+  const updateRowStatus = (rowIndex: number, field: keyof SpecTableRow, val: any) => {
+    const nextRows = [...specTable.rows];
+    (nextRows[rowIndex] as any)[field] = val;
+    setSpecTable({ ...specTable, rows: nextRows });
+  };
+
+  const removeTableRow = (index: number) => {
+    setSpecTable(prev => ({
+      ...prev,
+      rows: prev.rows.filter((_, i) => i !== index)
+    }));
+  };
+
   const handleAiGenerate = async () => {
     if (!form.name || !form.brand) {
       toast({ variant: "destructive", title: "Lipsesc date", description: "Vă rugăm introduceți numele și marca pentru a folosi AI-ul." });
@@ -187,6 +246,7 @@ export default function ProductForm({ initialData, mode }: Props) {
         salePercent: parseInt(form.salePercent) || 0,
         tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
         specifications: specsObj,
+        specTable: specTable.rows.length > 0 ? specTable : null,
         currency: 'RON' as const,
         images: finalImages,
       };
@@ -344,10 +404,89 @@ export default function ProductForm({ initialData, mode }: Props) {
             </div>
           </div>
 
+          {/* TABEL TEHNIC (MODELE) */}
+          <div className="bg-white rounded-[2.5rem] p-10 shadow-sm space-y-8 border border-neutral-100 overflow-hidden">
+            <div className="flex justify-between items-center">
+              <h3 className="font-headline font-extrabold text-xl tracking-tight flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Tabel Modele (Variantă PDF/Site)
+              </h3>
+              <div className="flex gap-2">
+                <Button type="button" variant="outline" size="sm" onClick={addTableHeader} className="rounded-xl border-2 font-bold text-[10px] uppercase">
+                  Adaugă Coloană
+                </Button>
+                <Button type="button" variant="ghost" size="sm" onClick={addTableRow} className="text-accent-lime font-extrabold gap-2">
+                  <Plus size={16} /> ADAUGĂ RÂND
+                </Button>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto pb-4 custom-scrollbar">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-neutral-900 text-white">
+                    {specTable.headers.map((header, i) => (
+                      <th key={i} className="p-3 text-left min-w-[120px] relative group/header">
+                        <Input 
+                          value={header} 
+                          onChange={e => updateHeader(i, e.target.value)} 
+                          className="bg-transparent border-none text-white text-[10px] font-extrabold uppercase p-0 h-auto focus-visible:ring-0"
+                        />
+                        <button 
+                          type="button" 
+                          onClick={() => removeTableHeader(i)}
+                          className="absolute -top-1 -right-1 bg-red-500 rounded-full p-0.5 opacity-0 group-hover/header:opacity-100 transition-opacity"
+                        >
+                          <X size={10} />
+                        </button>
+                      </th>
+                    ))}
+                    <th className="p-3 w-20"></th>
+                    <th className="p-3 w-10"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-neutral-100">
+                  {specTable.rows.map((row, rowIndex) => (
+                    <tr key={rowIndex} className={row.isPopular ? "bg-accent-lime/5" : ""}>
+                      {row.values.map((val, colIndex) => (
+                        <td key={colIndex} className="p-2">
+                          <Input 
+                            value={val} 
+                            onChange={e => updateRowValue(rowIndex, colIndex, e.target.value)}
+                            className="bg-transparent border-none text-xs font-bold focus-visible:ring-0 h-8"
+                          />
+                        </td>
+                      ))}
+                      <td className="p-2 text-center">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <Checkbox checked={row.isPopular} onCheckedChange={v => updateRowStatus(rowIndex, 'isPopular', !!v)} />
+                          <span className="text-[8px] font-bold uppercase">Popular</span>
+                        </label>
+                      </td>
+                      <td className="p-2">
+                        <Button type="button" variant="ghost" size="icon" onClick={() => removeTableRow(rowIndex)} className="h-8 w-8 text-red-400">
+                          <Trash2 size={14} />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            
+            <div className="pt-4 border-t border-neutral-50">
+              <label className={labelClass}>Notă Subsol Tabel</label>
+              <Input 
+                value={specTable.footerNote} 
+                onChange={e => setSpecTable({...specTable, footerNote: e.target.value})} 
+                className={inputClass} 
+              />
+            </div>
+          </div>
+
           <div className="bg-white rounded-[2.5rem] p-10 shadow-sm space-y-8 border border-neutral-100">
             <div className="flex justify-between items-center">
               <h3 className="font-headline font-extrabold text-xl tracking-tight flex items-center gap-2">
-                <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Specificații Tehnice
+                <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Specificații Rapide (Key/Value)
               </h3>
               <Button type="button" variant="ghost" size="sm" onClick={() => setSpecs([...specs, { key: '', value: '' }])} className="text-accent-lime font-extrabold gap-2">
                 <Plus size={16} /> ADAUGĂ

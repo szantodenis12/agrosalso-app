@@ -1,3 +1,4 @@
+
 'use client';
 import { use, useEffect, useState, useCallback } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -7,7 +8,7 @@ import { collection, query, where, getDocs, limit, addDoc, serverTimestamp } fro
 import { Product } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, Send, Phone, Info, ShieldCheck, Truck, Cog, Sparkles, Star, Settings2, Image as ImageIcon } from 'lucide-react';
+import { ChevronLeft, Send, Phone, Info, ShieldCheck, Truck, Cog, Sparkles, Star, Settings2, Image as ImageIcon, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,6 +16,8 @@ import { toast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -142,38 +145,172 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start">
             
             {/* Content Column */}
-            <div className="lg:col-span-7 space-y-10">
+            <div className="lg:col-span-12 space-y-12">
               
-              {/* Detailed Content */}
-              <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-neutral-100 shadow-sm space-y-8">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-accent-lime/10 rounded-xl flex items-center justify-center">
-                    <Sparkles className="text-accent-lime w-5 h-5" />
-                  </div>
-                  <h2 className="font-headline font-extrabold text-xl md:text-2xl text-neutral-900 tracking-tight">Despre acest utilaj</h2>
-                </div>
-                
-                <div 
-                  className="prose prose-neutral max-w-none text-neutral-600 font-body leading-relaxed text-base md:text-lg"
-                  dangerouslySetInnerHTML={{ __html: product.detailedDescription || product.description }}
-                />
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <div className="lg:col-span-7 space-y-10">
+                  {/* Detailed Content */}
+                  <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-neutral-100 shadow-sm space-y-8">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-accent-lime/10 rounded-xl flex items-center justify-center">
+                        <Sparkles className="text-accent-lime w-5 h-5" />
+                      </div>
+                      <h2 className="font-headline font-extrabold text-xl md:text-2xl text-neutral-900 tracking-tight">Despre acest utilaj</h2>
+                    </div>
+                    
+                    <div 
+                      className="prose prose-neutral max-w-none text-neutral-600 font-body leading-relaxed text-base md:text-lg"
+                      dangerouslySetInnerHTML={{ __html: product.detailedDescription || product.description }}
+                    />
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 border-t border-neutral-50">
-                   {[
-                     { icon: <ShieldCheck className="w-8 h-8" />, title: "Garanție RO", sub: "Service autorizat" },
-                     { icon: <Truck className="w-8 h-8" />, title: "Livrare", sub: "Direct în fermă" },
-                     { icon: <Cog className="w-8 h-8" />, title: "Piese", sub: "Stoc disponibil" },
-                   ].map((item, i) => (
-                     <div key={i} className="space-y-2">
-                       <div className="text-accent-lime">{item.icon}</div>
-                       <h4 className="font-headline font-bold text-sm text-neutral-900">{item.title}</h4>
-                       <p className="text-[10px] text-neutral-400 font-medium uppercase tracking-wider">{item.sub}</p>
-                     </div>
-                   ))}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 border-t border-neutral-50">
+                       {[
+                         { icon: <ShieldCheck className="w-8 h-8" />, title: "Garanție RO", sub: "Service autorizat" },
+                         { icon: <Truck className="w-8 h-8" />, title: "Livrare", sub: "Direct în fermă" },
+                         { icon: <Cog className="w-8 h-8" />, title: "Piese", sub: "Stoc disponibil" },
+                       ].map((item, i) => (
+                         <div key={i} className="space-y-2">
+                           <div className="text-accent-lime">{item.icon}</div>
+                           <h4 className="font-headline font-bold text-sm text-neutral-900">{item.title}</h4>
+                           <p className="text-[10px] text-neutral-400 font-medium uppercase tracking-wider">{item.sub}</p>
+                         </div>
+                       ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="lg:col-span-5 space-y-8">
+                  {/* Pricing & Inquiry Sidebar */}
+                  <div className="bg-white rounded-[2.5rem] p-10 text-neutral-900 border border-neutral-100 shadow-xl overflow-hidden relative">
+                    <div className="space-y-6 relative z-10">
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț Catalog (fără TVA)</span>
+                        <div className="font-headline font-extrabold text-4xl md:text-5xl text-neutral-900 tracking-tighter">
+                          {product.priceOnRequest ? "LA CERERE" : `${product.price.toLocaleString()} RON`}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3 p-4 bg-neutral-50 rounded-2xl border border-neutral-100">
+                        <div className="w-2.5 h-2.5 bg-accent-lime rounded-full animate-pulse shadow-[0_0_10px_rgba(163,230,53,0.5)]" />
+                        <span className="text-[11px] font-extrabold text-neutral-500 uppercase tracking-widest">Verificat & Gata de Livrare</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-[2.5rem] p-8 md:p-10 text-neutral-900 space-y-8 shadow-xl border border-neutral-100">
+                    <div className="space-y-3">
+                      <h3 className="font-headline font-extrabold text-2xl tracking-tight">Solicită Ofertă</h3>
+                      <p className="text-neutral-500 text-sm font-medium">Lăsați-ne datele voastre și vă vom contacta cu o ofertă personalizată.</p>
+                    </div>
+
+                    <form onSubmit={handleInquirySubmit} className="space-y-4">
+                      <Input 
+                        placeholder="Nume Complet" 
+                        value={inquiry.name}
+                        onChange={(e) => setInquiry({...inquiry, name: e.target.value})}
+                        required
+                        className="h-14 bg-neutral-50 border-neutral-100 rounded-2xl focus:ring-accent-lime"
+                      />
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <Input 
+                          type="email" 
+                          placeholder="Email" 
+                          value={inquiry.email}
+                          onChange={(e) => setInquiry({...inquiry, email: e.target.value})}
+                          required
+                          className="h-14 bg-neutral-50 border-neutral-100 rounded-2xl focus:ring-accent-lime"
+                        />
+                        <Input 
+                          type="tel" 
+                          placeholder="Telefon" 
+                          value={inquiry.phone}
+                          onChange={(e) => setInquiry({...inquiry, phone: e.target.value})}
+                          required
+                          className="h-14 bg-neutral-50 border-neutral-100 rounded-2xl focus:ring-accent-lime"
+                        />
+                      </div>
+                      <Textarea 
+                        placeholder="Mesajul tău..." 
+                        value={inquiry.message}
+                        onChange={(e) => setInquiry({...inquiry, message: e.target.value})}
+                        required
+                        className="min-h-[120px] bg-neutral-50 border-neutral-100 rounded-2xl focus:ring-accent-lime"
+                      />
+
+                      <Button 
+                        type="submit" 
+                        disabled={submitting}
+                        className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold h-16 rounded-full flex items-center justify-between pl-8 pr-2 group transition-all"
+                      >
+                        {submitting ? 'SE TRIMITE...' : 'TRIMITE CEREREA'}
+                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
+                          <Send size={20} className="text-black" />
+                        </div>
+                      </Button>
+                    </form>
+                  </div>
                 </div>
               </div>
 
-              {/* Specifications */}
+              {/* TABEL SPECIFICAȚII (MODELE) - EXACT CA ÎN IMAGINE */}
+              {product.specTable && product.specTable.rows.length > 0 && (
+                <div className="space-y-8 pt-10">
+                  <div className="text-center space-y-4">
+                    <h2 className="font-headline font-extrabold text-3xl md:text-5xl text-neutral-900 tracking-tight">
+                      Alege <span className="text-red-600">modelul potrivit</span>
+                    </h2>
+                    <p className="text-neutral-500 font-medium max-w-2xl mx-auto text-sm md:text-base">
+                      De la ferme mici cu tractor de 70 CP până la exploatații mari cu 150 CP — există un {product.name} pentru tine.
+                    </p>
+                  </div>
+
+                  <div className="bg-white rounded-[2rem] shadow-2xl shadow-black/5 overflow-hidden border border-neutral-100">
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="bg-neutral-900 text-white">
+                            {product.specTable.headers.map((header, i) => (
+                              <th key={i} className="p-5 text-left text-[10px] font-extrabold uppercase tracking-widest border-r border-white/5 last:border-0">
+                                {header}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-neutral-100">
+                          {product.specTable.rows.map((row, rowIndex) => (
+                            <tr key={rowIndex} className={cn(
+                              "hover:bg-neutral-50/50 transition-colors",
+                              row.isPopular && "bg-red-50/30"
+                            )}>
+                              {row.values.map((val, colIndex) => (
+                                <td key={colIndex} className="p-5 text-sm">
+                                  {colIndex === 0 ? (
+                                    <div className="flex items-center gap-3">
+                                      <span className="font-bold text-red-600 font-headline">{val}</span>
+                                      {row.isPopular && (
+                                        <Badge className="bg-red-600 hover:bg-red-600 text-white border-none text-[8px] font-extrabold px-2 py-0.5 rounded-full">POPULAR</Badge>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <span className="font-medium text-neutral-600">{val}</span>
+                                  )}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  {product.specTable.footerNote && (
+                    <p className="text-[10px] text-neutral-400 font-bold uppercase text-center tracking-widest">
+                      {product.specTable.footerNote}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Quick Specifications (Key/Value) */}
               {product.specifications && Object.keys(product.specifications).length > 0 && (
                 <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-neutral-100 shadow-sm space-y-8">
                   <div className="flex items-center gap-3">
@@ -194,7 +331,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 </div>
               )}
 
-              {/* Conditional Gallery Section at Bottom */}
+              {/* Gallery Section */}
               {extraImages.length > 0 && (
                 <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-neutral-100 shadow-sm space-y-8">
                    <div className="flex items-center gap-3">
@@ -218,92 +355,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 </div>
               )}
             </div>
-
-            {/* Sticky Action Column */}
-            <aside className="lg:col-span-5 space-y-8 sticky top-[100px]">
-              
-              {/* Pricing Card - Now White */}
-              <div className="bg-white rounded-[2.5rem] p-10 text-neutral-900 border border-neutral-100 shadow-xl overflow-hidden relative">
-                <div className="space-y-6 relative z-10">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț Catalog (fără TVA)</span>
-                    <div className="font-headline font-extrabold text-4xl md:text-5xl text-neutral-900 tracking-tighter">
-                      {product.priceOnRequest ? "LA CERERE" : `${product.price.toLocaleString()} RON`}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 p-4 bg-neutral-50 rounded-2xl border border-neutral-100">
-                    <div className="w-2.5 h-2.5 bg-accent-lime rounded-full animate-pulse shadow-[0_0_10px_rgba(163,230,53,0.5)]" />
-                    <span className="text-[11px] font-extrabold text-neutral-500 uppercase tracking-widest">Verificat & Gata de Livrare</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Contact Form */}
-              <div className="bg-white rounded-[2.5rem] p-8 md:p-10 text-neutral-900 space-y-8 shadow-xl border border-neutral-100">
-                <div className="space-y-3">
-                  <h3 className="font-headline font-extrabold text-2xl tracking-tight">Solicită Ofertă</h3>
-                  <p className="text-neutral-500 text-sm font-medium">Lăsați-ne datele voastre și vă vom contacta cu o ofertă personalizată.</p>
-                </div>
-
-                <form onSubmit={handleInquirySubmit} className="space-y-4">
-                  <Input 
-                    placeholder="Nume Complet" 
-                    value={inquiry.name}
-                    onChange={(e) => setInquiry({...inquiry, name: e.target.value})}
-                    required
-                    className="h-14 bg-neutral-50 border-neutral-100 rounded-2xl focus:ring-accent-lime"
-                  />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Input 
-                      type="email" 
-                      placeholder="Email" 
-                      value={inquiry.email}
-                      onChange={(e) => setInquiry({...inquiry, email: e.target.value})}
-                      required
-                      className="h-14 bg-neutral-50 border-neutral-100 rounded-2xl focus:ring-accent-lime"
-                    />
-                    <Input 
-                      type="tel" 
-                      placeholder="Telefon" 
-                      value={inquiry.phone}
-                      onChange={(e) => setInquiry({...inquiry, phone: e.target.value})}
-                      required
-                      className="h-14 bg-neutral-50 border-neutral-100 rounded-2xl focus:ring-accent-lime"
-                    />
-                  </div>
-                  <Textarea 
-                    placeholder="Mesajul tău..." 
-                    value={inquiry.message}
-                    onChange={(e) => setInquiry({...inquiry, message: e.target.value})}
-                    required
-                    className="min-h-[120px] bg-neutral-50 border-neutral-100 rounded-2xl focus:ring-accent-lime"
-                  />
-
-                  <Button 
-                    type="submit" 
-                    disabled={submitting}
-                    className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold h-16 rounded-full flex items-center justify-between pl-8 pr-2 group transition-all"
-                  >
-                    {submitting ? 'SE TRIMITE...' : 'TRIMITE CEREREA'}
-                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
-                      <Send size={20} className="text-black" />
-                    </div>
-                  </Button>
-                </form>
-
-                <div className="pt-6 border-t border-neutral-50 flex flex-col gap-4">
-                   <a href="tel:+40751234567" className="flex items-center gap-4 text-neutral-500 hover:text-accent-lime transition-colors font-bold text-sm">
-                     <div className="w-10 h-10 bg-neutral-50 rounded-full flex items-center justify-center"><Phone size={18} /></div>
-                     +40 751 234 567
-                   </a>
-                   <div className="flex items-center gap-4 text-neutral-500 font-bold text-sm">
-                     <div className="w-10 h-10 bg-neutral-50 rounded-full flex items-center justify-center"><Info size={18} /></div>
-                     Consultanță gratuită
-                   </div>
-                </div>
-              </div>
-            </aside>
           </div>
         </div>
       </main>
