@@ -234,24 +234,40 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             </div>
           )}
 
-          {/* Detalii Utilaj */}
-          <div className="space-y-8 mb-12">
-            <div className="flex gap-8 items-center bg-neutral-50/50 p-6 rounded-3xl border border-neutral-50">
-               <div className="relative w-[160px] h-[110px] bg-white rounded-2xl overflow-hidden border border-neutral-100 shrink-0 shadow-sm">
-                 <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
-               </div>
-               <div className="flex-1 space-y-2">
-                 <div className="space-y-0.5">
-                   <span className="text-[9px] font-extrabold text-accent-lime uppercase tracking-widest">{product.brand}</span>
-                   <h3 className="font-headline font-extrabold text-2xl text-neutral-900 tracking-tight leading-none">{product.name}</h3>
-                 </div>
-                 <p className="text-[11px] text-neutral-600 leading-relaxed font-medium">{product.shortDescription}</p>
-               </div>
+          {/* Detalii Utilaj - Redesigned Layout */}
+          <div className="space-y-6 mb-12">
+            {/* Product Image - Full Width Styled */}
+            <div className="relative w-full aspect-[16/8] rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-100 shadow-sm">
+              <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
             </div>
 
-            <div className="space-y-4">
-              <h4 className="font-headline font-bold text-base border-b border-neutral-100 pb-2">Specificații Tehnice</h4>
-              <div className="grid grid-cols-2 gap-x-12 gap-y-1 text-[11px]">
+            {/* Product Name and Badge */}
+            <div className="flex items-center justify-between gap-4 pt-2">
+              <h3 className="font-headline font-extrabold text-3xl tracking-tight leading-none uppercase">
+                <span className="text-destructive mr-2">{product.brand}</span>
+                <span className="text-neutral-900">{product.name}</span>
+              </h3>
+              
+              {/* Status Badge */}
+              <div className="flex items-center gap-2 bg-[#E9F5E1] text-[#22633B] px-4 py-2 rounded-full border border-[#D1E9C2] shrink-0">
+                <div className="w-2 h-2 bg-[#3A8C58] rounded-full" />
+                <span className="text-[10px] font-extrabold uppercase tracking-widest">
+                  {product.inStock ? "Pe stoc — livrare imediată" : "La comandă"}
+                </span>
+              </div>
+            </div>
+
+            {/* Product Description */}
+            <div className="prose prose-neutral max-w-none">
+              <p className="text-sm text-neutral-600 leading-relaxed font-medium">
+                {product.detailedDescription || product.description}
+              </p>
+            </div>
+
+            {/* Specifications Table */}
+            <div className="pt-4 space-y-3">
+              <h4 className="font-headline font-bold text-sm uppercase tracking-tight border-b border-neutral-100 pb-1.5">Specificații Tehnice</h4>
+              <div className="grid grid-cols-2 gap-x-12 gap-y-1.5 text-[11px]">
                 {Object.entries(product.specifications).map(([key, value]) => (
                   <div key={key} className="flex justify-between items-center py-1.5 border-b border-neutral-50">
                     <span className="font-bold text-neutral-400 uppercase text-[8px] tracking-widest">{key}</span>
