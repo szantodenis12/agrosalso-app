@@ -68,3 +68,23 @@
 .animate-pill-float {
   animation: pillFloat 4s ease-in-out infinite;
 }
+
+@media print {
+  @page {
+    margin: 0;
+    size: auto;
+  }
+  body {
+    background: white !important;
+  }
+  .print-hidden {
+    display: none !important;
+  }
+  nav, footer, aside, button {
+    display: none !important;
+  }
+  main {
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+}

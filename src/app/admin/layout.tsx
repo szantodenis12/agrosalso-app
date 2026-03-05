@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useUser } from '@/firebase';
 import Link from 'next/link';
-import { LayoutDashboard, Package, PlusCircle, Database, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, PlusCircle, Database, LogOut, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 function AdminShell({ children }: { children: React.ReactNode }) {
@@ -32,7 +32,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen bg-neutral-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-neutral-900 text-white shrink-0 fixed h-full flex flex-col">
+      <aside className="w-64 bg-neutral-900 text-white shrink-0 fixed h-full flex flex-col z-40">
         <div className="p-6 border-b border-white/10">
           <Link href="/admin" className="flex items-center gap-2">
             <div className="w-5 h-3 bg-accent-lime rounded-sm rotate-12" />
@@ -43,6 +43,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         <nav className="flex-1 p-4 space-y-2 mt-4">
           {[
             { name: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={18} /> },
+            { name: 'Cereri Ofertă', href: '/admin/cereri', icon: <MessageSquare size={18} /> },
             { name: 'Produse', href: '/admin/produse', icon: <Package size={18} /> },
             { name: 'Adaugă Produs', href: '/admin/produse/nou', icon: <PlusCircle size={18} /> },
             { name: 'Seed DB', href: '/admin/seed', icon: <Database size={18} /> },
@@ -77,7 +78,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-10">
+      <main className="flex-1 ml-64 p-10 print:ml-0 print:p-0">
         {children}
       </main>
     </div>

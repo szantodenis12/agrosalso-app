@@ -69,3 +69,17 @@ export interface Brand {
   isPartner: boolean;
   order: number;
 }
+
+export interface Inquiry {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  productId: string;
+  productName: string;
+  status: 'new' | 'read' | 'replied';
+  createdAt: any;
+  repliedAt?: any;
+  offerId?: string;
+}
