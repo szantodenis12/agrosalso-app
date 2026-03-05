@@ -1,16 +1,14 @@
 'use client';
 import { use, useEffect, useState, useMemo } from 'react';
 import { useFirestore } from '@/firebase';
-import { doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { Inquiry, Product } from '@/types';
-import { format, addDays } from 'date-fns';
+import { format } from 'date-fns';
 import { ro } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Printer, Send, FileText, ChevronLeft, Building2, CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react';
+import { Printer, Send, ChevronLeft, AlertTriangle, Loader2, CheckCircle2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
 type OfferType = 'standard' | 'afir' | 'urgent';
@@ -92,8 +90,8 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin text-accent-lime" /></div>;
-  if (!inquiry || !product) return <div className="p-10 text-center font-bold">Datele nu au fost găsite.</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center bg-white"><Loader2 className="animate-spin text-accent-lime size-10" /></div>;
+  if (!inquiry || !product) return <div className="p-10 text-center font-bold text-neutral-400">Datele solicitate nu au fost găsite în sistem.</div>;
 
   const tva = editPrice * 0.19;
   const total = editPrice + tva;
@@ -101,22 +99,24 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   return (
     <div className="min-h-screen bg-neutral-100 pb-20 print:bg-white print:pb-0">
       {/* Toolbar - Ascuns la Print */}
-      <div className="bg-white border-b border-neutral-200 p-6 sticky top-0 z-50 shadow-sm print:hidden">
+      <div className="bg-white border-b border-neutral-200 p-6 sticky top-0 z-[100] shadow-md print:hidden">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Button type="button" variant="ghost" size="icon" className="rounded-full" onClick={() => router.back()}><ChevronLeft /></Button>
+            <Button type="button" variant="ghost" size="icon" className="rounded-full" onClick={() => router.back()}>
+              <ChevronLeft />
+            </Button>
             <h1 className="font-headline font-extrabold text-xl tracking-tight">Generator Ofertă</h1>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <div className="bg-neutral-50 p-1 rounded-xl flex gap-1 mr-4">
               <Button type="button" variant={offerType === 'standard' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('standard')} className="rounded-lg h-9">Standard</Button>
               <Button type="button" variant={offerType === 'afir' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('afir')} className="rounded-lg h-9">AFIR</Button>
               <Button type="button" variant={offerType === 'urgent' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('urgent')} className="rounded-lg h-9 text-red-500 hover:text-red-600">Urgență</Button>
             </div>
             
-            <Button type="button" variant="outline" className="rounded-xl h-11 px-6 gap-2" onClick={handlePrint}>
-              <Printer size={18} /> DESCARCĂ PDF
+            <Button type="button" variant="outline" className="rounded-xl h-11 px-6 gap-2 border-2" onClick={handlePrint}>
+              <Printer size={18} /> DESCĂRCĂ PDF
             </Button>
             <Button type="button" className="bg-neutral-900 hover:bg-black text-white rounded-xl h-11 px-6 gap-2" onClick={handleSendEmail} disabled={sending}>
               {sending ? <Loader2 className="animate-spin size-4" /> : <Send size={18} />} TRIMITE EMAIL
@@ -125,8 +125,8 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
         </div>
       </div>
 
-      {/* Pagina de Ofertă */}
-      <div className="max-w-5xl mx-auto my-10 bg-white shadow-2xl min-h-[1414px] p-16 print:m-0 print:shadow-none print:p-8 relative">
+      {/* Pagina de Ofertă - Format A4 Simulat */}
+      <div className="max-w-5xl mx-auto my-10 bg-white shadow-2xl min-h-[1414px] p-16 print:m-0 print:shadow-none print:p-8 relative border border-neutral-200 print:border-none">
         
         {/* Header Oferta */}
         <div className="flex justify-between items-start mb-16">
@@ -136,10 +136,10 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                 <span className="font-headline font-extrabold text-3xl tracking-tighter">AgroSalso</span>
              </div>
              <div className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest leading-relaxed">
-               <p>AGRO SALSO SRL</p>
+               <p className="text-neutral-900">AGRO SALSO SRL</p>
                <p>DN79, Mădăras 417330, Județul Bihor</p>
                <p>CUI: 30425879 | Reg. Com.: J05/1234/2012</p>
-               <p>office@agrosalso.ro | agrosalso.ro</p>
+               <p>office@agrosalso.ro | www.agrosalso.ro</p>
              </div>
           </div>
           <div className="text-right">
@@ -152,11 +152,11 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
 
         {/* Banner Urgență */}
         {offerType === 'urgent' && (
-          <div className="bg-red-600 text-white p-6 rounded-2xl mb-10 flex items-center gap-4 animate-pulse">
+          <div className="bg-red-600 text-white p-6 rounded-2xl mb-10 flex items-center gap-4">
             <AlertTriangle className="shrink-0" size={32} />
             <div>
               <p className="font-bold text-lg uppercase tracking-tight">STOC LIMITAT - LIVRARE IMEDIATĂ</p>
-              <p className="text-sm opacity-90">Prețul este valabil doar pentru utilajele aflate pe stoc. Sunați acum!</p>
+              <p className="text-sm opacity-90">Prețul este valabil doar pentru utilajele aflate pe stoc în momentul emiterii.</p>
             </div>
           </div>
         )}
@@ -172,7 +172,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             </div>
           </div>
           <div className="bg-neutral-50 p-6 rounded-2xl">
-             <h4 className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest mb-2">Referință Cerere:</h4>
+             <h4 className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest mb-2">Referință Mesaj:</h4>
              <p className="text-xs text-neutral-600 italic leading-relaxed">"{inquiry.message}"</p>
           </div>
         </div>
@@ -215,9 +215,9 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                <div className="flex items-baseline gap-1">
                  <span 
                    contentEditable 
-                   suppressContentEditableWarning
-                   onBlur={(e) => setEditPrice(parseFloat(e.currentTarget.innerText) || 0)}
-                   className="font-headline font-extrabold text-2xl text-neutral-900 focus:outline-accent-lime px-1"
+                   suppressContentEditableWarning={true}
+                   onBlur={(e) => setEditPrice(parseFloat(e.currentTarget.innerText.replace(/[^0-9]/g, '')) || 0)}
+                   className="font-headline font-extrabold text-2xl text-neutral-900 focus:outline-accent-lime px-1 min-w-[50px] inline-block"
                  >
                    {editPrice.toLocaleString()}
                  </span>
@@ -245,10 +245,10 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             <div className="grid grid-cols-1 gap-3">
               {[
                 "Utilajul este nou și nefolosit anterior.",
-                "Sistemul îndeplinește standardele europene de siguranță (CE).",
-                "Produsul este eligibil pentru finanțare prin fonduri nerambursabile.",
+                "Sistemul îndeplinește standardele europene de siguranță (Certificare CE).",
+                "Produsul este eligibil pentru finanțare prin fonduri nerambursabile (PNDR).",
                 "Echipamentul contribuie la modernizarea exploatației agricole.",
-                "Garanția de producător este asigurată de service-ul autorizat AgroSalso."
+                "Garanția și service-ul post-vânzare sunt asigurate de AgroSalso."
               ].map((text, i) => (
                 <div key={i} className="flex items-start gap-3">
                    <div className="w-5 h-5 rounded border-2 border-green-600 shrink-0 mt-0.5 flex items-center justify-center">
@@ -268,30 +268,65 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
              <div className="space-y-4">
                <div>
                  <p className="text-[10px] font-bold text-neutral-400 uppercase mb-1">Termen de livrare:</p>
-                 <p contentEditable suppressContentEditableWarning className="text-sm font-bold text-neutral-900 focus:outline-accent-lime" onBlur={e => setDeliveryTerm(e.currentTarget.innerText)}>{deliveryTerm}</p>
+                 <p 
+                    contentEditable 
+                    suppressContentEditableWarning={true}
+                    className="text-sm font-bold text-neutral-900 focus:outline-accent-lime inline-block" 
+                    onBlur={e => setDeliveryTerm(e.currentTarget.innerText)}
+                 >
+                    {deliveryTerm}
+                 </p>
                </div>
                <div>
                  <p className="text-[10px] font-bold text-neutral-400 uppercase mb-1">Condiții de plată:</p>
-                 <p contentEditable suppressContentEditableWarning className="text-sm font-bold text-neutral-900 focus:outline-accent-lime" onBlur={e => setPaymentTerms(e.currentTarget.innerText)}>{paymentTerms}</p>
+                 <p 
+                    contentEditable 
+                    suppressContentEditableWarning={true}
+                    className="text-sm font-bold text-neutral-900 focus:outline-accent-lime inline-block" 
+                    onBlur={e => setPaymentTerms(e.currentTarget.innerText)}
+                 >
+                    {paymentTerms}
+                 </p>
                </div>
              </div>
           </div>
           <div className="space-y-6">
              <h4 className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Persoană de contact:</h4>
              <div className="space-y-1">
-               <p contentEditable suppressContentEditableWarning className="font-headline font-extrabold text-lg text-neutral-900 focus:outline-accent-lime" onBlur={e => setContactPerson(e.currentTarget.innerText)}>{contactPerson}</p>
-               <p contentEditable suppressContentEditableWarning className="text-xs font-bold text-neutral-400 uppercase focus:outline-accent-lime" onBlur={e => setContactPosition(e.currentTarget.innerText)}>{contactPosition}</p>
-               <p contentEditable suppressContentEditableWarning className="text-sm font-bold text-neutral-700 mt-2 focus:outline-accent-lime" onBlur={e => setContactPhone(e.currentTarget.innerText)}>{contactPhone}</p>
+               <p 
+                  contentEditable 
+                  suppressContentEditableWarning={true}
+                  className="font-headline font-extrabold text-lg text-neutral-900 focus:outline-accent-lime" 
+                  onBlur={e => setContactPerson(e.currentTarget.innerText)}
+               >
+                  {contactPerson}
+               </p>
+               <p 
+                  contentEditable 
+                  suppressContentEditableWarning={true}
+                  className="text-xs font-bold text-neutral-400 uppercase focus:outline-accent-lime" 
+                  onBlur={e => setContactPosition(e.currentTarget.innerText)}
+               >
+                  {contactPosition}
+               </p>
+               <p 
+                  contentEditable 
+                  suppressContentEditableWarning={true}
+                  className="text-sm font-bold text-neutral-700 mt-2 focus:outline-accent-lime" 
+                  onBlur={e => setContactPhone(e.currentTarget.innerText)}
+               >
+                  {contactPhone}
+               </p>
              </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="absolute bottom-16 left-16 right-16 border-t border-neutral-100 pt-8 flex justify-between items-center text-[10px] font-bold text-neutral-300 uppercase tracking-widest">
-           <div>© {new Date().getFullYear()} AGRO SALSO SRL</div>
+        {/* Footer Pagina */}
+        <div className="absolute bottom-12 left-16 right-16 border-t border-neutral-100 pt-8 flex justify-between items-center text-[9px] font-bold text-neutral-300 uppercase tracking-widest">
+           <div>© {new Date().getFullYear()} AGRO SALSO SRL — BIHOR, ROMÂNIA</div>
            <div className="flex gap-6">
-             <span>WWW.AGROSALSO.RO</span>
-             <span>STRATEGIE PENTRU VIITOR</span>
+             <span>WWWW.AGROSALSO.RO</span>
+             <span className="text-neutral-200">TEHNOLOGIE PENTRU AGRICULTURĂ</span>
            </div>
         </div>
       </div>
