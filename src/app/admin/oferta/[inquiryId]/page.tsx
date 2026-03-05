@@ -1,4 +1,3 @@
-
 'use client';
 import { use, useEffect, useState, useMemo } from 'react';
 import { useFirestore } from '@/firebase';
@@ -258,20 +257,20 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
              <div className="space-y-4">
                <div>
                  <p className="text-[10px] font-bold text-neutral-400 uppercase mb-1">Termen de livrare:</p>
-                 <p contentEditable className="text-sm font-bold text-neutral-900 focus:outline-accent-lime" onBlur={e => setDeliveryTerm(e.currentTarget.innerText)}>{deliveryTerm}</p>
+                 <p contentEditable suppressContentEditableWarning className="text-sm font-bold text-neutral-900 focus:outline-accent-lime" onBlur={e => setDeliveryTerm(e.currentTarget.innerText)}>{deliveryTerm}</p>
                </div>
                <div>
                  <p className="text-[10px] font-bold text-neutral-400 uppercase mb-1">Condiții de plată:</p>
-                 <p contentEditable className="text-sm font-bold text-neutral-900 focus:outline-accent-lime" onBlur={e => setPaymentTerms(e.currentTarget.innerText)}>{paymentTerms}</p>
+                 <p contentEditable suppressContentEditableWarning className="text-sm font-bold text-neutral-900 focus:outline-accent-lime" onBlur={e => setPaymentTerms(e.currentTarget.innerText)}>{paymentTerms}</p>
                </div>
              </div>
           </div>
           <div className="space-y-6">
              <h4 className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Persoană de contact:</h4>
              <div className="space-y-1">
-               <p contentEditable className="font-headline font-extrabold text-lg text-neutral-900 focus:outline-accent-lime" onBlur={e => setContactPerson(e.currentTarget.innerText)}>{contactPerson}</p>
-               <p contentEditable className="text-xs font-bold text-neutral-400 uppercase focus:outline-accent-lime" onBlur={e => setContactPosition(e.currentTarget.innerText)}>{contactPosition}</p>
-               <p contentEditable className="text-sm font-bold text-neutral-700 mt-2 focus:outline-accent-lime" onBlur={e => setContactPhone(e.currentTarget.innerText)}>{contactPhone}</p>
+               <p contentEditable suppressContentEditableWarning className="font-headline font-extrabold text-lg text-neutral-900 focus:outline-accent-lime" onBlur={e => setContactPerson(e.currentTarget.innerText)}>{contactPerson}</p>
+               <p contentEditable suppressContentEditableWarning className="text-xs font-bold text-neutral-400 uppercase focus:outline-accent-lime" onBlur={e => setContactPosition(e.currentTarget.innerText)}>{contactPosition}</p>
+               <p contentEditable suppressContentEditableWarning className="text-sm font-bold text-neutral-700 mt-2 focus:outline-accent-lime" onBlur={e => setContactPhone(e.currentTarget.innerText)}>{contactPhone}</p>
              </div>
           </div>
         </div>

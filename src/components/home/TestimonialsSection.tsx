@@ -91,7 +91,7 @@ export function TestimonialsSection() {
 
         {/* Testimonials Grid/Carousel */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-16">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="popLayout">
             {visibleTestimonials.map((item, idx) => (
               <motion.div
                 key={`${item.id}-${idx}`}
