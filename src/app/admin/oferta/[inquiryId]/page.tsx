@@ -1,10 +1,9 @@
-
 'use client';
 import { use, useEffect, useState, useMemo } from 'react';
 import { useFirestore } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { Inquiry, Product } from '@/types';
-import { format, addDays } from 'date-fns';
+import { format } from 'date-fns';
 import { ro } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { Printer, Send, ChevronLeft, AlertTriangle, Loader2, CheckCircle2 } from 'lucide-react';
@@ -42,7 +41,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const [beneficiaryAddress, setBeneficiaryAddress] = useState(PLACEHOLDER_ADDRESS);
 
   const today = useMemo(() => new Date(), []);
-  const validityDate = useMemo(() => addDays(today, 15), [today]);
   const offerNumber = useMemo(() => `AS-${format(today, 'yyyy')}-${format(today, 'MMdd')}`, [today]);
 
   useEffect(() => {
@@ -165,7 +163,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                  Data: {format(today, 'dd.MM.yyyy')}
                </div>
                <div className="text-[10px] text-neutral-900 font-extrabold uppercase tracking-widest mt-0.5">
-                 Valabilitate: {format(validityDate, 'dd.MM.yyyy')}
+                 Valabilitate: 15 Zile
                </div>
             </div>
           </div>
