@@ -127,9 +127,9 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               <div className="flex items-center gap-3">
                 <span className="text-accent-lime font-extrabold text-[11px] md:text-[12px] uppercase tracking-[0.3em]">{product.brand}</span>
                 <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" />
-                <span className="text-white/80 font-bold text-[11px] md:text-[12px] uppercase tracking-widest">{product.category}</span>
+                <span className="text-neutral-500 font-bold text-[11px] md:text-[12px] uppercase tracking-widest">{product.category}</span>
               </div>
-              <h1 className="font-headline font-extrabold text-4xl md:text-6xl text-white tracking-tighter leading-tight">
+              <h1 className="font-headline font-extrabold text-4xl md:text-6xl text-neutral-900 tracking-tighter leading-tight">
                 {product.name}
               </h1>
               <div className="flex flex-wrap gap-2 pt-2">
