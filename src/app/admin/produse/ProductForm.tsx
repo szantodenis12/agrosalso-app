@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -43,7 +44,7 @@ export default function ProductForm({ initialData, mode }: Props) {
   const [uploadingGallery, setUploadingGallery] = useState(false);
 
   // Stările pentru imagini
-  const [galleryImages, setGalleryImages] = useState<string[]>(initialData?.images ?? []);
+  const [galleryImages, setGalleryImages] = useState<string[]>(initialData?.images?.filter(img => img !== initialData?.mainImage) ?? []);
   const [mainImage, setMainImage] = useState<string>(initialData?.mainImage ?? '');
 
   const [specs, setSpecs] = useState<{ key: string; value: string }[]>(
@@ -187,6 +188,9 @@ export default function ProductForm({ initialData, mode }: Props) {
       const specsObj: Record<string, string> = {};
       specs.filter(s => s.key && s.value).forEach(s => { specsObj[s.key] = s.value; });
 
+      // Asigurăm că poza principală este prima în array-ul de imagini
+      const finalImages = [mainImage, ...galleryImages.filter(img => img !== mainImage)];
+
       const data = {
         ...form,
         mainImage,
@@ -197,7 +201,7 @@ export default function ProductForm({ initialData, mode }: Props) {
         tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
         specifications: specsObj,
         currency: 'RON' as const,
-        images: galleryImages.length > 0 ? galleryImages : [mainImage],
+        images: finalImages,
       };
 
       if (mode === 'create') {
@@ -303,7 +307,7 @@ export default function ProductForm({ initialData, mode }: Props) {
                     {uploadingMain ? <Loader2 className="animate-spin" /> : <Upload size={18} />}
                     {uploadingMain ? 'SE ÎNCARCĂ...' : 'ÎNCARCĂ POZĂ PRINCIPALĂ'}
                   </Button>
-                  <p className="text-[10px] text-neutral-400 text-center uppercase tracking-tight">Format acceptat: JPG, PNG, WEBP</p>
+                  <p className="text-[10px] text-neutral-400 text-center uppercase tracking-tight">Aceasta va fi prima poză în galerie.</p>
                 </div>
                 {mainImage ? (
                   <div className="relative aspect-video rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-100">
@@ -319,7 +323,7 @@ export default function ProductForm({ initialData, mode }: Props) {
 
               <div className="pt-8 border-t border-neutral-50">
                 <div className="flex justify-between items-center mb-6">
-                  <label className={labelClass}>Galerie Foto ({galleryImages.length})</label>
+                  <label className={labelClass}>Alte Imagini ({galleryImages.length})</label>
                   <Button 
                     type="button" 
                     size="sm"
