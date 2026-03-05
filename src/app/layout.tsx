@@ -2,6 +2,8 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
+import { VisitorTracker } from '@/components/analytics/VisitorTracker';
+import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://agrosalso.ro'),
@@ -33,7 +35,9 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-background text-foreground min-h-screen">
         <FirebaseClientProvider>
+          <VisitorTracker />
           {children}
+          <Toaster />
         </FirebaseClientProvider>
       </body>
     </html>
