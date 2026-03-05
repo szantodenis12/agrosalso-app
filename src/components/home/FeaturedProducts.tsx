@@ -1,3 +1,4 @@
+
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -6,22 +7,23 @@ import { ArrowUpRight, Loader2 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, where, orderBy, limit } from 'firebase/firestore';
+import { collection, query, where, limit } from 'firebase/firestore';
 import { Product } from '@/types';
 
-const CATEGORIES = ['Toate', 'Tractoare', 'Combine', 'Irigații', 'Echipamente'];
+// Tab-urile de pe Home mapate pe slug-urile reale din PRODUCT_CATEGORIES
+const CATEGORIES = ['Toate', 'Terradisc', 'Plug', 'Semănătoare', 'Echipamente'];
 
 export function FeaturedProducts() {
   const [activeCategory, setActiveCategory] = useState('Toate');
   const db = useFirestore();
 
-  // Interogăm produsele recomandate direct din Firestore
+  // Interogăm produsele recomandate. Am scos orderBy pentru a evita eroarea de index lipsă.
+  // Sortarea o facem local pe client pentru a fi siguri că datele apar imediat.
   const featuredQuery = useMemoFirebase(() => {
     return query(
       collection(db, 'products'),
       where('isFeatured', '==', true),
-      orderBy('createdAt', 'desc'),
-      limit(3) // Limităm la 3 produse pentru a nu strica layout-ul
+      limit(12) // Luăm mai multe pentru a putea filtra local dacă e cazul
     );
   }, [db]);
 
@@ -47,21 +49,29 @@ export function FeaturedProducts() {
     }
   };
 
-  // Filtrare locală opțională bazată pe tab-uri (dacă este cazul)
+  // Filtrare și sortare locală
   const filteredProducts = useMemo(() => {
     if (!products) return [];
-    if (activeCategory === 'Toate') return products;
     
-    // Notă: Categoriile din Firestore sunt slugs (ex: 'plug'), 
-    // tab-urile de aici sunt nume prietenoase. Mapăm simplist pentru demo.
+    // Sortăm manual după data creării (cele mai noi primele)
+    let result = [...products].sort((a, b) => {
+      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return dateB - dateA;
+    });
+
+    if (activeCategory === 'Toate') return result.slice(0, 3);
+    
+    // Mapare tab-uri -> slug-uri reale
     const catMap: Record<string, string> = {
-      'Tractoare': 'tractor',
-      'Combine': 'masina-recoltat',
-      'Irigații': 'instalatie-erbicidat',
+      'Terradisc': 'terradisc',
+      'Plug': 'plug',
+      'Semănătoare': 'semanatoare-paioase',
       'Echipamente': 'combinator'
     };
     
-    return products.filter(p => p.category.includes(catMap[activeCategory] || activeCategory.toLowerCase()));
+    const targetSlug = catMap[activeCategory];
+    return result.filter(p => p.category === targetSlug).slice(0, 3);
   }, [products, activeCategory]);
 
   return (
@@ -122,7 +132,7 @@ export function FeaturedProducts() {
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-20 bg-neutral-50 rounded-[3rem] border border-dashed border-neutral-200">
-             <p className="text-neutral-400 font-bold uppercase tracking-widest text-sm">Niciun produs recomandat momentan.</p>
+             <p className="text-neutral-400 font-bold uppercase tracking-widest text-sm">Niciun produs recomandat în această secțiune.</p>
           </div>
         ) : (
           <motion.div 
