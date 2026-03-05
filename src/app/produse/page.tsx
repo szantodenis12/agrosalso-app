@@ -2,7 +2,6 @@
 'use client';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { useFirestore } from '@/firebase';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, LayoutGrid, List, ArrowUpRight, FilterX, ChevronDown } from 'lucide-react';
@@ -13,6 +12,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useProducts } from '@/hooks/useProducts';
 import { useState } from 'react';
 import { PRODUCT_CATEGORIES } from '@/lib/constants';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Cele mai noi' },
@@ -56,14 +62,18 @@ export default function CatalogPage() {
             {/* Sort & View Options */}
             <div className="flex flex-wrap items-center gap-4 w-full lg:w-auto">
               <div className="relative flex-1 lg:flex-none min-w-[200px]">
-                <select 
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value)}
-                  className="w-full h-14 bg-white border-none rounded-2xl px-6 text-sm font-bold appearance-none shadow-sm focus:ring-2 focus:ring-accent-lime outline-none cursor-pointer"
-                >
-                  {SORT_OPTIONS.map(opt => <option key={opt.value} value={opt.label}>{opt.label}</option>)}
-                </select>
-                <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
+                <Select value={sort} onValueChange={(val) => setSort(val)}>
+                  <SelectTrigger className="w-full h-14 bg-white border-none rounded-2xl px-6 text-sm font-bold shadow-sm focus:ring-2 focus:ring-accent-lime outline-none">
+                    <SelectValue placeholder="Sortează după" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl border-none shadow-xl">
+                    {SORT_OPTIONS.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value} className="font-medium focus:bg-accent-lime/10">
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="flex items-center bg-white rounded-2xl p-1 shadow-sm border border-neutral-100">
@@ -100,37 +110,27 @@ export default function CatalogPage() {
                 </div>
               </div>
 
-              {/* Categories */}
+              {/* Categories Dropdown */}
               <div className="space-y-4">
-                <h3 className="font-headline font-extrabold text-[12px] uppercase tracking-widest text-neutral-900">Categorii</h3>
-                <div className="flex flex-col gap-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
-                  <button 
-                    onClick={() => updateFilter('category', 'toate')}
-                    className={cn(
-                      "flex items-center justify-between px-5 py-4 rounded-2xl text-sm font-bold transition-all shrink-0",
-                      !filters.category || filters.category === 'toate' ? "bg-accent-lime text-black shadow-lg shadow-accent-lime/20" : "bg-white text-neutral-500 hover:bg-white/80"
-                    )}
-                  >
-                    <span>Toate Produsele</span>
-                    {!filters.category || filters.category === 'toate' ? <div className="w-1.5 h-1.5 bg-black rounded-full" /> : null}
-                  </button>
-                  {PRODUCT_CATEGORIES.map(cat => (
-                    <button 
-                      key={cat.slug}
-                      onClick={() => updateFilter('category', cat.slug)}
-                      className={cn(
-                        "flex items-center justify-between px-5 py-4 rounded-2xl text-sm font-bold transition-all shrink-0",
-                        filters.category === cat.slug ? "bg-accent-lime text-black shadow-lg shadow-accent-lime/20" : "bg-white text-neutral-500 hover:bg-white/80"
-                      )}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg">{cat.icon}</span>
-                        <span className="text-left leading-tight">{cat.name}</span>
-                      </div>
-                      {filters.category === cat.slug ? <div className="w-1.5 h-1.5 bg-black rounded-full" /> : null}
-                    </button>
-                  ))}
-                </div>
+                <h3 className="font-headline font-extrabold text-[12px] uppercase tracking-widest text-neutral-900">Categorie</h3>
+                <Select 
+                  value={filters.category || 'toate'} 
+                  onValueChange={(val) => updateFilter('category', val)}
+                >
+                  <SelectTrigger className="w-full h-14 bg-white border-none rounded-2xl px-6 text-sm font-bold shadow-sm focus:ring-2 focus:ring-accent-lime outline-none">
+                    <SelectValue placeholder="Alege Categoria" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl border-none shadow-xl max-h-[400px]">
+                    <SelectItem value="toate" className="font-bold text-neutral-900 focus:bg-accent-lime/20">
+                      Toate Produsele
+                    </SelectItem>
+                    {PRODUCT_CATEGORIES.map(cat => (
+                      <SelectItem key={cat.slug} value={cat.slug} className="font-medium focus:bg-accent-lime/10">
+                        {cat.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Status Filters */}

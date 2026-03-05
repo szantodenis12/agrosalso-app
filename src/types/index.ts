@@ -26,7 +26,7 @@ export interface Product {
   category: ProductCategory;
   subcategory?: string;
   description: string;
-  detailedDescription: string; // Nou: Conținut SEO bogat
+  detailedDescription: string;
   shortDescription: string;
   price: number;
   priceOnRequest: boolean;
@@ -53,7 +53,7 @@ export interface Category {
   name: string;
   slug: string;
   description: string;
-  icon: string;
+  icon?: string;
   image: string;
   productCount: number;
   order: number;
