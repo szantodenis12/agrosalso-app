@@ -39,22 +39,33 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
 
   useEffect(() => {
     async function load() {
-      const iSnap = await getDoc(doc(db, 'inquiries', inquiryId));
-      if (iSnap.exists()) {
-        const inq = { id: iSnap.id, ...iSnap.data() } as Inquiry;
-        setInquiry(inq);
-        
-        const pSnap = await getDoc(doc(db, 'products', inq.productId));
-        if (pSnap.exists()) {
-          const prod = { id: pSnap.id, ...pSnap.data() } as Product;
-          setProduct(prod);
-          setEditPrice(prod.price);
+      try {
+        const iSnap = await getDoc(doc(db, 'inquiries', inquiryId));
+        if (iSnap.exists()) {
+          const inq = { id: iSnap.id, ...iSnap.data() } as Inquiry;
+          setInquiry(inq);
+          
+          const pSnap = await getDoc(doc(db, 'products', inq.productId));
+          if (pSnap.exists()) {
+            const prod = { id: pSnap.id, ...pSnap.data() } as Product;
+            setProduct(prod);
+            setEditPrice(prod.price);
+          }
         }
+      } catch (err) {
+        console.error("Error loading offer data:", err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     load();
   }, [db, inquiryId]);
+
+  const handlePrint = () => {
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
+  };
 
   const handleSendEmail = async () => {
     setSending(true);
@@ -93,21 +104,21 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
       <div className="bg-white border-b border-neutral-200 p-6 sticky top-0 z-50 shadow-sm print:hidden">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="rounded-full" onClick={() => router.back()}><ChevronLeft /></Button>
+            <Button type="button" variant="ghost" size="icon" className="rounded-full" onClick={() => router.back()}><ChevronLeft /></Button>
             <h1 className="font-headline font-extrabold text-xl tracking-tight">Generator Ofertă</h1>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="bg-neutral-50 p-1 rounded-xl flex gap-1 mr-4">
-              <Button variant={offerType === 'standard' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('standard')} className="rounded-lg h-9">Standard</Button>
-              <Button variant={offerType === 'afir' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('afir')} className="rounded-lg h-9">AFIR</Button>
-              <Button variant={offerType === 'urgent' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('urgent')} className="rounded-lg h-9 text-red-500 hover:text-red-600">Urgență</Button>
+              <Button type="button" variant={offerType === 'standard' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('standard')} className="rounded-lg h-9">Standard</Button>
+              <Button type="button" variant={offerType === 'afir' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('afir')} className="rounded-lg h-9">AFIR</Button>
+              <Button type="button" variant={offerType === 'urgent' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('urgent')} className="rounded-lg h-9 text-red-500 hover:text-red-600">Urgență</Button>
             </div>
             
-            <Button variant="outline" className="rounded-xl h-11 px-6 gap-2" onClick={() => window.print()}>
+            <Button type="button" variant="outline" className="rounded-xl h-11 px-6 gap-2" onClick={handlePrint}>
               <Printer size={18} /> DESCARCĂ PDF
             </Button>
-            <Button className="bg-neutral-900 hover:bg-black text-white rounded-xl h-11 px-6 gap-2" onClick={handleSendEmail} disabled={sending}>
+            <Button type="button" className="bg-neutral-900 hover:bg-black text-white rounded-xl h-11 px-6 gap-2" onClick={handleSendEmail} disabled={sending}>
               {sending ? <Loader2 className="animate-spin size-4" /> : <Send size={18} />} TRIMITE EMAIL
             </Button>
           </div>
