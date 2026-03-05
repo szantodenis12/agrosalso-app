@@ -248,11 +248,13 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                 <span className="text-neutral-900">{product.name}</span>
               </h3>
               
-              {/* Status Badge */}
+              {/* Status Badge - Dynamic based on inStock status */}
               <div className="flex items-center gap-2 bg-neutral-50 text-neutral-900 px-4 py-2 rounded-full border border-neutral-100 shrink-0">
-                <div className="w-2 h-2 bg-accent-lime rounded-full" />
+                <div className={cn("w-2 h-2 rounded-full", product.inStock ? "bg-accent-lime" : "bg-neutral-300")} />
                 <span className="text-[10px] font-extrabold uppercase tracking-widest">
-                  {product.inStock ? "Pe stoc — livrare imediată" : "La comandă"}
+                  {product.inStock 
+                    ? "Pe stoc — livrare imediată" 
+                    : "În stoc furnizor, livrare confirmată după plasarea comenzii"}
                 </span>
               </div>
             </div>
