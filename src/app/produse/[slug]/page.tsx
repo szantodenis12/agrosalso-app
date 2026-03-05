@@ -1,4 +1,3 @@
-
 'use client';
 import { use, useEffect, useState, useCallback } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -132,7 +131,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 {product.name}
               </h1>
               <div className="flex flex-wrap gap-2 pt-2">
-                 {product.isNew && <span className="bg-blue-600 text-white text-[9px] font-extrabold px-4 py-1.5 rounded-full tracking-widest uppercase">Utilaj Nou</span>}
+                 {product.isNew && <span className="bg-neutral-900 text-white text-[9px] font-extrabold px-4 py-1.5 rounded-full tracking-widest uppercase shadow-lg shadow-black/20">Utilaj Nou</span>}
                  {product.isOnSale && <span className="bg-yellow-400 text-black text-[9px] font-extrabold px-4 py-1.5 rounded-full tracking-widest uppercase">Ofertă</span>}
               </div>
             </div>

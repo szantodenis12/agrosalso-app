@@ -227,7 +227,7 @@ export default function CatalogPage() {
                               <span className="text-[9px] font-extrabold text-white bg-neutral-900/60 backdrop-blur-md px-4 py-2 rounded-full tracking-widest uppercase">LA COMANDĂ</span>
                             )}
                             {product.isNew && (
-                              <span className="text-[9px] font-extrabold text-white bg-blue-600 px-4 py-2 rounded-full tracking-widest uppercase shadow-lg shadow-blue-600/20">NOU</span>
+                              <span className="text-[9px] font-extrabold text-white bg-neutral-900 px-4 py-2 rounded-full tracking-widest uppercase shadow-lg shadow-black/20">NOU</span>
                             )}
                           </div>
                         </div>
