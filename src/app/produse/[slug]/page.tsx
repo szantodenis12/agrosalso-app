@@ -286,7 +286,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                                 <td key={colIndex} className="p-5 text-sm">
                                   {colIndex === 0 ? (
                                     <div className="flex items-center gap-3">
-                                      <span className="font-bold text-accent-lime font-headline">{val}</span>
+                                      <span className="font-bold text-neutral-900 font-headline">{val}</span>
                                       {row.isPopular && (
                                         <Badge className="bg-accent-lime hover:bg-accent-lime text-black border-none text-[8px] font-extrabold px-2 py-0.5 rounded-full">POPULAR</Badge>
                                       )}
