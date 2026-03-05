@@ -1,4 +1,3 @@
-
 'use client';
 import { use, useEffect, useState, useCallback } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -257,7 +256,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 <div className="space-y-8 pt-10">
                   <div className="text-center space-y-4">
                     <h2 className="font-headline font-extrabold text-3xl md:text-5xl text-neutral-900 tracking-tight">
-                      Alege <span className="text-red-600">modelul potrivit</span>
+                      Alege <span className="text-accent-lime">modelul potrivit</span>
                     </h2>
                     <p className="text-neutral-500 font-medium max-w-2xl mx-auto text-sm md:text-base">
                       De la ferme mici cu tractor de 70 CP până la exploatații mari cu 150 CP — există un {product.name} pentru tine.
@@ -280,15 +279,15 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                           {product.specTable.rows.map((row, rowIndex) => (
                             <tr key={rowIndex} className={cn(
                               "hover:bg-neutral-50/50 transition-colors",
-                              row.isPopular && "bg-red-50/30"
+                              row.isPopular && "bg-accent-lime/5"
                             )}>
                               {row.values.map((val, colIndex) => (
                                 <td key={colIndex} className="p-5 text-sm">
                                   {colIndex === 0 ? (
                                     <div className="flex items-center gap-3">
-                                      <span className="font-bold text-red-600 font-headline">{val}</span>
+                                      <span className="font-bold text-accent-lime font-headline">{val}</span>
                                       {row.isPopular && (
-                                        <Badge className="bg-red-600 hover:bg-red-600 text-white border-none text-[8px] font-extrabold px-2 py-0.5 rounded-full">POPULAR</Badge>
+                                        <Badge className="bg-accent-lime hover:bg-accent-lime text-black border-none text-[8px] font-extrabold px-2 py-0.5 rounded-full">POPULAR</Badge>
                                       )}
                                     </div>
                                   ) : (
