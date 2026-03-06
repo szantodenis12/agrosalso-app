@@ -32,7 +32,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const [editPrice, setEditPrice] = useState<number>(0);
   const [contactPerson, setContactPerson] = useState("Doru Salso");
   const [contactPosition, setContactPosition] = useState("Manager Vânzări");
-  const [contactPhone, setContactPhone] = useState("+40 751 234 567");
+  const [contactPhone, setContactPhone] = useState("+40 742 936 959");
   const [deliveryTerm, setDeliveryTerm] = useState("2-5 zile lucrătoare");
   const [paymentTerms, setPaymentTerms] = useState("Transfer Bancar / Ordin de plată la livrare");
 
@@ -178,7 +178,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                 <div className="text-[11px] font-bold text-neutral-500 space-y-0.5">
                   <p>CUI: 30425879 | Reg. Com.: J05/1234/2012</p>
                   <p>DN79, Mădăras 417330, Bihor</p>
-                  <p className="text-neutral-900">office@agrosalso.ro</p>
+                  <p className="text-neutral-900">contact@agrosalso.ro</p>
                 </div>
               </div>
             </div>
@@ -256,7 +256,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             </div>
 
             <div className="prose prose-neutral max-w-none">
-              <p className="text-sm text-neutral-600 leading-relaxed font-medium">
+              <p className="text-sm text-neutral-600 font-medium leading-relaxed">
                 {product.detailedDescription || product.description}
               </p>
             </div>

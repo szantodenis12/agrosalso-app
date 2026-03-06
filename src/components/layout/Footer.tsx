@@ -76,8 +76,8 @@ export function Footer() {
                 <a href="mailto:contact@agrosalso.ro" className="flex items-center gap-3 text-white font-bold hover:text-accent-lime transition-colors">
                   contact@agrosalso.ro
                 </a>
-                <a href="tel:+40751234567" className="flex items-center gap-3 text-white font-bold hover:text-accent-lime transition-colors">
-                  +40 751 234 567
+                <a href="tel:+40742936959" className="flex items-center gap-3 text-white font-bold hover:text-accent-lime transition-colors">
+                  +40 742 936 959
                 </a>
               </div>
             </div>

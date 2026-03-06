@@ -1,4 +1,3 @@
-
 'use client';
 import { doc, setDoc, serverTimestamp, type Firestore } from 'firebase/firestore';
 import { PRODUCT_CATEGORIES } from '@/lib/constants';
@@ -51,8 +50,8 @@ export async function seedDatabase(db: Firestore) {
 
   await setDoc(doc(db, 'siteConfig', 'main'), {
     companyName: 'AgroSalso SRL',
-    phone: '+40 751 234 567',
-    email: 'office@agrosalso.ro',
+    phone: '+40 742 936 959',
+    email: 'contact@agrosalso.ro',
     address: 'Madaras, Bihor',
     updatedAt: serverTimestamp()
   });
