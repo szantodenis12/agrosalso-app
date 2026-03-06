@@ -138,9 +138,9 @@ export function HeroSection() {
             variants={itemVariants}
             className="font-headline font-bold text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8"
           >
-            Smart. <span className="text-accent-lime">Sustainable.</span> <br className="hidden md:block" /> 
-            <span className="text-accent-lime">Future-Ready</span> <br className="hidden md:block" />
-            Farming.
+            Tehnologie. <span className="text-accent-lime">Performanță.</span> <br className="hidden md:block" /> 
+            <span className="text-accent-lime">Viitorul</span> <br className="hidden md:block" />
+            în Agricultură.
           </motion.h1>
 
           <motion.p 
