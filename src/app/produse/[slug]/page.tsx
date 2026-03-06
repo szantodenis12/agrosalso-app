@@ -11,6 +11,7 @@ import { ChevronLeft, Send, ShieldCheck, Truck, Cog, Sparkles, Image as ImageIco
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from '@/hooks/use-toast';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
@@ -23,6 +24,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const db = useFirestore();
 
   // Carousel pentru galeria de jos
@@ -51,7 +53,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
 
   const handleInquirySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!product) return;
+    if (!product || !termsAccepted) return;
     setSubmitting(true);
     try {
       await addDoc(collection(db, 'inquiries'), {
@@ -66,6 +68,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
         description: "Vă vom contacta în cel mai scurt timp posibil.",
       });
       setInquiry({ name: '', email: '', phone: '', message: '' });
+      setTermsAccepted(false);
     } catch (error) {
       toast({ variant: "destructive", title: "Eroare", description: "Nu s-a putut trimite cererea." });
     } finally {
@@ -235,10 +238,26 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                         className="min-h-[100px] md:min-h-[120px] bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
                       />
 
+                      {/* Tick box pentru Termeni și Condiții */}
+                      <div className="flex items-start gap-3 py-2">
+                        <Checkbox 
+                          id="terms" 
+                          checked={termsAccepted} 
+                          onCheckedChange={(checked) => setTermsAccepted(checked === true)}
+                          className="mt-1 border-neutral-300 data-[state=checked]:bg-accent-lime data-[state=checked]:border-accent-lime"
+                        />
+                        <label
+                          htmlFor="terms"
+                          className="text-[11px] font-medium leading-tight text-neutral-500 cursor-pointer select-none"
+                        >
+                          Sunt de acord cu <Link href="/termeni-si-conditii" className="text-accent-lime font-bold hover:underline">Termenii și Condițiile</Link> și <Link href="/politica-de-confidentialitate" className="text-accent-lime font-bold hover:underline">Politica de Confidențialitate</Link> pentru a primi oferta.
+                        </label>
+                      </div>
+
                       <Button 
                         type="submit" 
-                        disabled={submitting}
-                        className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold h-14 md:h-16 rounded-full flex items-center justify-between pl-6 md:pl-8 pr-1.5 group transition-all"
+                        disabled={submitting || !termsAccepted}
+                        className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold h-14 md:h-16 rounded-full flex items-center justify-between pl-6 md:pl-8 pr-1.5 group transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
                       >
                         <span className="text-sm md:text-base">{submitting ? 'SE TRIMITE...' : 'TRIMITE CEREREA'}</span>
                         <div className="w-11 h-11 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
