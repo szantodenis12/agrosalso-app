@@ -106,6 +106,7 @@ export function Footer() {
               <ul className="space-y-4">
                 <li><Link href="/cariere" className="text-white/60 hover:text-white transition-colors text-sm">Cariere</Link></li>
                 <li><Link href="/contact" className="text-white/60 hover:text-white transition-colors text-sm">Contact</Link></li>
+                <li><Link href="/politica-de-confidentialitate" className="text-white/60 hover:text-white transition-colors text-sm">Politica de Confidențialitate</Link></li>
               </ul>
             </div>
 
