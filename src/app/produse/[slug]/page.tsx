@@ -96,7 +96,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
     );
   }
 
-  // Identificăm imaginile suplimentare specifice acestui produs pentru galeria de jos
   const extraImages = Array.from(new Set(product.images || []))
     .filter(img => img !== product.mainImage);
 
@@ -144,9 +143,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
         <div className="max-w-[1440px] mx-auto px-4 md:px-14 py-8 md:py-16 -mt-10 relative z-30">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start">
             
-            {/* Content Column */}
             <div className="lg:col-span-12 space-y-8 md:space-y-12">
-              
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
                 <div className="lg:col-span-7 space-y-8 md:space-y-12">
                   {/* Detailed Content */}
@@ -182,7 +179,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 </div>
 
                 <div className="lg:col-span-5 space-y-6 md:space-y-8">
-                  {/* Pricing & Inquiry Sidebar */}
                   <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-8 md:p-10 text-neutral-900 border border-neutral-100 shadow-xl overflow-hidden relative">
                     <div className="space-y-4 md:space-y-6 relative z-10">
                       <div className="space-y-1">
@@ -266,14 +262,14 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                     </p>
                   </div>
 
-                  {/* Desktop Table View */}
-                  <div className="hidden md:block bg-white rounded-[2rem] shadow-2xl shadow-black/5 overflow-hidden border border-neutral-100">
-                    <div className="overflow-x-auto">
+                  {/* Compact Table View for both Desktop and Mobile */}
+                  <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-2xl shadow-black/5 overflow-hidden border border-neutral-100 mx-2 md:mx-0">
+                    <div className="overflow-x-auto custom-scrollbar">
                       <table className="w-full border-collapse">
                         <thead>
                           <tr className="bg-neutral-900 text-white">
                             {product.specTable.headers.map((header, i) => (
-                              <th key={i} className="p-5 text-left text-[10px] font-extrabold uppercase tracking-widest border-r border-white/5 last:border-0">
+                              <th key={i} className="p-3 md:p-5 text-left text-[8px] md:text-[10px] font-extrabold uppercase tracking-widest border-r border-white/5 last:border-0 whitespace-nowrap">
                                 {header}
                               </th>
                             ))}
@@ -286,12 +282,12 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                               row.isPopular && "bg-accent-lime/5"
                             )}>
                               {row.values.map((val, colIndex) => (
-                                <td key={colIndex} className="p-5 text-sm">
+                                <td key={colIndex} className="p-3 md:p-5 text-[10px] md:text-sm whitespace-nowrap">
                                   {colIndex === 0 ? (
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-2 md:gap-3">
                                       <span className="font-bold text-neutral-900 font-headline">{val}</span>
                                       {row.isPopular && (
-                                        <Badge className="bg-accent-lime hover:bg-accent-lime text-black border-none text-[8px] font-extrabold px-2 py-0.5 rounded-full">POPULAR</Badge>
+                                        <Badge className="bg-accent-lime hover:bg-accent-lime text-black border-none text-[7px] md:text-[8px] font-extrabold px-1.5 md:px-2 py-0.5 rounded-full">POPULAR</Badge>
                                       )}
                                     </div>
                                   ) : (
@@ -304,31 +300,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                         </tbody>
                       </table>
                     </div>
-                  </div>
-
-                  {/* Mobile Card View */}
-                  <div className="md:hidden space-y-4 px-2">
-                    {product.specTable.rows.map((row, rowIndex) => (
-                      <div key={rowIndex} className={cn(
-                        "bg-white rounded-[1.5rem] p-6 border border-neutral-100 shadow-sm",
-                        row.isPopular && "ring-2 ring-accent-lime bg-accent-lime/5"
-                      )}>
-                        <div className="flex justify-between items-start mb-4">
-                          <h4 className="font-headline font-extrabold text-lg text-neutral-900">{row.values[0]}</h4>
-                          {row.isPopular && (
-                            <Badge className="bg-accent-lime text-black border-none text-[8px] font-extrabold px-2 py-0.5 rounded-full">POPULAR</Badge>
-                          )}
-                        </div>
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-3">
-                          {product.specTable.headers.slice(1).map((header, colIndex) => (
-                            <div key={colIndex} className="space-y-1">
-                              <p className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest">{header}</p>
-                              <p className="text-xs font-bold text-neutral-700">{row.values[colIndex + 1]}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
                   </div>
 
                   {product.specTable.footerNote && (
