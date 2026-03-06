@@ -1,3 +1,4 @@
+
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -33,9 +34,10 @@ export function Navbar() {
     }
   }, [isOpen]);
 
-  // Pe pagina de produse header-ul trebuie să fie mereu vizibil deoarece fundalul paginii este deschis
+  // Pe paginile cu fundal deschis, header-ul trebuie să fie mereu vizibil
   const isProductsPage = pathname?.startsWith('/produse');
-  const shouldBeVisible = scrolled || isOpen || isProductsPage;
+  const isPrivacyPage = pathname === '/politica-de-confidentialitate';
+  const shouldBeVisible = scrolled || isOpen || isProductsPage || isPrivacyPage;
 
   return (
     <>
