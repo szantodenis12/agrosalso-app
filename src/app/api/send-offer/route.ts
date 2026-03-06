@@ -5,7 +5,7 @@ import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore, doc, updateDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { firebaseConfig } from '@/firebase/config';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const dynamic = 'force-dynamic';
 
 // Initialize Firebase for the API route
 if (!getApps().length) {
@@ -20,6 +20,9 @@ export async function POST(request: Request) {
     if (!inquiryId || !offerId) {
       return NextResponse.json({ error: 'Date lipsă' }, { status: 400 });
     }
+
+    // Initialize Resend inside the request handler to avoid build-time errors
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     // 1. Fetch inquiry to get client email and product info
     const inquiryRef = doc(db, 'inquiries', inquiryId);
@@ -39,7 +42,6 @@ export async function POST(request: Request) {
     });
 
     // 3. Send email via Resend
-    // In a real scenario, you'd generate a beautiful HTML from a template or attachment
     const { data, error } = await resend.emails.send({
       from: 'AgroSalso <oferte@agrosalso.ro>',
       to: [inquiry.email],
@@ -59,7 +61,7 @@ export async function POST(request: Request) {
 
           <p>Vă vom contacta telefonic în cel mai scurt timp pentru a discuta detaliile tehnice și modalitățile de finanțare.</p>
           
-          <p style="margin-top: 40px; border-top: 1px solid #eee; pt: 20px;">
+          <p style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
             Cu stimă,<br>
             <strong>${contact}</strong><br>
             Echipa AgroSalso
@@ -70,7 +72,6 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error('Resend Error:', error);
-      // Even if email fails, we continue since we updated Firestore (or handle it based on requirements)
     }
 
     return NextResponse.json({ success: true, data });
