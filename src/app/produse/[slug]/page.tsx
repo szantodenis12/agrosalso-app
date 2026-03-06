@@ -141,66 +141,68 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
           </div>
         </section>
 
-        <div className="max-w-[1440px] mx-auto px-6 md:px-14 py-12 md:py-16 -mt-10 relative z-30">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-14 py-8 md:py-16 -mt-10 relative z-30">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start">
             
             {/* Content Column */}
-            <div className="lg:col-span-12 space-y-12">
+            <div className="lg:col-span-12 space-y-8 md:space-y-12">
               
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                <div className="lg:col-span-7 space-y-12">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
+                <div className="lg:col-span-7 space-y-8 md:space-y-12">
                   {/* Detailed Content */}
-                  <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-neutral-100 shadow-sm space-y-8">
+                  <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-12 border border-neutral-100 shadow-sm space-y-6 md:space-y-8">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-accent-lime/10 rounded-xl flex items-center justify-center">
-                        <Sparkles className="text-accent-lime w-5 h-5" />
+                      <div className="w-8 h-8 md:w-10 md:h-10 bg-accent-lime/10 rounded-lg md:rounded-xl flex items-center justify-center">
+                        <Sparkles className="text-accent-lime w-4 h-4 md:w-5 md:h-5" />
                       </div>
-                      <h2 className="font-headline font-extrabold text-xl md:text-2xl text-neutral-900 tracking-tight">Despre acest utilaj</h2>
+                      <h2 className="font-headline font-extrabold text-lg md:text-2xl text-neutral-900 tracking-tight">Despre acest utilaj</h2>
                     </div>
                     
                     <div 
-                      className="prose prose-neutral max-w-none text-neutral-600 font-body leading-relaxed text-base md:text-lg"
+                      className="prose prose-neutral max-w-none text-neutral-600 font-body leading-relaxed text-sm md:text-lg"
                       dangerouslySetInnerHTML={{ __html: product.detailedDescription || product.description }}
                     />
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 border-t border-neutral-50">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 md:pt-8 border-t border-neutral-50">
                        {[
-                         { icon: <ShieldCheck className="w-8 h-8" />, title: "Garanție RO", sub: "Service autorizat" },
-                         { icon: <Truck className="w-8 h-8" />, title: "Livrare", sub: "Direct în fermă" },
-                         { icon: <Cog className="w-8 h-8" />, title: "Piese", sub: "Stoc disponibil" },
+                         { icon: <ShieldCheck className="w-6 h-6 md:w-8 md:h-8" />, title: "Garanție RO", sub: "Service autorizat" },
+                         { icon: <Truck className="w-6 h-6 md:w-8 md:h-8" />, title: "Livrare", sub: "Direct în fermă" },
+                         { icon: <Cog className="w-6 h-6 md:w-8 md:h-8" />, title: "Piese", sub: "Stoc disponibil" },
                        ].map((item, i) => (
-                         <div key={i} className="space-y-2">
-                           <div className="text-accent-lime">{item.icon}</div>
-                           <h4 className="font-headline font-bold text-sm text-neutral-900">{item.title}</h4>
-                           <p className="text-[10px] text-neutral-400 font-medium uppercase tracking-wider">{item.sub}</p>
+                         <div key={i} className="flex md:block items-center md:items-start gap-4 md:space-y-2">
+                           <div className="text-accent-lime shrink-0">{item.icon}</div>
+                           <div>
+                            <h4 className="font-headline font-bold text-xs md:text-sm text-neutral-900">{item.title}</h4>
+                            <p className="text-[9px] md:text-[10px] text-neutral-400 font-medium uppercase tracking-wider">{item.sub}</p>
+                           </div>
                          </div>
                        ))}
                     </div>
                   </div>
                 </div>
 
-                <div className="lg:col-span-5 space-y-8">
+                <div className="lg:col-span-5 space-y-6 md:space-y-8">
                   {/* Pricing & Inquiry Sidebar */}
-                  <div className="bg-white rounded-[2.5rem] p-10 text-neutral-900 border border-neutral-100 shadow-xl overflow-hidden relative">
-                    <div className="space-y-6 relative z-10">
+                  <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-8 md:p-10 text-neutral-900 border border-neutral-100 shadow-xl overflow-hidden relative">
+                    <div className="space-y-4 md:space-y-6 relative z-10">
                       <div className="space-y-1">
-                        <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț Catalog (fără TVA)</span>
-                        <div className="font-headline font-extrabold text-4xl md:text-5xl text-neutral-900 tracking-tighter">
+                        <span className="text-[9px] md:text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț Catalog (fără TVA)</span>
+                        <div className="font-headline font-extrabold text-3xl md:text-5xl text-neutral-900 tracking-tighter">
                           {product.priceOnRequest ? "LA CERERE" : `${product.price.toLocaleString()} RON`}
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3 p-4 bg-neutral-50 rounded-2xl border border-neutral-100">
-                        <div className="w-2.5 h-2.5 bg-accent-lime rounded-full animate-pulse shadow-[0_0_10px_rgba(163,230,53,0.5)]" />
-                        <span className="text-[11px] font-extrabold text-neutral-500 uppercase tracking-widest">Verificat & Gata de Livrare</span>
+                      <div className="flex items-center gap-3 p-3 md:p-4 bg-neutral-50 rounded-xl md:rounded-2xl border border-neutral-100">
+                        <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-accent-lime rounded-full animate-pulse shadow-[0_0_10px_rgba(163,230,53,0.5)]" />
+                        <span className="text-[10px] md:text-[11px] font-extrabold text-neutral-500 uppercase tracking-widest">Verificat & Gata de Livrare</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-[2.5rem] p-8 md:p-10 text-neutral-900 space-y-8 shadow-xl border border-neutral-100">
-                    <div className="space-y-3">
-                      <h3 className="font-headline font-extrabold text-2xl tracking-tight">Solicită Ofertă</h3>
-                      <p className="text-neutral-500 text-sm font-medium">Lăsați-ne datele voastre și vă vom contacta cu o ofertă personalizată.</p>
+                  <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 text-neutral-900 space-y-6 md:space-y-8 shadow-xl border border-neutral-100">
+                    <div className="space-y-2 md:space-y-3">
+                      <h3 className="font-headline font-extrabold text-xl md:text-2xl tracking-tight">Solicită Ofertă</h3>
+                      <p className="text-neutral-500 text-xs md:text-sm font-medium">Lăsați-ne datele voastre și vă vom contacta cu o ofertă personalizată.</p>
                     </div>
 
                     <form onSubmit={handleInquirySubmit} className="space-y-4">
@@ -209,7 +211,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                         value={inquiry.name}
                         onChange={(e) => setInquiry({...inquiry, name: e.target.value})}
                         required
-                        className="h-14 bg-neutral-50 border-neutral-100 rounded-2xl focus:ring-accent-lime"
+                        className="h-12 md:h-14 bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
                       />
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <Input 
@@ -218,7 +220,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                           value={inquiry.email}
                           onChange={(e) => setInquiry({...inquiry, email: e.target.value})}
                           required
-                          className="h-14 bg-neutral-50 border-neutral-100 rounded-2xl focus:ring-accent-lime"
+                          className="h-12 md:h-14 bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
                         />
                         <Input 
                           type="tel" 
@@ -226,7 +228,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                           value={inquiry.phone}
                           onChange={(e) => setInquiry({...inquiry, phone: e.target.value})}
                           required
-                          className="h-14 bg-neutral-50 border-neutral-100 rounded-2xl focus:ring-accent-lime"
+                          className="h-12 md:h-14 bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
                         />
                       </div>
                       <Textarea 
@@ -234,17 +236,17 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                         value={inquiry.message}
                         onChange={(e) => setInquiry({...inquiry, message: e.target.value})}
                         required
-                        className="min-h-[120px] bg-neutral-50 border-neutral-100 rounded-2xl focus:ring-accent-lime"
+                        className="min-h-[100px] md:min-h-[120px] bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
                       />
 
                       <Button 
                         type="submit" 
                         disabled={submitting}
-                        className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold h-16 rounded-full flex items-center justify-between pl-8 pr-2 group transition-all"
+                        className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold h-14 md:h-16 rounded-full flex items-center justify-between pl-6 md:pl-8 pr-1.5 group transition-all"
                       >
-                        {submitting ? 'SE TRIMITE...' : 'TRIMITE CEREREA'}
-                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
-                          <Send size={20} className="text-black" />
+                        <span className="text-sm md:text-base">{submitting ? 'SE TRIMITE...' : 'TRIMITE CEREREA'}</span>
+                        <div className="w-11 h-11 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
+                          <Send size={18} className="text-black md:w-5 md:h-5" />
                         </div>
                       </Button>
                     </form>
@@ -254,17 +256,18 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
 
               {/* TABEL SPECIFICAȚII (MODELE) */}
               {product.specTable && product.specTable.rows.length > 0 && (
-                <div className="space-y-8 pt-10">
-                  <div className="text-center space-y-4">
-                    <h2 className="font-headline font-extrabold text-3xl md:text-5xl text-neutral-900 tracking-tight">
+                <div className="space-y-6 md:space-y-8 pt-6 md:pt-10">
+                  <div className="text-center space-y-3 md:space-y-4">
+                    <h2 className="font-headline font-extrabold text-2xl md:text-5xl text-neutral-900 tracking-tight px-4">
                       Alege <span className="text-accent-lime">modelul potrivit</span>
                     </h2>
-                    <p className="text-neutral-500 font-medium max-w-2xl mx-auto text-sm md:text-base">
+                    <p className="text-neutral-500 font-medium max-w-2xl mx-auto text-xs md:text-base px-6">
                       De la ferme mici cu tractor de 70 CP până la exploatații mari cu 150 CP — există un {product.name} pentru tine.
                     </p>
                   </div>
 
-                  <div className="bg-white rounded-[2rem] shadow-2xl shadow-black/5 overflow-hidden border border-neutral-100">
+                  {/* Desktop Table View */}
+                  <div className="hidden md:block bg-white rounded-[2rem] shadow-2xl shadow-black/5 overflow-hidden border border-neutral-100">
                     <div className="overflow-x-auto">
                       <table className="w-full border-collapse">
                         <thead>
@@ -302,28 +305,54 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                       </table>
                     </div>
                   </div>
+
+                  {/* Mobile Card View */}
+                  <div className="md:hidden space-y-4 px-2">
+                    {product.specTable.rows.map((row, rowIndex) => (
+                      <div key={rowIndex} className={cn(
+                        "bg-white rounded-[1.5rem] p-6 border border-neutral-100 shadow-sm",
+                        row.isPopular && "ring-2 ring-accent-lime bg-accent-lime/5"
+                      )}>
+                        <div className="flex justify-between items-start mb-4">
+                          <h4 className="font-headline font-extrabold text-lg text-neutral-900">{row.values[0]}</h4>
+                          {row.isPopular && (
+                            <Badge className="bg-accent-lime text-black border-none text-[8px] font-extrabold px-2 py-0.5 rounded-full">POPULAR</Badge>
+                          )}
+                        </div>
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                          {product.specTable.headers.slice(1).map((header, colIndex) => (
+                            <div key={colIndex} className="space-y-1">
+                              <p className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest">{header}</p>
+                              <p className="text-xs font-bold text-neutral-700">{row.values[colIndex + 1]}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
                   {product.specTable.footerNote && (
-                    <p className="text-[10px] text-neutral-400 font-bold uppercase text-center tracking-widest">
+                    <p className="text-[9px] md:text-[10px] text-neutral-400 font-bold uppercase text-center tracking-widest px-4">
                       {product.specTable.footerNote}
                     </p>
                   )}
                 </div>
               )}
 
-              {/* WHY BRAND SECTION (STYLE MODIFIED) */}
+              {/* WHY BRAND SECTION */}
               {Array.isArray(product.whyBrand) && product.whyBrand.length > 0 && (
-                <section className="pt-20 pb-10">
-                  <div className="max-w-4xl mx-auto space-y-12">
-                     <div className="text-center space-y-4">
+                <section className="pt-10 md:pt-20 pb-10">
+                  <div className="max-w-4xl mx-auto space-y-8 md:space-y-12">
+                     <div className="text-center space-y-3 md:space-y-4">
                         <div className="inline-block px-4 py-1.5 bg-accent-lime/10 text-accent-lime rounded-full text-[10px] font-bold uppercase tracking-widest">
                           Expertiză și Fiabilitate
                         </div>
-                        <h2 className="font-headline font-extrabold text-3xl md:text-5xl text-neutral-900 tracking-tight">
+                        <h2 className="font-headline font-extrabold text-2xl md:text-5xl text-neutral-900 tracking-tight">
                           De ce <span className="text-accent-lime">{product.brand}</span>?
                         </h2>
                      </div>
 
-                     <div className="grid grid-cols-1 gap-8">
+                     <div className="grid grid-cols-1 gap-6 md:gap-8 px-4">
                         {product.whyBrand.map((text, i) => (
                           <motion.div 
                             key={i} 
@@ -331,12 +360,12 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1, duration: 0.6 }}
-                            className="flex items-start gap-6 group"
+                            className="flex items-start gap-4 md:gap-6 group"
                           >
-                            <div className="mt-1 w-10 h-10 rounded-full bg-accent-lime flex items-center justify-center shrink-0 shadow-lg shadow-accent-lime/20 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                              <Check size={20} className="text-black" strokeWidth={4} />
+                            <div className="mt-1 w-8 h-8 md:w-10 md:h-10 rounded-full bg-accent-lime flex items-center justify-center shrink-0 shadow-lg shadow-accent-lime/20 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                              <Check size={16} className="text-black md:w-5 md:h-5" strokeWidth={4} />
                             </div>
-                            <p className="font-headline font-bold text-xl md:text-2xl text-neutral-900 leading-tight tracking-tight pt-1">
+                            <p className="font-headline font-bold text-lg md:text-2xl text-neutral-900 leading-tight tracking-tight pt-1">
                               {text}
                             </p>
                           </motion.div>
@@ -348,19 +377,19 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
 
               {/* Gallery Section */}
               {extraImages.length > 0 && (
-                <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-neutral-100 shadow-sm space-y-8">
+                <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-12 border border-neutral-100 shadow-sm space-y-6 md:space-y-8">
                    <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-accent-lime rounded-xl flex items-center justify-center">
-                      <ImageIcon className="text-black w-5 h-5" />
+                    <div className="w-8 h-8 md:w-10 md:h-10 bg-accent-lime rounded-lg md:rounded-xl flex items-center justify-center">
+                      <ImageIcon className="text-black w-4 h-4 md:w-5 md:h-5" />
                     </div>
-                    <h2 className="font-headline font-extrabold text-xl md:text-2xl text-neutral-900 tracking-tight">Galerie Foto</h2>
+                    <h2 className="font-headline font-extrabold text-lg md:text-2xl text-neutral-900 tracking-tight">Galerie Foto</h2>
                   </div>
 
                   <div className="embla overflow-hidden" ref={emblaRef}>
                     <div className="embla__container flex">
                       {extraImages.map((img, index) => (
-                        <div className="embla__slide flex-[0_0_80%] md:flex-[0_0_45%] min-w-0 pl-4" key={index}>
-                          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-neutral-100">
+                        <div className="embla__slide flex-[0_0_85%] md:flex-[0_0_45%] min-w-0 pl-4" key={index}>
+                          <div className="relative aspect-[4/3] rounded-xl md:rounded-2xl overflow-hidden border border-neutral-100">
                             <Image src={img} alt={`${product.name} - Gallery ${index}`} fill className="object-cover" />
                           </div>
                         </div>
