@@ -104,7 +104,7 @@ export function Footer() {
             <div>
               <h4 className="text-neutral-500 font-bold text-sm mb-8">Altele</h4>
               <ul className="space-y-4">
-                <li><Link href="/cariere" className="text-white/60 hover:text-white transition-colors text-sm">Cariere</Link></li>
+                <li><Link href="/termeni-si-conditii" className="text-white/60 hover:text-white transition-colors text-sm">Termeni și Condiții</Link></li>
                 <li><Link href="/contact" className="text-white/60 hover:text-white transition-colors text-sm">Contact</Link></li>
                 <li><Link href="/politica-de-confidentialitate" className="text-white/60 hover:text-white transition-colors text-sm">Politica de Confidențialitate</Link></li>
               </ul>
