@@ -73,8 +73,8 @@ export function Footer() {
                 </span>
               </Link>
               <div className="space-y-4">
-                <a href="mailto:office@agrosalso.ro" className="flex items-center gap-3 text-white font-bold hover:text-accent-lime transition-colors">
-                  office@agrosalso.ro
+                <a href="mailto:contact@agrosalso.ro" className="flex items-center gap-3 text-white font-bold hover:text-accent-lime transition-colors">
+                  contact@agrosalso.ro
                 </a>
                 <a href="tel:+40751234567" className="flex items-center gap-3 text-white font-bold hover:text-accent-lime transition-colors">
                   +40 751 234 567

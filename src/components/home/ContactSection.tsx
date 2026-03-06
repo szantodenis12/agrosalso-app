@@ -74,7 +74,7 @@ export function ContactSection() {
         {/* Bottom Section: Info Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {[
-            { icon: <Mail size={20} className="text-accent-lime" />, title: "Email", value: "office@agrosalso.ro" },
+            { icon: <Mail size={20} className="text-accent-lime" />, title: "Email", value: "contact@agrosalso.ro" },
             { icon: <Phone size={20} className="text-accent-lime" />, title: "Telefon", value: "+40 751 234 567" },
             { icon: <Clock size={20} className="text-accent-lime" />, title: "Program", value: "Luni-Vineri: 08:00 - 17:00" },
             { icon: <MapPin size={20} className="text-accent-lime" />, title: "Sediu", value: "DN79, Mădăras 417330, România" }
