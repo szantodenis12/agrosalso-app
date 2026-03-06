@@ -18,6 +18,9 @@ import Autoplay from 'embla-carousel-autoplay';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/context/LanguageContext';
+import { t } from '@/lib/translations';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -26,6 +29,9 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
   const [submitting, setSubmitting] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const db = useFirestore();
+  const { lang } = useLanguage();
+
+  const { translatedData, isTranslating } = useTranslation(product, product?.id);
 
   // Carousel pentru galeria de jos
   const [emblaRef] = useEmblaCarousel({ loop: true, align: 'start' }, [
@@ -64,13 +70,13 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
         createdAt: serverTimestamp(),
       });
       toast({
-        title: "Cerere trimisă!",
-        description: "Vă vom contacta în cel mai scurt timp posibil.",
+        title: lang === 'ro' ? "Cerere trimisă!" : "Request sent!",
+        description: lang === 'ro' ? "Vă vom contacta în cel mai scurt timp posibil." : "We will contact you as soon as possible.",
       });
       setInquiry({ name: '', email: '', phone: '', message: '' });
       setTermsAccepted(false);
     } catch (error) {
-      toast({ variant: "destructive", title: "Eroare", description: "Nu s-a putut trimite cererea." });
+      toast({ variant: "destructive", title: "Error", description: "Could not send request." });
     } finally {
       setSubmitting(false);
     }
@@ -89,9 +95,9 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
       <>
         <Navbar />
         <main className="pt-40 pb-24 text-center bg-neutral-50 min-h-screen">
-          <h1 className="text-4xl font-headline font-extrabold mb-4 text-neutral-900">Produsul nu a fost găsit</h1>
+          <h1 className="text-4xl font-headline font-extrabold mb-4 text-neutral-900">404</h1>
           <Link href="/produse">
-            <Button className="bg-neutral-900 text-white rounded-full px-8 h-12">Înapoi la catalog</Button>
+            <Button className="bg-neutral-900 text-white rounded-full px-8 h-12">{t[lang].backToCatalog}</Button>
           </Link>
         </main>
         <Footer />
@@ -120,7 +126,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
           <div className="absolute top-32 left-6 md:left-14 z-20">
             <Link href="/produse">
               <Button variant="ghost" className="text-white hover:bg-white/10 rounded-full h-10 px-4 gap-2 font-bold backdrop-blur-md border border-white/20">
-                <ChevronLeft size={18} /> Catalog
+                <ChevronLeft size={18} /> {lang === 'ro' ? 'Catalog' : 'Catalog'}
               </Button>
             </Link>
           </div>
@@ -130,14 +136,19 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               <div className="flex items-center gap-3">
                 <span className="text-accent-lime font-extrabold text-[11px] md:text-[12px] uppercase tracking-[0.3em]">{product.brand}</span>
                 <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" />
-                <span className="text-neutral-500 font-bold text-[11px] md:text-[12px] uppercase tracking-widest">{product.category}</span>
+                <span className="text-neutral-500 font-bold text-[11px] md:text-[12px] uppercase tracking-widest">
+                  {t[lang][product.category as keyof typeof t.ro] || product.category}
+                </span>
               </div>
-              <h1 className="font-headline font-extrabold text-4xl md:text-6xl text-neutral-900 tracking-tighter leading-tight">
-                {product.name}
+              <h1 className={cn(
+                "font-headline font-extrabold text-4xl md:text-6xl text-neutral-900 tracking-tighter leading-tight transition-all",
+                isTranslating && "animate-pulse blur-[2px]"
+              )}>
+                {translatedData?.name}
               </h1>
               <div className="flex flex-wrap gap-2 pt-2">
-                 {product.isNew && <span className="bg-neutral-900 text-white text-[9px] font-extrabold px-4 py-1.5 rounded-full tracking-widest uppercase shadow-lg shadow-black/20">Utilaj Nou</span>}
-                 {product.isOnSale && <span className="bg-yellow-400 text-black text-[9px] font-extrabold px-4 py-1.5 rounded-full tracking-widest uppercase">Ofertă</span>}
+                 {product.isNew && <span className="bg-neutral-900 text-white text-[9px] font-extrabold px-4 py-1.5 rounded-full tracking-widest uppercase shadow-lg shadow-black/20">{lang === 'ro' ? 'Utilaj Nou' : 'New Equipment'}</span>}
+                 {product.isOnSale && <span className="bg-yellow-400 text-black text-[9px] font-extrabold px-4 py-1.5 rounded-full tracking-widest uppercase">{lang === 'ro' ? 'Ofertă' : 'Sale'}</span>}
               </div>
             </div>
           </div>
@@ -155,19 +166,22 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                       <div className="w-8 h-8 md:w-10 md:h-10 bg-accent-lime/10 rounded-lg md:rounded-xl flex items-center justify-center">
                         <Sparkles className="text-accent-lime w-4 h-4 md:w-5 md:h-5" />
                       </div>
-                      <h2 className="font-headline font-extrabold text-lg md:text-2xl text-neutral-900 tracking-tight">Despre acest utilaj</h2>
+                      <h2 className="font-headline font-extrabold text-lg md:text-2xl text-neutral-900 tracking-tight">{t[lang].aboutEquipment}</h2>
                     </div>
                     
                     <div 
-                      className="prose prose-neutral max-w-none text-neutral-600 font-body leading-relaxed text-sm md:text-lg"
-                      dangerouslySetInnerHTML={{ __html: product.detailedDescription || product.description }}
+                      className={cn(
+                        "prose prose-neutral max-w-none text-neutral-600 font-body leading-relaxed text-sm md:text-lg transition-all",
+                        isTranslating && "animate-pulse opacity-50"
+                      )}
+                      dangerouslySetInnerHTML={{ __html: translatedData?.detailedDescription || translatedData?.description || '' }}
                     />
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 md:pt-8 border-t border-neutral-50">
                        {[
-                         { icon: <ShieldCheck className="w-6 h-6 md:w-8 md:h-8" />, title: "Garanție RO", sub: "Service autorizat" },
-                         { icon: <Truck className="w-6 h-6 md:w-8 md:h-8" />, title: "Livrare", sub: "Direct în fermă" },
-                         { icon: <Cog className="w-6 h-6 md:w-8 md:h-8" />, title: "Piese", sub: "Stoc disponibil" },
+                         { icon: <ShieldCheck className="w-6 h-6 md:w-8 md:h-8" />, title: t[lang].warranty, sub: t[lang].warrantySub },
+                         { icon: <Truck className="w-6 h-6 md:w-8 md:h-8" />, title: t[lang].delivery, sub: t[lang].deliverySub },
+                         { icon: <Cog className="w-6 h-6 md:w-8 md:h-8" />, title: t[lang].parts, sub: t[lang].partsSub },
                        ].map((item, i) => (
                          <div key={i} className="flex md:block items-center md:items-start gap-4 md:space-y-2">
                            <div className="text-accent-lime shrink-0">{item.icon}</div>
@@ -185,28 +199,28 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                   <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-8 md:p-10 text-neutral-900 border border-neutral-100 shadow-xl overflow-hidden relative">
                     <div className="space-y-4 md:space-y-6 relative z-10">
                       <div className="space-y-1">
-                        <span className="text-[9px] md:text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț Catalog (fără TVA)</span>
+                        <span className="text-[9px] md:text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">{t[lang].catalogPrice}</span>
                         <div className="font-headline font-extrabold text-3xl md:text-5xl text-neutral-900 tracking-tighter">
-                          {product.priceOnRequest ? "LA CERERE" : `${product.price.toLocaleString()} RON`}
+                          {product.priceOnRequest ? t[lang].priceOnRequest : `${product.price.toLocaleString()} RON`}
                         </div>
                       </div>
 
                       <div className="flex items-center gap-3 p-3 md:p-4 bg-neutral-50 rounded-xl md:rounded-2xl border border-neutral-100">
                         <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-accent-lime rounded-full animate-pulse shadow-[0_0_10px_rgba(163,230,53,0.5)]" />
-                        <span className="text-[10px] md:text-[11px] font-extrabold text-neutral-500 uppercase tracking-widest">Verificat & Gata de Livrare</span>
+                        <span className="text-[10px] md:text-[11px] font-extrabold text-neutral-500 uppercase tracking-widest">{t[lang].readyToDeliver}</span>
                       </div>
                     </div>
                   </div>
 
                   <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 text-neutral-900 space-y-6 md:space-y-8 shadow-xl border border-neutral-100">
                     <div className="space-y-2 md:space-y-3">
-                      <h3 className="font-headline font-extrabold text-xl md:text-2xl tracking-tight">Solicită Ofertă</h3>
-                      <p className="text-neutral-500 text-xs md:text-sm font-medium">Lăsați-ne datele voastre și vă vom contacta cu o ofertă personalizată.</p>
+                      <h3 className="font-headline font-extrabold text-xl md:text-2xl tracking-tight">{t[lang].requestOffer}</h3>
+                      <p className="text-neutral-500 text-xs md:text-sm font-medium">{lang === 'ro' ? 'Lăsați-ne datele voastre și vă vom contacta cu o ofertă personalizată.' : 'Leave us your details and we will contact you with a personalized offer.'}</p>
                     </div>
 
                     <form onSubmit={handleInquirySubmit} className="space-y-4">
                       <Input 
-                        placeholder="Nume Complet" 
+                        placeholder={t[lang].fullName} 
                         value={inquiry.name}
                         onChange={(e) => setInquiry({...inquiry, name: e.target.value})}
                         required
@@ -215,7 +229,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <Input 
                           type="email" 
-                          placeholder="Email" 
+                          placeholder={t[lang].email} 
                           value={inquiry.email}
                           onChange={(e) => setInquiry({...inquiry, email: e.target.value})}
                           required
@@ -223,7 +237,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                         />
                         <Input 
                           type="tel" 
-                          placeholder="Telefon" 
+                          placeholder={t[lang].phone} 
                           value={inquiry.phone}
                           onChange={(e) => setInquiry({...inquiry, phone: e.target.value})}
                           required
@@ -231,14 +245,13 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                         />
                       </div>
                       <Textarea 
-                        placeholder="Mesajul tău..." 
+                        placeholder={t[lang].message} 
                         value={inquiry.message}
                         onChange={(e) => setInquiry({...inquiry, message: e.target.value})}
                         required
                         className="min-h-[100px] md:min-h-[120px] bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
                       />
 
-                      {/* Tick box pentru Termeni și Condiții */}
                       <div className="flex items-start gap-3 py-2">
                         <Checkbox 
                           id="terms" 
@@ -250,7 +263,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                           htmlFor="terms"
                           className="text-[11px] font-medium leading-tight text-neutral-500 cursor-pointer select-none"
                         >
-                          Sunt de acord cu <Link href="/termeni-si-conditii" className="text-accent-lime font-bold hover:underline">Termenii și Condițiile</Link> și <Link href="/politica-de-confidentialitate" className="text-accent-lime font-bold hover:underline">Politica de Confidențialitate</Link> pentru a primi oferta.
+                          {t[lang].termsAgreement}
                         </label>
                       </div>
 
@@ -259,7 +272,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                         disabled={submitting || !termsAccepted}
                         className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold h-14 md:h-16 rounded-full flex items-center justify-between pl-6 md:pl-8 pr-1.5 group transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
                       >
-                        <span className="text-sm md:text-base">{submitting ? 'SE TRIMITE...' : 'TRIMITE CEREREA'}</span>
+                        <span className="text-sm md:text-base">{submitting ? t[lang].sending : t[lang].requestOffer}</span>
                         <div className="w-11 h-11 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
                           <Send size={18} className="text-black md:w-5 md:h-5" />
                         </div>
@@ -274,14 +287,10 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 <div className="space-y-6 md:space-y-8 pt-6 md:pt-10">
                   <div className="text-center space-y-3 md:space-y-4">
                     <h2 className="font-headline font-extrabold text-2xl md:text-5xl text-neutral-900 tracking-tight px-4">
-                      Alege <span className="text-accent-lime">modelul potrivit</span>
+                      {lang === 'ro' ? 'Alege ' : 'Choose the '} <span className="text-accent-lime">{lang === 'ro' ? 'modelul potrivit' : 'right model'}</span>
                     </h2>
-                    <p className="text-neutral-500 font-medium max-w-2xl mx-auto text-xs md:text-base px-6">
-                      De la ferme mici cu tractor de 70 CP până la exploatații mari cu 150 CP — există un {product.name} pentru tine.
-                    </p>
                   </div>
 
-                  {/* Compact Table View for both Desktop and Mobile */}
                   <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-2xl shadow-black/5 overflow-hidden border border-neutral-100 mx-2 md:mx-0">
                     <div className="overflow-x-auto custom-scrollbar">
                       <table className="w-full border-collapse">
@@ -306,7 +315,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                                     <div className="flex items-center gap-2 md:gap-3">
                                       <span className="font-bold text-neutral-900 font-headline">{val}</span>
                                       {row.isPopular && (
-                                        <Badge className="bg-accent-lime hover:bg-accent-lime text-black border-none text-[7px] md:text-[8px] font-extrabold px-1.5 md:px-2 py-0.5 rounded-full">POPULAR</Badge>
+                                        <Badge className="bg-accent-lime hover:bg-accent-lime text-black border-none text-[7px] md:text-[8px] font-extrabold px-1.5 md:px-2 py-0.5 rounded-full uppercase">POPULAR</Badge>
                                       )}
                                     </div>
                                   ) : (
@@ -320,12 +329,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                       </table>
                     </div>
                   </div>
-
-                  {product.specTable.footerNote && (
-                    <p className="text-[9px] md:text-[10px] text-neutral-400 font-bold uppercase text-center tracking-widest px-4">
-                      {product.specTable.footerNote}
-                    </p>
-                  )}
                 </div>
               )}
 
@@ -334,11 +337,8 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 <section className="pt-10 md:pt-20 pb-10">
                   <div className="max-w-4xl mx-auto space-y-8 md:space-y-12">
                      <div className="text-center space-y-3 md:space-y-4">
-                        <div className="inline-block px-4 py-1.5 bg-accent-lime/10 text-accent-lime rounded-full text-[10px] font-bold uppercase tracking-widest">
-                          Expertiză și Fiabilitate
-                        </div>
                         <h2 className="font-headline font-extrabold text-2xl md:text-5xl text-neutral-900 tracking-tight">
-                          De ce <span className="text-accent-lime">{product.brand}</span>?
+                          {t[lang].whyBrand.replace('{brand}', product.brand)}
                         </h2>
                      </div>
 
@@ -372,7 +372,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                     <div className="w-8 h-8 md:w-10 md:h-10 bg-accent-lime rounded-lg md:rounded-xl flex items-center justify-center">
                       <ImageIcon className="text-black w-4 h-4 md:w-5 md:h-5" />
                     </div>
-                    <h2 className="font-headline font-extrabold text-lg md:text-2xl text-neutral-900 tracking-tight">Galerie Foto</h2>
+                    <h2 className="font-headline font-extrabold text-lg md:text-2xl text-neutral-900 tracking-tight">{t[lang].photoGallery}</h2>
                   </div>
 
                   <div className="embla overflow-hidden" ref={emblaRef}>

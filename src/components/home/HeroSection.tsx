@@ -3,6 +3,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
+import { t } from '@/lib/translations';
 
 const SLIDE_DURATION = 8000;
 
@@ -36,6 +39,7 @@ const BACKGROUNDS = [
 export function HeroSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const { lang } = useLanguage();
 
   const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % BACKGROUNDS.length);
@@ -138,30 +142,36 @@ export function HeroSection() {
             variants={itemVariants}
             className="font-headline font-bold text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8"
           >
-            Tehnologie. <span className="text-accent-lime">Performanță.</span> <br className="hidden md:block" /> 
-            <span className="text-accent-lime">Viitorul</span> <br className="hidden md:block" />
-            în Agricultură.
+            {lang === 'ro' ? (
+              <>Tehnologie. <span className="text-accent-lime">Performanță.</span> <br className="hidden md:block" /> <span className="text-accent-lime">Viitorul</span> <br className="hidden md:block" /> în Agricultură.</>
+            ) : (
+              <>Technology. <span className="text-accent-lime">Performance.</span> <br className="hidden md:block" /> <span className="text-accent-lime">The Future</span> <br className="hidden md:block" /> of Agriculture.</>
+            )}
           </motion.h1>
 
           <motion.p 
             variants={itemVariants}
             className="text-white/80 text-base md:text-lg max-w-xl mb-10 font-body leading-relaxed"
           >
-            AgroSalso sprijină fermierii și afacerile agricole cu soluții inteligente și sustenabile, 
-            care cresc productivitatea și profitabilitatea — protejând în același timp planeta.
+            {lang === 'ro' 
+              ? "AgroSalso sprijină fermierii și afacerile agricole cu soluții inteligente și sustenabile, care cresc productivitatea și profitabilitatea — protejând în același timp planeta."
+              : "AgroSalso supports farmers and agricultural businesses with smart and sustainable solutions that increase productivity and profitability — while protecting the planet."
+            }
           </motion.p>
 
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-6 items-start">
-            <motion.button 
-              whileHover={{ scale: 1.05, x: 5 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white hover:bg-neutral-50 text-neutral-900 font-bold h-14 pl-8 pr-1.5 rounded-full flex items-center gap-8 transition-all text-base shadow-2xl group border border-white/20"
-            >
-              Începe Acum
-              <div className="w-11 h-11 bg-neutral-900 rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
-                <ArrowUpRight size={20} className="text-white" strokeWidth={2.5} />
-              </div>
-            </motion.button>
+            <Link href="/produse">
+              <motion.button 
+                whileHover={{ scale: 1.05, x: 5 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white hover:bg-neutral-50 text-neutral-900 font-bold h-14 pl-8 pr-1.5 rounded-full flex items-center gap-8 transition-all text-base shadow-2xl group border border-white/20"
+              >
+                {lang === 'ro' ? 'Începe Acum' : 'Start Now'}
+                <div className="w-11 h-11 bg-neutral-900 rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
+                  <ArrowUpRight size={20} className="text-white" strokeWidth={2.5} />
+                </div>
+              </motion.button>
+            </Link>
           </motion.div>
         </motion.div>
       </div>

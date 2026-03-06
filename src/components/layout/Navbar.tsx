@@ -5,18 +5,21 @@ import { useState, useEffect } from 'react';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const NAV_LINKS = [
-  { name: 'Produse', href: '/produse' },
-  { name: 'Despre noi', href: '/despre' },
-  { name: 'Servicii', href: '/servicii' },
-  { name: 'Prețuri', href: '/preturi' },
-];
+import { useLanguage } from '@/context/LanguageContext';
+import { t } from '@/lib/translations';
 
 export function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { lang, setLang } = useLanguage();
+
+  const NAV_LINKS = [
+    { name: t[lang].products, href: '/produse' },
+    { name: t[lang].about, href: '/despre' },
+    { name: t[lang].services, href: '/servicii' },
+    { name: t[lang].prices, href: '/preturi' },
+  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -24,7 +27,6 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Previne scroll-ul paginii când meniul este deschis
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -33,7 +35,6 @@ export function Navbar() {
     }
   }, [isOpen]);
 
-  // Pe paginile cu fundal deschis, header-ul trebuie să fie mereu vizibil
   const isProductsPage = pathname?.startsWith('/produse');
   const isPrivacyPage = pathname === '/politica-de-confidentialitate';
   const isTermsPage = pathname === '/termeni-si-conditii';
@@ -73,10 +74,27 @@ export function Navbar() {
             ))}
           </div>
 
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-6">
+            {/* RO | EN Toggle */}
+            <div className="flex items-center gap-2 text-[0.8rem] font-bold tracking-widest text-white/40">
+              <button 
+                onClick={() => setLang('ro')}
+                className={cn("transition-colors", lang === 'ro' ? "text-accent-lime opacity-100" : "hover:text-white")}
+              >
+                RO
+              </button>
+              <span className="opacity-20">|</span>
+              <button 
+                onClick={() => setLang('en')}
+                className={cn("transition-colors", lang === 'en' ? "text-accent-lime opacity-100" : "hover:text-white")}
+              >
+                EN
+              </button>
+            </div>
+
             <Link href="/contact">
               <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-6 pr-1 rounded-full flex items-center gap-4 transition-all text-sm group">
-                Contactează-ne
+                {t[lang].contactUs}
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
                   <ArrowUpRight size={18} className="text-black" strokeWidth={2.5} />
                 </div>
@@ -85,13 +103,21 @@ export function Navbar() {
           </div>
 
           {/* Mobile Toggle */}
-          <button 
-            className="lg:hidden text-white relative z-[70] p-2 hover:bg-white/10 rounded-full transition-colors" 
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? "Închide meniu" : "Deschide meniu"}
-          >
-            {isOpen ? <X size={32} /> : <Menu size={32} />}
-          </button>
+          <div className="flex items-center gap-4 lg:hidden">
+             {/* RO | EN Toggle Mobile */}
+             <div className="flex items-center gap-2 text-[0.7rem] font-bold text-white/40 mr-2">
+                <button onClick={() => setLang('ro')} className={cn(lang === 'ro' && "text-accent-lime")}>RO</button>
+                <span className="opacity-20">|</span>
+                <button onClick={() => setLang('en')} className={cn(lang === 'en' && "text-accent-lime")}>EN</button>
+             </div>
+             <button 
+              className="text-white relative z-[70] p-2 hover:bg-white/10 rounded-full transition-colors" 
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? "Închide meniu" : "Deschide meniu"}
+            >
+              {isOpen ? <X size={32} /> : <Menu size={32} />}
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -135,7 +161,7 @@ export function Navbar() {
             >
               <Link href="/contact" onClick={() => setIsOpen(false)}>
                 <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-6 pr-1 rounded-full flex items-center gap-4 transition-all text-sm group">
-                  Contactează-ne
+                  {t[lang].contactUs}
                   <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
                     <ArrowUpRight size={18} className="text-black" strokeWidth={2.5} />
                   </div>
