@@ -244,7 +244,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                           id="terms" 
                           checked={termsAccepted} 
                           onCheckedChange={(checked) => setTermsAccepted(checked === true)}
-                          className="mt-1 border-neutral-300 data-[state=checked]:bg-accent-lime data-[state=checked]:border-accent-lime"
+                          className="mt-1 border-neutral-300 data-[state=checked]:bg-accent-lime data-[state=checked]:border-accent-lime data-[state=checked]:text-black"
                         />
                         <label
                           htmlFor="terms"
@@ -288,7 +288,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                         <thead>
                           <tr className="bg-neutral-900 text-white">
                             {product.specTable.headers.map((header, i) => (
-                              <th key={i} className="p-3 md:p-5 text-left text-[8px] md:text-[10px] font-extrabold uppercase tracking-widest border-r border-white/5 last:border-0 whitespace-nowrap">
+                              <th key={i} className="p-2 md:p-5 text-left text-[8px] md:text-[10px] font-extrabold uppercase tracking-widest border-r border-white/5 last:border-0 whitespace-nowrap">
                                 {header}
                               </th>
                             ))}
@@ -301,7 +301,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                               row.isPopular && "bg-accent-lime/5"
                             )}>
                               {row.values.map((val, colIndex) => (
-                                <td key={colIndex} className="p-3 md:p-5 text-[10px] md:text-sm whitespace-nowrap">
+                                <td key={colIndex} className="p-2 md:p-5 text-[8px] md:text-sm whitespace-nowrap">
                                   {colIndex === 0 ? (
                                     <div className="flex items-center gap-2 md:gap-3">
                                       <span className="font-bold text-neutral-900 font-headline">{val}</span>
