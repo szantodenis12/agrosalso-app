@@ -122,7 +122,7 @@ export function Footer() {
           {/* Copyright */}
           <div className="pt-12 border-t border-white/10 text-center">
             <p className="text-white/40 text-xs tracking-widest font-body">
-              ( © {new Date().getFullYear()} AgroSalso. Toate drepturile rezervate. )
+              © {new Date().getFullYear()} AgroSalso. Toate drepturile rezervate.
             </p>
           </div>
         </div>
