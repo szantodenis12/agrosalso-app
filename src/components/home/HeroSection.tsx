@@ -142,13 +142,16 @@ export function HeroSection() {
             variants={itemVariants}
             className="font-headline font-bold text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8"
           >
-            {t[lang].heroTitle.split('.').map((part, i, arr) => (
-              <span key={i}>
-                {i === arr.length - 1 ? <span className="text-accent-lime">{part}</span> : part}
-                {i < arr.length - 1 && '.'}
-                {i < arr.length - 1 && <br className="hidden md:block" />}
-              </span>
-            ))}
+            {t[lang].heroTitle.split('.').map((part, i, arr) => {
+              const isLast = i === arr.length - 1;
+              return (
+                <span key={i}>
+                  {isLast ? <span className="text-accent-lime">{part.trim()}</span> : part.trim()}
+                  {i < arr.length - 1 && '.'}
+                  {i < arr.length - 1 && <br className="hidden md:block" />}
+                </span>
+              );
+            })}
           </motion.h1>
 
           <motion.p 

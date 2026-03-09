@@ -59,7 +59,7 @@ export const t = {
     sendNow: 'Trimite acum',
     termsAgreement: 'Sunt de acord cu Termenii și Condițiile și Politica de Confidențialitate pentru a primi oferta.',
     contactTitle: 'Hai să creștem împreună',
-    contactSub: 'Indiferent dacă ești fermier, partener sau investitor, echipa noastră este aici să te ajute să explorezi cum tehnologia AgroSalso poate susține drumul tău către o agricultură inteligentă.',
+    contactSub: 'Indiferent dacă ești fermier, partener sau investitor, echipa noastră este aici să te ajute să exploreze cum tehnologia AgroSalso poate susține drumul tău către o agricultură inteligentă.',
     infoEmail: 'Email',
     infoPhone: 'Telefon',
     infoSchedule: 'Program',
@@ -68,7 +68,7 @@ export const t = {
     infoAddressVal: 'DN79, Mădăras 417330, România',
     
     // Homepage Sections
-    heroTitle: 'Tehnologie. Performanță. Viitorul în Agricultură.',
+    heroTitle: 'Tehnologie. Performanță. Viitorul în Agricultură',
     heroSub: 'AgroSalso sprijină fermierii și afacerile agricole cu soluții inteligente și sustenabile, care cresc productivitatea și profitabilitatea — protejând în același timp planeta.',
     heroBtn: 'Începe Acum',
     topEquipment: 'Utilaje de Top',
@@ -185,7 +185,7 @@ export const t = {
     infoAddressVal: 'DN79, Mădăras 417330, Romania',
     
     // Homepage Sections
-    heroTitle: 'Technology. Performance. The Future of Agriculture.',
+    heroTitle: 'Technology. Performance. The Future of Agriculture',
     heroSub: 'AgroSalso supports farmers and agricultural businesses with smart and sustainable solutions that increase productivity and profitability — while protecting the planet.',
     heroBtn: 'Start Now',
     topEquipment: 'Top Equipment',
