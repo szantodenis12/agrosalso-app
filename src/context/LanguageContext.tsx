@@ -2,12 +2,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export const LANGUAGES = [
-  { code: 'ro', label: 'Română', short: 'RO', flag: '🇷🇴' },
-  { code: 'en', label: 'English', short: 'EN', flag: '🇬🇧' },
-  { code: 'hu', label: 'Magyar', short: 'HU', flag: '🇭🇺' },
-  { code: 'it', label: 'Italiano', short: 'IT', flag: '🇮🇹' },
-  { code: 'de', label: 'Deutsch', short: 'DE', flag: '🇩🇪' },
-  { code: 'es', label: 'Español', short: 'ES', flag: '🇪🇸' },
+  { code: 'ro', label: 'Română', short: 'RO', countryCode: 'ro' },
+  { code: 'en', label: 'English', short: 'EN', countryCode: 'gb' },
+  { code: 'hu', label: 'Magyar', short: 'HU', countryCode: 'hu' },
+  { code: 'it', label: 'Italiano', short: 'IT', countryCode: 'it' },
+  { code: 'de', label: 'Deutsch', short: 'DE', countryCode: 'de' },
+  { code: 'es', label: 'Español', short: 'ES', countryCode: 'es' },
 ] as const;
 
 export type Language = typeof LANGUAGES[number]['code'];

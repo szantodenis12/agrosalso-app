@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, LANGUAGES } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
+import Image from 'next/image';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,12 +53,19 @@ export function Navbar() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-lg transition-all focus:outline-none">
-          <span className="text-base leading-none">{activeLang.flag}</span>
+          <div className="relative w-5 h-3.5 rounded-sm overflow-hidden border border-white/20">
+            <Image 
+              src={`https://flagcdn.com/w40/${activeLang.countryCode}.png`}
+              alt={activeLang.label}
+              fill
+              className="object-cover"
+            />
+          </div>
           <span className="text-[10px] font-extrabold text-white uppercase tracking-widest">{activeLang.short}</span>
           <ChevronDown size={12} className="text-white/40" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-40 bg-neutral-900/95 backdrop-blur-xl border-white/10 rounded-xl p-1 shadow-2xl">
+      <DropdownMenuContent align="end" className="w-44 bg-neutral-900/95 backdrop-blur-xl border-white/10 rounded-xl p-1 shadow-2xl">
         {LANGUAGES.map((l) => (
           <DropdownMenuItem
             key={l.code}
@@ -67,7 +75,14 @@ export function Navbar() {
               lang === l.code ? "bg-accent-lime/10 text-accent-lime" : "text-white/60 hover:text-white"
             )}
           >
-            <span className="text-base leading-none">{l.flag}</span>
+            <div className="relative w-5 h-3.5 rounded-sm overflow-hidden border border-white/10">
+              <Image 
+                src={`https://flagcdn.com/w40/${l.countryCode}.png`}
+                alt={l.label}
+                fill
+                className="object-cover"
+              />
+            </div>
             <div className="flex flex-col">
               <span className="text-[10px] font-extrabold uppercase tracking-widest leading-none mb-0.5">{l.label}</span>
               <span className="text-[8px] font-bold opacity-40 uppercase tracking-tighter">{l.short}</span>
