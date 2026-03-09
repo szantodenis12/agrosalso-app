@@ -4,16 +4,15 @@ import { useRouter } from 'next/navigation';
 import { useFirestore, useStorage } from '@/firebase';
 import { addProduct, updateProduct } from '@/lib/firestore/products';
 import { uploadImage } from '@/lib/firebase/storage';
-import { Product, ProductCategory, SpecTable, SpecTableRow, ProductTranslation } from '@/types';
+import { Product, ProductCategory, ProductTranslation } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Sparkles, Save, ChevronLeft, Trash2, Plus, Image as ImageIcon, X, Upload, Loader2, Languages, ShieldCheck } from 'lucide-react';
+import { Sparkles, Save, ChevronLeft, Upload, Loader2, Languages, ShieldCheck } from 'lucide-react';
 import { adminProductDescriptionGenerator } from '@/ai/flows/admin-product-description-generator';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import { PRODUCT_CATEGORIES } from '@/lib/constants';
-import { Checkbox } from '@/components/ui/checkbox';
 import { LANGUAGES } from '@/context/LanguageContext';
 
 interface Props {
@@ -37,14 +36,6 @@ export default function ProductForm({ initialData, mode }: Props) {
 
   const [galleryImages, setGalleryImages] = useState<string[]>(initialData?.images?.filter(img => img !== initialData?.mainImage) ?? []);
   const [mainImage, setMainImage] = useState<string>(initialData?.mainImage ?? '');
-
-  const [specTable, setSpecTable] = useState<SpecTable>(
-    initialData?.specTable ?? {
-      headers: ['MODEL', 'LĂȚIME', 'VITEZĂ', 'EFICIENȚĂ', 'NR. DISCURI', 'PUTERE NECESARĂ'],
-      rows: [],
-      footerNote: '*Puterea necesară depinde de tipul de tăvălug utilizat.'
-    }
-  );
 
   const [form, setForm] = useState({
     name: initialData?.name ?? '',
@@ -173,7 +164,6 @@ export default function ProductForm({ initialData, mode }: Props) {
         whyBrand: form.whyBrand.split('\n').map(p => p.trim()).filter(Boolean),
         brandSlug: generateSlug(form.brand),
         price: parseFloat(form.price) || 0,
-        specTable: specTable.rows.length > 0 ? specTable : null,
         currency: 'RON',
       };
       if (mode === 'create') await addProduct(db, data);
@@ -188,51 +178,53 @@ export default function ProductForm({ initialData, mode }: Props) {
   const inputClass = "h-12 rounded-xl bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm";
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-5xl mx-auto space-y-10 pb-20">
+    <form onSubmit={handleSubmit} className="max-w-5xl mx-auto space-y-6 lg:space-y-10 pb-20">
       <input type="file" ref={mainImageInputRef} onChange={handleMainImageFile} accept="image/*" className="hidden" />
       <input type="file" ref={galleryInputRef} onChange={handleGalleryFiles} accept="image/*" multiple className="hidden" />
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <Button type="button" variant="ghost" size="icon" className="rounded-full bg-white shadow-sm" onClick={() => router.back()}>
             <ChevronLeft size={20} />
           </Button>
           <div>
-            <h1 className="font-headline font-extrabold text-3xl text-neutral-900 tracking-tighter uppercase">{mode === 'create' ? 'Adăugare' : 'Editare'} Produs</h1>
+            <h1 className="font-headline font-extrabold text-2xl lg:text-3xl text-neutral-900 tracking-tighter uppercase leading-tight">
+              {mode === 'create' ? 'Adăugare' : 'Editare'} Produs
+            </h1>
           </div>
         </div>
         
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           {mode === 'edit' && (
             <Button 
               type="button"
               onClick={handleRetranslate}
               disabled={translating}
-              className="bg-neutral-900 hover:bg-black text-white font-extrabold rounded-full h-12 px-6 gap-2"
+              className="flex-1 sm:flex-none bg-neutral-900 hover:bg-black text-white font-extrabold rounded-full h-12 px-4 lg:px-6 gap-2 text-xs"
             >
-              {translating ? <Loader2 className="animate-spin" /> : <Languages size={18} />}
-              {translating ? 'TRADUCERE...' : 'RE-TRADUCE TOATE'}
+              {translating ? <Loader2 className="animate-spin size-4" /> : <Languages size={16} />}
+              {translating ? 'TRADUCERE...' : 'RE-TRADUCE'}
             </Button>
           )}
           <Button 
             type="button"
             onClick={handleAiGenerate}
             disabled={generating}
-            className="bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold rounded-full h-12 px-6 gap-2"
+            className="flex-1 sm:flex-none bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold rounded-full h-12 px-4 lg:px-6 gap-2 text-xs shadow-lg shadow-accent-lime/20"
           >
-            {generating ? <Loader2 className="animate-spin" /> : <Sparkles size={18} />}
+            {generating ? <Loader2 className="animate-spin size-4" /> : <Sparkles size={16} />}
             GENERARE AI
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <div className="lg:col-span-2 space-y-10">
-          <div className="bg-white rounded-[2.5rem] p-10 shadow-sm space-y-8 border border-neutral-100">
-            <h3 className="font-headline font-extrabold text-xl tracking-tight flex items-center gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
+        <div className="lg:col-span-2 space-y-6 lg:space-y-10">
+          <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
+            <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Detalii Principale
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
               <div>
                 <label className={labelClass}>Nume Produs</label>
                 <Input value={form.name} onChange={e => handleNameChange(e.target.value)} required className={inputClass} />
@@ -259,34 +251,34 @@ export default function ProductForm({ initialData, mode }: Props) {
               </div>
               <div>
                 <label className={labelClass}>Descriere Vizibilă (Pagina Produs)</label>
-                <Textarea value={form.detailedDescription} onChange={e => set('detailedDescription', e.target.value)} className="min-h-[250px] rounded-2xl bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm" />
+                <Textarea value={form.detailedDescription} onChange={e => set('detailedDescription', e.target.value)} className="min-h-[200px] lg:min-h-[250px] rounded-[1.5rem] bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-[2.5rem] p-10 shadow-sm space-y-8 border border-neutral-100">
-             <h3 className="font-headline font-extrabold text-xl tracking-tight flex items-center gap-2 text-accent-lime">
+          <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
+             <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2 text-accent-lime">
               <ShieldCheck size={22} /> Secțiunea Brand (Argumente cheie)
             </h3>
             <Textarea 
               value={form.whyBrand} 
               onChange={e => set('whyBrand', e.target.value)} 
-              className="min-h-[150px] rounded-2xl bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm" 
+              className="min-h-[120px] lg:min-h-[150px] rounded-[1.5rem] bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm" 
               placeholder="Ex: Experiență de peste 30 de ani..." 
             />
           </div>
 
-          <div className="bg-white rounded-[2.5rem] p-10 shadow-sm space-y-8 border border-neutral-100">
-             <h3 className="font-headline font-extrabold text-xl tracking-tight flex items-center gap-2">
+          <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
+             <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Galerie Media
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-start">
               <Button type="button" variant="outline" onClick={() => mainImageInputRef.current?.click()} className="w-full h-14 border-dashed border-2 rounded-2xl">
                 {uploadingMain ? <Loader2 className="animate-spin" /> : <Upload size={18} />}
                 ÎNCARCĂ POZĂ PRINCIPALĂ
               </Button>
               {mainImage && (
-                <div className="relative aspect-video rounded-2xl overflow-hidden border border-neutral-100">
+                <div className="relative aspect-video rounded-2xl overflow-hidden border border-neutral-100 shadow-sm">
                   <Image src={mainImage} alt="Preview" fill className="object-cover" />
                 </div>
               )}
@@ -294,15 +286,23 @@ export default function ProductForm({ initialData, mode }: Props) {
           </div>
         </div>
 
-        <div className="space-y-10">
-          <div className="bg-neutral-900 rounded-[2.5rem] p-8 text-white space-y-8 shadow-xl">
-             <h3 className="font-headline font-extrabold text-xl tracking-tight">Preț & Stoc</h3>
+        <div className="space-y-6 lg:space-y-10">
+          <div className="bg-neutral-900 rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-8 text-white space-y-6 lg:space-y-8 shadow-xl">
+             <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight">Preț & Stoc</h3>
              <div className="space-y-6">
-                <Input type="number" value={form.price} onChange={e => set('price', e.target.value)} disabled={form.priceOnRequest} className="bg-white/5 border-none h-12 rounded-xl text-white" />
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest ml-1">Preț (RON)</label>
+                  <Input type="number" value={form.price} onChange={e => set('price', e.target.value)} disabled={form.priceOnRequest} className="bg-white/5 border-none h-12 rounded-xl text-white" />
+                </div>
                 <div className="space-y-4 pt-2">
                   {['priceOnRequest', 'inStock', 'isNew', 'isFeatured', 'isOnSale'].map(field => (
-                    <label key={field} className="flex items-center justify-between cursor-pointer">
-                      <span className="text-sm font-bold text-white/60">{field}</span>
+                    <label key={field} className="flex items-center justify-between cursor-pointer group">
+                      <span className="text-sm font-bold text-white/60 group-hover:text-white transition-colors">
+                        {field === 'priceOnRequest' ? 'La cerere' : 
+                         field === 'inStock' ? 'În stoc' : 
+                         field === 'isNew' ? 'Produs nou' : 
+                         field === 'isFeatured' ? 'Recomandat' : 'Promoție'}
+                      </span>
                       <input type="checkbox" checked={form[field as keyof typeof form] as boolean} onChange={e => set(field, e.target.checked)} className="w-5 h-5 accent-accent-lime rounded-md" />
                     </label>
                   ))}
@@ -310,9 +310,9 @@ export default function ProductForm({ initialData, mode }: Props) {
              </div>
           </div>
 
-          <Button type="submit" disabled={saving || uploadingMain || uploadingGallery} className="w-full bg-neutral-900 hover:bg-black text-white font-extrabold h-16 rounded-3xl flex items-center justify-between pl-10 pr-2 group shadow-2xl">
-            {saving ? 'SE SALVEAZĂ...' : 'SALVEAZĂ PRODUSUL'}
-            <div className="w-12 h-12 bg-accent-lime rounded-full flex items-center justify-center">
+          <Button type="submit" disabled={saving || uploadingMain || uploadingGallery} className="w-full bg-neutral-900 hover:bg-black text-white font-extrabold h-16 rounded-[1.5rem] lg:rounded-3xl flex items-center justify-between pl-6 lg:pl-10 pr-2 group shadow-2xl">
+            <span>{saving ? 'SE SALVEAZĂ...' : 'SALVEAZĂ PRODUSUL'}</span>
+            <div className="w-12 h-12 bg-accent-lime rounded-full flex items-center justify-center shrink-0">
               <Save size={20} className="text-black" />
             </div>
           </Button>
