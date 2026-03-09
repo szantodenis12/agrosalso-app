@@ -28,6 +28,14 @@ export interface SpecTable {
   footerNote?: string;
 }
 
+export interface ProductTranslation {
+  name?: string;
+  shortDescription?: string;
+  description?: string;
+  detailedDescription?: string;
+  whyBrand?: string[];
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -59,6 +67,9 @@ export interface Product {
   metaDescription: string;
   createdAt: string;
   updatedAt: string;
+  translations?: {
+    [key: string]: ProductTranslation;
+  };
 }
 
 export interface Category {

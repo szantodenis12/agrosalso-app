@@ -1,8 +1,16 @@
 import { NextResponse } from 'next/server';
 
+const DEEPL_LANG_MAP: Record<string, string> = {
+  en: 'EN-US',
+  hu: 'HU',
+  it: 'IT',
+  de: 'DE',
+  es: 'ES',
+};
+
 export async function POST(req: Request) {
   try {
-    const { text, target = 'en' } = await req.json();
+    const { text, target_lang = 'en' } = await req.json();
     const apiKey = process.env.DEEPL_API_KEY;
 
     if (!apiKey) {
@@ -13,7 +21,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No text provided' }, { status: 400 });
     }
 
-    // DeepL handles both single string and array, but we standardize to array
+    const deeplTarget = DEEPL_LANG_MAP[target_lang.toLowerCase()] || 'EN-US';
+
     const textsToTranslate = Array.isArray(text) ? text : [text];
 
     const response = await fetch(
@@ -26,8 +35,8 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           text: textsToTranslate,
-          target_lang: 'EN',
-          tag_handling: 'html', // Important to preserve HTML tags in product descriptions
+          target_lang: deeplTarget,
+          tag_handling: 'html',
         }),
       }
     );

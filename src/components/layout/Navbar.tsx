@@ -2,10 +2,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage } from '@/context/LanguageContext';
+import { useLanguage, LANGUAGES } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
 
 export function Navbar() {
@@ -75,21 +75,22 @@ export function Navbar() {
           </div>
 
           <div className="hidden lg:flex items-center gap-6">
-            {/* RO | EN Toggle */}
-            <div className="flex items-center gap-2 text-[0.8rem] font-bold tracking-widest text-white/40">
-              <button 
-                onClick={() => setLang('ro')}
-                className={cn("transition-colors", lang === 'ro' ? "text-accent-lime opacity-100" : "hover:text-white")}
-              >
-                RO
-              </button>
-              <span className="opacity-20">|</span>
-              <button 
-                onClick={() => setLang('en')}
-                className={cn("transition-colors", lang === 'en' ? "text-accent-lime opacity-100" : "hover:text-white")}
-              >
-                EN
-              </button>
+            {/* Multi-language Toggle Desktop */}
+            <div className="flex items-center gap-3 text-[0.75rem] font-bold tracking-widest text-white/40">
+              {LANGUAGES.map((l, i) => (
+                <div key={l.code} className="flex items-center gap-3">
+                  <button 
+                    onClick={() => setLang(l.code)}
+                    className={cn(
+                      "transition-colors uppercase", 
+                      lang === l.code ? "text-accent-lime opacity-100" : "hover:text-white"
+                    )}
+                  >
+                    {l.label}
+                  </button>
+                  {i < LANGUAGES.length - 1 && <span className="opacity-10">|</span>}
+                </div>
+              ))}
             </div>
 
             <Link href="/contact">
@@ -104,12 +105,20 @@ export function Navbar() {
 
           {/* Mobile Toggle */}
           <div className="flex items-center gap-4 lg:hidden">
-             {/* RO | EN Toggle Mobile */}
-             <div className="flex items-center gap-2 text-[0.7rem] font-bold text-white/40 mr-2">
-                <button onClick={() => setLang('ro')} className={cn(lang === 'ro' && "text-accent-lime")}>RO</button>
-                <span className="opacity-20">|</span>
-                <button onClick={() => setLang('en')} className={cn(lang === 'en' && "text-accent-lime")}>EN</button>
+             {/* Language Dropdown Mobile */}
+             <div className="relative">
+                <select 
+                  value={lang} 
+                  onChange={(e) => setLang(e.target.value as any)}
+                  className="appearance-none bg-white/10 border border-white/20 text-white text-[10px] font-bold rounded-lg px-3 py-1.5 pr-8 focus:outline-none focus:ring-1 focus:ring-accent-lime uppercase tracking-widest"
+                >
+                  {LANGUAGES.map(l => (
+                    <option key={l.code} value={l.code} className="bg-neutral-900 text-white">{l.label}</option>
+                  ))}
+                </select>
+                <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none" />
              </div>
+
              <button 
               className="text-white relative z-[70] p-2 hover:bg-white/10 rounded-full transition-colors" 
               onClick={() => setIsOpen(!isOpen)}
@@ -160,7 +169,7 @@ export function Navbar() {
               className="mt-auto pt-12"
             >
               <Link href="/contact" onClick={() => setIsOpen(false)}>
-                <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-6 pr-1 rounded-full flex items-center gap-4 transition-all text-sm group">
+                <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-6 pr-1 rounded-full flex items-center gap-4 transition-all text-sm group w-full">
                   {t[lang].contactUs}
                   <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
                     <ArrowUpRight size={18} className="text-black" strokeWidth={2.5} />

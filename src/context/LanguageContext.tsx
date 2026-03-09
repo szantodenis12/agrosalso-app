@@ -1,7 +1,16 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type Language = 'ro' | 'en';
+export const LANGUAGES = [
+  { code: 'ro', label: 'RO' },
+  { code: 'en', label: 'EN' },
+  { code: 'hu', label: 'HU' },
+  { code: 'it', label: 'IT' },
+  { code: 'de', label: 'DE' },
+  { code: 'es', label: 'ES' },
+] as const;
+
+export type Language = typeof LANGUAGES[number]['code'];
 
 interface LanguageContextType {
   lang: Language;
@@ -15,7 +24,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem('agro_lang') as Language;
-    if (saved && (saved === 'ro' || saved === 'en')) {
+    if (saved && LANGUAGES.some(l => l.code === saved)) {
       setLangState(saved);
     }
   }, []);
