@@ -1,4 +1,3 @@
-
 'use client';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -340,7 +339,10 @@ export default function CatalogPage() {
                   </Button>
                 </motion.div>
               ) : (
-                <div className="grid gap-6 md:gap-10 grid-cols-1 md:grid-cols-2">
+                <div className={cn(
+                  "grid gap-6 md:gap-10",
+                  viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
+                )}>
                   <AnimatePresence mode="popLayout">
                     {products.map((product) => (
                       <ProductCard key={product.id} product={product} viewMode={viewMode} />
