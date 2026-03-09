@@ -52,8 +52,8 @@ export function Navbar() {
   const LanguageSwitcher = () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-lg transition-all focus:outline-none">
-          <div className="relative w-5 h-3.5 rounded-sm overflow-hidden border border-white/20">
+        <button className="flex items-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/20 border border-white/10 rounded-full transition-all focus:outline-none backdrop-blur-sm">
+          <div className="relative w-5 h-3.5 rounded-sm overflow-hidden border border-white/20 shrink-0">
             <Image 
               src={`https://flagcdn.com/w40/${activeLang.countryCode}.png`}
               alt={activeLang.label}
@@ -65,17 +65,17 @@ export function Navbar() {
           <ChevronDown size={12} className="text-white/40" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-44 bg-neutral-900/95 backdrop-blur-xl border-white/10 rounded-xl p-1 shadow-2xl">
+      <DropdownMenuContent align="end" className="w-48 bg-neutral-900/95 backdrop-blur-xl border-white/10 rounded-2xl p-1.5 shadow-2xl z-[100]">
         {LANGUAGES.map((l) => (
           <DropdownMenuItem
             key={l.code}
             onClick={() => setLang(l.code)}
             className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors focus:bg-accent-lime/10 focus:text-white",
-              lang === l.code ? "bg-accent-lime/10 text-accent-lime" : "text-white/60 hover:text-white"
+              "flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all focus:bg-accent-lime/10 mb-0.5 last:mb-0",
+              lang === l.code ? "bg-accent-lime/10" : "hover:bg-white/5"
             )}
           >
-            <div className="relative w-5 h-3.5 rounded-sm overflow-hidden border border-white/10">
+            <div className="relative w-6 h-4 rounded-sm overflow-hidden border border-white/10 shrink-0">
               <Image 
                 src={`https://flagcdn.com/w40/${l.countryCode}.png`}
                 alt={l.label}
@@ -83,9 +83,19 @@ export function Navbar() {
                 className="object-cover"
               />
             </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest leading-none mb-0.5">{l.label}</span>
-              <span className="text-[8px] font-bold opacity-40 uppercase tracking-tighter">{l.short}</span>
+            <div className="flex flex-col justify-center gap-0.5">
+              <span className={cn(
+                "text-[10px] font-extrabold uppercase tracking-widest leading-tight",
+                lang === l.code ? "text-accent-lime" : "text-white"
+              )}>
+                {l.label}
+              </span>
+              <span className={cn(
+                "text-[8px] font-bold uppercase tracking-tighter leading-none",
+                lang === l.code ? "text-accent-lime/60" : "text-white/40"
+              )}>
+                {l.short}
+              </span>
             </div>
           </DropdownMenuItem>
         ))}
