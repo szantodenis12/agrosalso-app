@@ -7,6 +7,12 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, LANGUAGES } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -39,6 +45,38 @@ export function Navbar() {
   const isPrivacyPage = pathname === '/politica-de-confidentialitate';
   const isTermsPage = pathname === '/termeni-si-conditii';
   const shouldBeVisible = scrolled || isOpen || isProductsPage || isPrivacyPage || isTermsPage;
+
+  const activeLang = LANGUAGES.find(l => l.code === lang) || LANGUAGES[0];
+
+  const LanguageSwitcher = () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-lg transition-all focus:outline-none">
+          <span className="text-base leading-none">{activeLang.flag}</span>
+          <span className="text-[10px] font-extrabold text-white uppercase tracking-widest">{activeLang.short}</span>
+          <ChevronDown size={12} className="text-white/40" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-40 bg-neutral-900/95 backdrop-blur-xl border-white/10 rounded-xl p-1 shadow-2xl">
+        {LANGUAGES.map((l) => (
+          <DropdownMenuItem
+            key={l.code}
+            onClick={() => setLang(l.code)}
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors focus:bg-accent-lime/10 focus:text-white",
+              lang === l.code ? "bg-accent-lime/10 text-accent-lime" : "text-white/60 hover:text-white"
+            )}
+          >
+            <span className="text-base leading-none">{l.flag}</span>
+            <div className="flex flex-col">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest leading-none mb-0.5">{l.label}</span>
+              <span className="text-[8px] font-bold opacity-40 uppercase tracking-tighter">{l.short}</span>
+            </div>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 
   return (
     <>
@@ -75,23 +113,7 @@ export function Navbar() {
           </div>
 
           <div className="hidden lg:flex items-center gap-6">
-            {/* Multi-language Toggle Desktop */}
-            <div className="flex items-center gap-3 text-[0.75rem] font-bold tracking-widest text-white/40">
-              {LANGUAGES.map((l, i) => (
-                <div key={l.code} className="flex items-center gap-3">
-                  <button 
-                    onClick={() => setLang(l.code)}
-                    className={cn(
-                      "transition-colors uppercase", 
-                      lang === l.code ? "text-accent-lime opacity-100" : "hover:text-white"
-                    )}
-                  >
-                    {l.label}
-                  </button>
-                  {i < LANGUAGES.length - 1 && <span className="opacity-10">|</span>}
-                </div>
-              ))}
-            </div>
+            <LanguageSwitcher />
 
             <Link href="/contact">
               <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-6 pr-1 rounded-full flex items-center gap-4 transition-all text-sm group">
@@ -105,19 +127,7 @@ export function Navbar() {
 
           {/* Mobile Toggle */}
           <div className="flex items-center gap-4 lg:hidden">
-             {/* Language Dropdown Mobile */}
-             <div className="relative">
-                <select 
-                  value={lang} 
-                  onChange={(e) => setLang(e.target.value as any)}
-                  className="appearance-none bg-white/10 border border-white/20 text-white text-[10px] font-bold rounded-lg px-3 py-1.5 pr-8 focus:outline-none focus:ring-1 focus:ring-accent-lime uppercase tracking-widest"
-                >
-                  {LANGUAGES.map(l => (
-                    <option key={l.code} value={l.code} className="bg-neutral-900 text-white">{l.label}</option>
-                  ))}
-                </select>
-                <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none" />
-             </div>
+             <LanguageSwitcher />
 
              <button 
               className="text-white relative z-[70] p-2 hover:bg-white/10 rounded-full transition-colors" 
