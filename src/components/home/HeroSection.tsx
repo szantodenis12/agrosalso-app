@@ -142,21 +142,20 @@ export function HeroSection() {
             variants={itemVariants}
             className="font-headline font-bold text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8"
           >
-            {lang === 'ro' ? (
-              <>Tehnologie. <span className="text-accent-lime">Performanță.</span> <br className="hidden md:block" /> <span className="text-accent-lime">Viitorul</span> <br className="hidden md:block" /> în Agricultură.</>
-            ) : (
-              <>Technology. <span className="text-accent-lime">Performance.</span> <br className="hidden md:block" /> <span className="text-accent-lime">The Future</span> <br className="hidden md:block" /> of Agriculture.</>
-            )}
+            {t[lang].heroTitle.split('.').map((part, i, arr) => (
+              <span key={i}>
+                {i === arr.length - 1 ? <span className="text-accent-lime">{part}</span> : part}
+                {i < arr.length - 1 && '.'}
+                {i < arr.length - 1 && <br className="hidden md:block" />}
+              </span>
+            ))}
           </motion.h1>
 
           <motion.p 
             variants={itemVariants}
             className="text-white/80 text-base md:text-lg max-w-xl mb-10 font-body leading-relaxed"
           >
-            {lang === 'ro' 
-              ? "AgroSalso sprijină fermierii și afacerile agricole cu soluții inteligente și sustenabile, care cresc productivitatea și profitabilitatea — protejând în același timp planeta."
-              : "AgroSalso supports farmers and agricultural businesses with smart and sustainable solutions that increase productivity and profitability — while protecting the planet."
-            }
+            {t[lang].heroSub}
           </motion.p>
 
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-6 items-start">
@@ -166,7 +165,7 @@ export function HeroSection() {
                 whileTap={{ scale: 0.95 }}
                 className="bg-white hover:bg-neutral-50 text-neutral-900 font-bold h-14 pl-8 pr-1.5 rounded-full flex items-center gap-8 transition-all text-base shadow-2xl group border border-white/20"
               >
-                {lang === 'ro' ? 'Începe Acum' : 'Start Now'}
+                {t[lang].heroBtn}
                 <div className="w-11 h-11 bg-neutral-900 rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
                   <ArrowUpRight size={20} className="text-white" strokeWidth={2.5} />
                 </div>

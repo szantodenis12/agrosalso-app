@@ -4,6 +4,8 @@ import { Star, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useLanguage } from '@/context/LanguageContext';
+import { t } from '@/lib/translations';
 
 const TESTIMONIALS = [
   {
@@ -23,7 +25,7 @@ const TESTIMONIALS = [
   {
     id: 3,
     rating: 5,
-    text: "Suntem foarte mulțumiți de fiabilitatea pieselor comandate. Colaborarea cu MegaMetal prin AgroSalso ne-a ajutat să reducem timpii morți în plin sezon de recoltare. Recomandăm cu toată încrederea!",
+    text: "Suntem foarte mulțumiți de fiabilitatea pieselor comandate. Colaborarea cu MegaMetal prin AgroSalso ne-ajutat să reducem timpii morți în plin sezon de recoltare. Recomandăm cu toată încrederea!",
     author: "Andrei Vasilescu",
     location: "Exploatație Agricolă Banat"
   }
@@ -33,6 +35,7 @@ export function TestimonialsSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
+  const { lang } = useLanguage();
 
   useEffect(() => {
     setMounted(true);
@@ -64,7 +67,7 @@ export function TestimonialsSection() {
               className="flex items-center gap-2 px-3 py-1 bg-accent-lime/10 rounded-full w-fit"
             >
               <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" />
-              <span className="text-accent-lime text-[10px] font-bold uppercase tracking-widest">Testimoniale</span>
+              <span className="text-accent-lime text-[10px] font-bold uppercase tracking-widest">{t[lang].testimonialsTitle}</span>
             </motion.div>
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
@@ -73,7 +76,7 @@ export function TestimonialsSection() {
               transition={{ delay: 0.1 }}
               className="font-headline font-extrabold text-3xl md:text-6xl text-neutral-900 tracking-tight leading-[1.1]"
             >
-              Ce spun partenerii și <br className="hidden md:block" /> fermierii noștri
+              {t[lang].testimonialsSub}
             </motion.h2>
           </div>
           <motion.div 
@@ -84,7 +87,7 @@ export function TestimonialsSection() {
             className="max-w-md"
           >
             <p className="text-neutral-500 text-sm md:text-base font-body leading-relaxed pt-2 lg:pt-10">
-              De peste un deceniu, AgroSalso sprijină afacerile agricole din România cu tehnologie de top și piese originale de la producători europeni renumiți, asigurând productivitate și performanță măsurabilă.
+              {t[lang].testimonialsText}
             </p>
           </motion.div>
         </div>

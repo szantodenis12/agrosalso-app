@@ -1,10 +1,14 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowUpRight, Mail, Phone } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/context/LanguageContext';
+import { t } from '@/lib/translations';
 
 export function Footer() {
+  const { lang } = useLanguage();
+
   return (
     <footer className="w-full">
       {/* Top CTA Section */}
@@ -33,15 +37,15 @@ export function Footer() {
           >
             <div className="flex items-center gap-2 px-3 py-1 bg-accent-lime/20 rounded-full w-fit backdrop-blur-sm border border-accent-lime/30">
               <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" />
-              <span className="text-accent-lime text-[10px] font-bold uppercase tracking-widest">Contactează-ne</span>
+              <span className="text-accent-lime text-[10px] font-bold uppercase tracking-widest">{t[lang].contactUs}</span>
             </div>
             
             <h2 className="font-headline font-bold text-4xl md:text-7xl text-white leading-[1.1] tracking-tight">
-              Ești gata să îți <br /> transformi ferma?
+              {t[lang].readyToTransform}
             </h2>
             
             <p className="text-white/70 text-base md:text-lg max-w-md font-body leading-relaxed">
-              Rezervă o consultanță gratuită și lasă AgroSalso să îți arate cum funcționează agricultura modernă și sustenabilă. Adaptează-te la noile standarde.
+              {t[lang].transformSub}
             </p>
 
             <Link href="/contact" className="block w-fit">
@@ -50,7 +54,7 @@ export function Footer() {
                 whileTap={{ scale: 0.95 }}
                 className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-14 pl-8 pr-1.5 rounded-full flex items-center gap-8 transition-all text-base group"
               >
-                Începe Acum
+                {t[lang].heroBtn}
                 <div className="w-11 h-11 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
                   <ArrowUpRight size={20} className="text-black" strokeWidth={2.5} />
                 </div>
@@ -84,34 +88,34 @@ export function Footer() {
 
             {/* Links Columns */}
             <div>
-              <h4 className="text-neutral-500 font-bold text-sm mb-8">Link-uri rapide</h4>
+              <h4 className="text-neutral-500 font-bold text-sm mb-8">{t[lang].footerQuickLinks}</h4>
               <ul className="space-y-4">
-                <li><Link href="/servicii" className="text-white/60 hover:text-white transition-colors text-sm">Servicii</Link></li>
-                <li><Link href="/produse" className="text-white/60 hover:text-white transition-colors text-sm">Produse</Link></li>
-                <li><Link href="/preturi" className="text-white/60 hover:text-white transition-colors text-sm">Prețuri</Link></li>
+                <li><Link href="/servicii" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].services}</Link></li>
+                <li><Link href="/produse" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].products}</Link></li>
+                <li><Link href="/preturi" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].prices}</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-neutral-500 font-bold text-sm mb-8">Companie</h4>
+              <h4 className="text-neutral-500 font-bold text-sm mb-8">{t[lang].footerCompany}</h4>
               <ul className="space-y-4">
-                <li><Link href="/despre" className="text-white/60 hover:text-white transition-colors text-sm">Despre noi</Link></li>
-                <li><Link href="/echipa" className="text-white/60 hover:text-white transition-colors text-sm">Echipa</Link></li>
-                <li><Link href="/recenzii" className="text-white/60 hover:text-white transition-colors text-sm">Recenzii</Link></li>
+                <li><Link href="/despre" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].about}</Link></li>
+                <li><Link href="/echipa" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].team}</Link></li>
+                <li><Link href="/recenzii" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].reviews}</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-neutral-500 font-bold text-sm mb-8">Altele</h4>
+              <h4 className="text-neutral-500 font-bold text-sm mb-8">{t[lang].footerOthers}</h4>
               <ul className="space-y-4">
                 <li><Link href="/termeni-si-conditii" className="text-white/60 hover:text-white transition-colors text-sm">Termeni și Condiții</Link></li>
-                <li><Link href="/contact" className="text-white/60 hover:text-white transition-colors text-sm">Contact</Link></li>
+                <li><Link href="/contact" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].contact}</Link></li>
                 <li><Link href="/politica-de-confidentialitate" className="text-white/60 hover:text-white transition-colors text-sm">Politica de Confidențialitate</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-neutral-500 font-bold text-sm mb-8">Social Media</h4>
+              <h4 className="text-neutral-500 font-bold text-sm mb-8">{t[lang].footerSocial}</h4>
               <ul className="space-y-4">
                 <li><Link href="#" className="text-white/60 hover:text-white transition-colors text-sm">Instagram</Link></li>
                 <li><Link href="#" className="text-white/60 hover:text-white transition-colors text-sm">Facebook</Link></li>
@@ -123,7 +127,7 @@ export function Footer() {
           {/* Copyright */}
           <div className="pt-12 border-t border-white/10 text-center">
             <p className="text-white/40 text-xs tracking-widest font-body">
-              © {new Date().getFullYear()} AgroSalso. Toate drepturile rezervate.
+              © {new Date().getFullYear()} AgroSalso. {t[lang].footerRights}
             </p>
           </div>
         </div>

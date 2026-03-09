@@ -3,8 +3,12 @@ import { Check, ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/context/LanguageContext';
+import { t } from '@/lib/translations';
 
 export function AboutSection() {
+  const { lang } = useLanguage();
+  
   const revealVariants = {
     hidden: { opacity: 0, y: 40 },
     visible: { 
@@ -28,13 +32,13 @@ export function AboutSection() {
             className="space-y-6 md:space-y-8"
           >
             <div className="inline-block px-4 py-1.5 bg-accent-lime/10 text-accent-lime rounded-full text-[10px] font-bold uppercase tracking-widest">
-              Povestea noastră
+              {t[lang].aboutStory}
             </div>
             <h2 className="font-headline font-extrabold text-4xl md:text-5xl lg:text-6xl text-neutral-900 tracking-tighter leading-[1]">
-              Despre noi
+              {t[lang].aboutTitle}
             </h2>
             <p className="text-neutral-500 text-base md:text-xl font-body leading-relaxed max-w-lg">
-              Afacere de familie fondată în 2012, AgroSalso distribuie utilaje și piese de top direct de la producători europeni renumiți. Oferim calitate garantată și peste un deceniu de experiență în serviciul agriculturii românești.
+              {t[lang].aboutText}
             </p>
             <div className="pt-4">
               <Link href="/contact">
@@ -43,7 +47,7 @@ export function AboutSection() {
                   whileTap={{ scale: 0.98 }}
                   className="bg-neutral-900 hover:bg-black text-white rounded-full p-1.5 flex items-center justify-between transition-all duration-300 group/btn w-fit gap-10 shadow-2xl shadow-black/10"
                 >
-                  <span className="pl-6 text-sm font-bold uppercase tracking-widest">Află mai multe</span>
+                  <span className="pl-6 text-sm font-bold uppercase tracking-widest">{t[lang].aboutBtn}</span>
                   <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover/btn:rotate-45">
                     <ArrowUpRight size={20} className="text-black" strokeWidth={3} />
                   </div>
@@ -78,18 +82,14 @@ export function AboutSection() {
             className="space-y-6 md:space-y-8"
           >
             <div className="inline-block px-4 py-1.5 bg-accent-lime/10 text-accent-lime rounded-full text-[10px] font-bold uppercase tracking-widest">
-              Valorile noastre
+              {t[lang].aboutValues}
             </div>
             <h2 className="font-headline font-extrabold text-4xl md:text-5xl lg:text-6xl text-neutral-900 tracking-tighter leading-[1]">
-              Misiune
+              {t[lang].aboutMission}
             </h2>
           </motion.div>
           <div className="space-y-8 md:space-y-12 pt-0 lg:pt-16">
-            {[
-              "Parteneriate cu producători de top (Dexwal, Letak, MegaMetal, Turan)",
-              "Garanția calității și devotament față de fiecare client",
-              "Livrare promptă și consultanță bazată pe responsabilitate"
-            ].map((text, i) => (
+            {t[lang].aboutMissionPoints.map((text, i) => (
               <motion.div 
                 key={i} 
                 initial={{ opacity: 0, x: 30 }}
