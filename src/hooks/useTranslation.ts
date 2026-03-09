@@ -5,11 +5,12 @@ import { useLanguage } from '@/context/LanguageContext';
 /**
  * Hook for translating dynamic content from Firestore.
  * Caches results in sessionStorage to minimize API calls.
+ * Supports both string fields and arrays of strings (like whyBrand).
  */
 export function useTranslation<T extends Record<string, any>>(
   data: T | null,
   id?: string,
-  fields: (keyof T)[] = ['name', 'shortDescription', 'description', 'detailedDescription']
+  fields: (keyof T)[] = ['name', 'shortDescription', 'description', 'detailedDescription', 'whyBrand']
 ) {
   const { lang } = useLanguage();
   const [translatedData, setTranslatedData] = useState<T | null>(data);
@@ -39,8 +40,23 @@ export function useTranslation<T extends Record<string, any>>(
     const performTranslation = async () => {
       setIsTranslating(true);
       try {
-        const valuesToTranslate = fields.map(f => data[f]).filter(Boolean);
-        if (valuesToTranslate.length === 0) {
+        // Create a flat queue of all strings that need translation
+        const translationQueue: { field: keyof T, index?: number, value: string }[] = [];
+        
+        fields.forEach(f => {
+          const val = data[f];
+          if (Array.isArray(val)) {
+            val.forEach((v, i) => {
+              if (v && typeof v === 'string') {
+                translationQueue.push({ field: f, index: i, value: v });
+              }
+            });
+          } else if (typeof val === 'string' && val) {
+            translationQueue.push({ field: f, value: val });
+          }
+        });
+
+        if (translationQueue.length === 0) {
           setIsTranslating(false);
           return;
         }
@@ -48,27 +64,35 @@ export function useTranslation<T extends Record<string, any>>(
         const response = await fetch('/api/translate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: valuesToTranslate, target: 'en' }),
+          body: JSON.stringify({ 
+            text: translationQueue.map(q => q.value), 
+            target: 'en' 
+          }),
         });
 
         const result = await response.json();
         
         if (result.translatedText) {
-          const translatedValues = result.translatedText;
+          const translatedValues = Array.isArray(result.translatedText) 
+            ? result.translatedText 
+            : [result.translatedText];
+
           const updatedFields: Partial<T> = {};
           
-          let translateIdx = 0;
-          fields.forEach(f => {
-            if (data[f]) {
-              updatedFields[f] = translatedValues[translateIdx];
-              translateIdx++;
+          // Re-assemble the translated values back into their original structure
+          translationQueue.forEach((item, i) => {
+            const translatedVal = translatedValues[i];
+            if (item.index !== undefined) {
+              // It's an array field
+              if (!updatedFields[item.field]) {
+                updatedFields[item.field] = [...(data[item.field] as any)] as any;
+              }
+              (updatedFields[item.field] as any)[item.index] = translatedVal;
+            } else {
+              // It's a string field
+              updatedFields[item.field] = translatedVal as any;
             }
           });
-
-          // Handle Spec Table if present
-          if (data.specTable && Array.isArray(data.specTable.headers)) {
-             // Optional: Translate spec table too if needed
-          }
 
           const finalData = { ...data, ...updatedFields };
           sessionStorage.setItem(cacheKey, JSON.stringify(updatedFields));

@@ -333,17 +333,20 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               )}
 
               {/* WHY BRAND SECTION */}
-              {Array.isArray(product.whyBrand) && product.whyBrand.length > 0 && (
+              {Array.isArray(translatedData?.whyBrand) && translatedData.whyBrand.length > 0 && (
                 <section className="pt-10 md:pt-20 pb-10">
                   <div className="max-w-4xl mx-auto space-y-8 md:space-y-12">
                      <div className="text-center space-y-3 md:space-y-4">
-                        <h2 className="font-headline font-extrabold text-2xl md:text-5xl text-neutral-900 tracking-tight">
+                        <h2 className="font-headline font-extrabold text-2xl md:text-5xl text-neutral-900 tracking-tight transition-all">
                           {t[lang].whyBrand.replace('{brand}', product.brand)}
                         </h2>
                      </div>
 
-                     <div className="grid grid-cols-1 gap-6 md:gap-8 px-4">
-                        {product.whyBrand.map((text, i) => (
+                     <div className={cn(
+                       "grid grid-cols-1 gap-6 md:gap-8 px-4 transition-all",
+                       isTranslating && "animate-pulse blur-[2px]"
+                     )}>
+                        {translatedData.whyBrand.map((text, i) => (
                           <motion.div 
                             key={i} 
                             initial={{ opacity: 0, x: 20 }}
