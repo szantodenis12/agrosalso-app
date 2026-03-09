@@ -1,3 +1,4 @@
+
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -65,7 +66,7 @@ export function Navbar() {
           <ChevronDown size={12} className="text-white/40" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48 bg-neutral-900/95 backdrop-blur-xl border-white/10 rounded-2xl p-1.5 shadow-2xl z-[100]">
+      <DropdownMenuContent align="end" className="w-56 bg-neutral-900/95 backdrop-blur-xl border-white/10 rounded-2xl p-1.5 shadow-2xl z-[100]">
         {LANGUAGES.map((l) => (
           <DropdownMenuItem
             key={l.code}
@@ -83,15 +84,15 @@ export function Navbar() {
                 className="object-cover"
               />
             </div>
-            <div className="flex flex-col justify-center gap-0.5">
+            <div className="flex flex-col justify-center min-w-0">
               <span className={cn(
-                "text-[10px] font-extrabold uppercase tracking-widest leading-tight",
+                "text-[10px] font-extrabold uppercase tracking-widest leading-normal",
                 lang === l.code ? "text-accent-lime" : "text-white"
               )}>
                 {l.label}
               </span>
               <span className={cn(
-                "text-[8px] font-bold uppercase tracking-tighter leading-none",
+                "text-[8px] font-bold uppercase tracking-tight leading-tight",
                 lang === l.code ? "text-accent-lime/60" : "text-white/40"
               )}>
                 {l.short}
@@ -204,10 +205,10 @@ export function Navbar() {
               className="mt-auto pt-12"
             >
               <Link href="/contact" onClick={() => setIsOpen(false)}>
-                <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-6 pr-1 rounded-full flex items-center gap-4 transition-all text-sm group w-full">
-                  {t[lang].contactUs}
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
-                    <ArrowUpRight size={18} className="text-black" strokeWidth={2.5} />
+                <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-14 pl-8 pr-1.5 rounded-full flex items-center justify-between transition-all text-sm group w-full shadow-2xl shadow-accent-lime/20">
+                  <span className="font-extrabold uppercase tracking-widest">{t[lang].contactUs}</span>
+                  <div className="w-11 h-11 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
+                    <ArrowUpRight size={20} className="text-black" strokeWidth={3} />
                   </div>
                 </button>
               </Link>
