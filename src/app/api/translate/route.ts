@@ -3,40 +3,43 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const { text, target = 'en' } = await req.json();
-    const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
+    const apiKey = process.env.DEEPL_API_KEY;
 
     if (!apiKey) {
-      return NextResponse.json({ error: 'Translation API key not configured' }, { status: 500 });
+      return NextResponse.json({ error: 'DeepL API key not configured' }, { status: 500 });
     }
 
     if (!text) {
       return NextResponse.json({ error: 'No text provided' }, { status: 400 });
     }
 
-    // Google Translate API supports batching
+    // DeepL handles both single string and array, but we standardize to array
     const textsToTranslate = Array.isArray(text) ? text : [text];
 
     const response = await fetch(
-      `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`,
+      `https://api-free.deepl.com/v2/translate`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Authorization': `DeepL-Auth-Key ${apiKey}`,
+          'Content-Type': 'application/json' 
+        },
         body: JSON.stringify({
-          q: textsToTranslate,
-          target: target,
-          format: 'html', // Use html to preserve potential formatting/paragraphs
+          text: textsToTranslate,
+          target_lang: 'EN',
+          tag_handling: 'html', // Important to preserve HTML tags in product descriptions
         }),
       }
     );
 
     const data = await response.json();
 
-    if (data.error) {
-      console.error('Google Translate Error:', data.error);
-      return NextResponse.json({ error: data.error.message }, { status: 500 });
+    if (!response.ok || !data.translations) {
+      console.error('DeepL Translate Error:', data);
+      return NextResponse.json({ error: data.message || 'DeepL API error' }, { status: 500 });
     }
 
-    const translations = data.data.translations.map((t: any) => t.translatedText);
+    const translations = data.translations.map((t: any) => t.text);
     
     return NextResponse.json({ 
       translatedText: Array.isArray(text) ? translations : translations[0] 
