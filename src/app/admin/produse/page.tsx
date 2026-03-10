@@ -1,4 +1,6 @@
+
 'use client';
+import { useState } from 'react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { deleteProduct } from '@/lib/firestore/products';
 import { Product } from '@/types';
@@ -22,14 +24,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Edit, Trash2, ExternalLink, Plus, Loader2 } from 'lucide-react';
+import { Edit, Trash2, ExternalLink, Plus, Loader2, Download } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from '@/hooks/use-toast';
 import { collection, query, orderBy } from 'firebase/firestore';
+import { exportCatalogToZip } from '@/lib/export-utils';
 
 export default function AdminProductsPage() {
   const db = useFirestore();
+  const [isExporting, setIsExporting] = useState(false);
 
   const productsQuery = useMemoFirebase(() => {
     return query(collection(db, 'products'), orderBy('createdAt', 'desc'));
@@ -45,6 +49,28 @@ export default function AdminProductsPage() {
     });
   };
 
+  const handleExport = async () => {
+    if (!products || products.length === 0) {
+      toast({ variant: "destructive", title: "Eroare", description: "Nu există produse de exportat." });
+      return;
+    }
+
+    setIsExporting(true);
+    try {
+      await exportCatalogToZip(products);
+      toast({ title: "Export reușit", description: "Arhiva ZIP a fost generată și descărcată." });
+    } catch (error) {
+      console.error("Export Error:", error);
+      toast({ 
+        variant: "destructive", 
+        title: "Eroare Export", 
+        description: "A apărut o problemă la generarea arhivei. Verifică setările CORS în Firebase." 
+      });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <div className="space-y-6 lg:space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
@@ -52,14 +78,27 @@ export default function AdminProductsPage() {
           <h1 className="font-headline font-extrabold text-3xl lg:text-4xl text-neutral-900 tracking-tighter uppercase leading-tight">Catalog Produse</h1>
           <p className="text-neutral-400 text-sm font-medium">Gestionați toate utilajele agricole disponibile.</p>
         </div>
-        <Link href="/admin/produse/nou" className="w-full sm:w-auto">
-          <Button className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold rounded-2xl h-14 pl-6 lg:pl-8 pr-2 group transition-all">
-            ADĂUGARE PRODUS
-            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center ml-4 lg:ml-6 transition-transform group-hover:rotate-90">
-              <Plus size={20} className="text-black" />
-            </div>
+        
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <Button 
+            onClick={handleExport}
+            disabled={isExporting || isLoading}
+            variant="outline"
+            className="w-full sm:w-auto border-2 h-14 rounded-2xl px-6 font-extrabold gap-3 text-xs uppercase tracking-widest hover:bg-neutral-100"
+          >
+            {isExporting ? <Loader2 className="animate-spin size-4" /> : <Download size={18} />}
+            {isExporting ? 'Se procesează...' : 'Exportă în ZIP'}
           </Button>
-        </Link>
+
+          <Link href="/admin/produse/nou" className="w-full sm:w-auto">
+            <Button className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold rounded-2xl h-14 pl-6 lg:pl-8 pr-2 group transition-all">
+              ADĂUGARE PRODUS
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center ml-4 lg:ml-6 transition-transform group-hover:rotate-90">
+                <Plus size={20} className="text-black" />
+              </div>
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] shadow-sm overflow-hidden border border-neutral-100">

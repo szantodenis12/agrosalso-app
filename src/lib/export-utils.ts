@@ -1,0 +1,81 @@
+
+'use client';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
+import { Product } from '@/types';
+
+/**
+ * Utilitar pentru exportul catalogului în format ZIP.
+ * Organizează produsele în foldere după categorie și nume.
+ */
+export async function exportCatalogToZip(products: Product[]) {
+  const zip = new JSZip();
+
+  for (const product of products) {
+    // Curățăm numele folderelor de caractere interzise în sistemele de fișiere
+    const cleanCategory = (product.category || 'Altele').replace(/[/\\?%*:|"<>\.]/g, '-');
+    const cleanName = product.name.replace(/[/\\?%*:|"<>\.]/g, '-');
+    
+    const categoryFolder = zip.folder(cleanCategory);
+    const productFolder = categoryFolder?.folder(cleanName);
+
+    // 1. Generare fișier text cu informații
+    let infoContent = `NUME PRODUS: ${product.name}\n`;
+    infoContent += `MARCĂ: ${product.brand}\n`;
+    infoContent += `CATEGORIE: ${product.category}\n`;
+    infoContent += `PREȚ: ${product.priceOnRequest ? 'LA CERERE' : product.price + ' EUR'}\n`;
+    infoContent += `STATUS STOC: ${product.inStock ? 'ÎN STOC' : 'LA COMANDĂ'}\n`;
+    infoContent += `--------------------------------------------------\n\n`;
+    
+    infoContent += `DESCRIERE SCURTĂ:\n${product.shortDescription}\n\n`;
+    
+    // Eliminăm tag-urile HTML din descrierea detaliată pentru fișierul text
+    const plainDescription = product.detailedDescription?.replace(/<[^>]*>?/gm, '') || '';
+    infoContent += `DESCRIERE DETALIATĂ:\n${plainDescription}\n\n`;
+
+    if (product.specTable && product.specTable.headers.length > 0) {
+      infoContent += `SPECIFICAȚII TEHNICE:\n`;
+      infoContent += product.specTable.headers.join(' | ') + '\n';
+      infoContent += '-'.repeat(product.specTable.headers.join(' | ').length) + '\n';
+      product.specTable.rows.forEach(row => {
+        infoContent += row.values.join(' | ') + (row.isPopular ? ' (POPULAR)' : '') + '\n';
+      });
+      if (product.specTable.footerNote) {
+        infoContent += `\nNotă: ${product.specTable.footerNote}\n`;
+      }
+    }
+
+    productFolder?.file('detalii-produs.txt', infoContent);
+
+    // 2. Descărcare și adăugare imagini
+    // Colectăm toate imaginile (principală + galerie), eliminând duplicatele
+    const imageUrls = [product.mainImage, ...(product.images || [])].filter(Boolean);
+    const uniqueImages = Array.from(new Set(imageUrls));
+
+    for (let i = 0; i < uniqueImages.length; i++) {
+      try {
+        const response = await fetch(uniqueImages[i]);
+        if (!response.ok) throw new Error(`Fetch failed for ${uniqueImages[i]}`);
+        
+        const blob = await response.blob();
+        
+        // Determinăm extensia corectă din tipul MIME
+        let extension = 'jpg';
+        if (blob.type === 'image/png') extension = 'png';
+        if (blob.type === 'image/webp') extension = 'webp';
+        
+        const fileName = i === 0 ? `imagine-principala.${extension}` : `galerie-${i}.${extension}`;
+        productFolder?.file(fileName, blob);
+      } catch (error) {
+        console.error(`Eroare la descărcarea imaginii ${uniqueImages[i]}:`, error);
+        // Adăugăm un fișier de eroare mic în folder pentru a notifica echipa de marketing
+        productFolder?.file(`EROARE-IMAGINE-${i}.txt`, `Nu s-a putut descărca imaginea de la adresa: ${uniqueImages[i]}`);
+      }
+    }
+  }
+
+  // Generare și declanșare download
+  const content = await zip.generateAsync({ type: 'blob' });
+  const dateStr = new Date().toISOString().split('T')[0];
+  saveAs(content, `Catalog-AgroSalso-${dateStr}.zip`);
+}
