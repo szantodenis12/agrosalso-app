@@ -28,7 +28,7 @@ export async function seedDatabase(db: Firestore) {
     shortDescription: 'Tractor performant cu 150 CP și transmisie automată.',
     price: 150000,
     priceOnRequest: false,
-    currency: 'RON',
+    currency: 'EUR',
     images: ['https://picsum.photos/seed/1/800/600'],
     mainImage: 'https://picsum.photos/seed/1/800/600',
     specifications: { 'Putere': '150 CP', 'An': '2024' },

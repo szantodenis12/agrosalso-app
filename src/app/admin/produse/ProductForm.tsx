@@ -218,7 +218,7 @@ export default function ProductForm({ initialData, mode }: Props) {
         whyBrand: form.whyBrand.split('\n').map(p => p.trim()).filter(Boolean),
         brandSlug: generateSlug(form.brand),
         price: parseFloat(form.price) || 0,
-        currency: 'RON',
+        currency: 'EUR',
         specTable,
         tags: form.tags.split(',').map(t => t.trim()).filter(Boolean)
       };
@@ -490,7 +490,7 @@ export default function ProductForm({ initialData, mode }: Props) {
              <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight">Preț & Stoc</h3>
              <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest ml-1">Preț (RON)</label>
+                  <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest ml-1">Preț (EUR)</label>
                   <Input type="number" value={form.price} onChange={e => set('price', e.target.value)} disabled={form.priceOnRequest} className="bg-white/5 border-none h-12 rounded-xl text-white" />
                 </div>
                 <div className="space-y-4 pt-2">

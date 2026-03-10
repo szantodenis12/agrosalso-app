@@ -113,7 +113,7 @@ export default function AdminProductsPage() {
                   </TableCell>
                   <TableCell>
                     <div className="font-headline font-bold text-sm whitespace-nowrap">
-                      {product.priceOnRequest ? "LA CERERE" : `${product.price.toLocaleString()} RON`}
+                      {product.priceOnRequest ? "LA CERERE" : `${product.price.toLocaleString()} EUR`}
                     </div>
                   </TableCell>
                   <TableCell>

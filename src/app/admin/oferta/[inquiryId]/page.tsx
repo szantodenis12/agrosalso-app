@@ -312,7 +312,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                   >
                     {editPrice.toLocaleString()}
                   </span>
-                  <span className="ml-1.5 font-bold text-[10px] text-neutral-400">RON</span>
+                  <span className="ml-1.5 font-bold text-[10px] text-neutral-400">EUR</span>
                 </div>
               </div>
 
@@ -320,7 +320,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                 <span className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest">TVA (19%)</span>
                 <div className="text-right">
                   <span className="font-bold text-sm text-neutral-600">{tva.toLocaleString()}</span>
-                  <span className="ml-1.5 font-bold text-[10px] text-neutral-400">RON</span>
+                  <span className="ml-1.5 font-bold text-[10px] text-neutral-400">EUR</span>
                 </div>
               </div>
 
@@ -330,7 +330,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                   <span className="font-headline font-extrabold text-2xl text-neutral-900 tracking-tight">
                     {total.toLocaleString()}
                   </span>
-                  <span className="ml-2 font-bold text-xs text-neutral-400">RON</span>
+                  <span className="ml-2 font-bold text-xs text-neutral-400">EUR</span>
                 </div>
               </div>
             </div>

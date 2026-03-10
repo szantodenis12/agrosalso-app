@@ -104,6 +104,7 @@ export const t = {
     'plantator-cartofi': 'Plantator cartofi',
     'cultivator-prasitoare': 'Cultivator intre randuri',
     altele: 'Altele',
+    startingFrom: 'Preț începând de la',
   },
   en: {
     home: 'Home',
@@ -210,6 +211,7 @@ export const t = {
     'plantator-cartofi': 'Potato Planter',
     'cultivator-prasitoare': 'Inter-row Cultivator',
     altele: 'Others',
+    startingFrom: 'Price starting from',
   },
   hu: {
     home: 'Kezdőlap',
@@ -316,6 +318,7 @@ export const t = {
     'plantator-cartofi': 'Burgonya ültető',
     'cultivator-prasitoare': 'Sorközművelő kultivátor',
     altele: 'Egyebek',
+    startingFrom: 'Ár kezdődik',
   },
   it: {
     home: 'Home',
@@ -416,6 +419,7 @@ export const t = {
     'plantator-cartofi': 'Piantapatate',
     'cultivator-prasitoare': 'Sarchiatrice interfilare',
     altele: 'Altro',
+    startingFrom: 'Prezzo a partire da',
   },
   de: {
     home: 'Startseite',
@@ -516,6 +520,7 @@ export const t = {
     'plantator-cartofi': 'Kartoffellegemaschine',
     'cultivator-prasitoare': 'Hackgerät',
     altele: 'Sonstiges',
+    startingFrom: 'Preis ab',
   },
   es: {
     home: 'Inicio',
@@ -616,6 +621,7 @@ export const t = {
     'plantator-cartofi': 'Plantadora de patatas',
     'cultivator-prasitoare': 'Cultivador entre líneas',
     altele: 'Otros',
+    startingFrom: 'Precio desde',
   }
 } as const;
 

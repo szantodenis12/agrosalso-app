@@ -102,10 +102,10 @@ function ProductCard({ product, viewMode }: { product: any, viewMode: 'grid' | '
         <div className="mt-auto pt-5 md:pt-8 border-t border-neutral-100 flex items-center justify-between gap-4">
            <div className="flex flex-col">
               <span className="text-[8px] md:text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest mb-1 leading-none">
-                {lang === 'ro' ? 'Estimare' : 'Est. price'}
+                {t[lang].startingFrom}
               </span>
               <span className="font-headline font-extrabold text-base md:text-2xl text-neutral-900 tracking-tighter">
-                {product.priceOnRequest ? t[lang].priceOnRequest : `${product.price.toLocaleString()} RON`}
+                {product.priceOnRequest ? t[lang].priceOnRequest : `${product.price.toLocaleString()} EUR`}
               </span>
            </div>
            <Link href={`/produse/${product.slug}`} className="shrink-0">

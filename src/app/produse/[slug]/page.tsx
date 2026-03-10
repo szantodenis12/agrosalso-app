@@ -7,7 +7,7 @@ import { collection, query, where, getDocs, limit, addDoc, serverTimestamp } fro
 import { Product } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, Send, ShieldCheck, Truck, Cog, Sparkles, Image as ImageIcon, CheckCircle2, Check } from 'lucide-react';
+import { ChevronLeft, Send, ShieldCheck, Truck, Cog, Sparkles, ImageIcon, CheckCircle2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -201,7 +201,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                       <div className="space-y-1">
                         <span className="text-[9px] md:text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">{t[lang].catalogPrice}</span>
                         <div className="font-headline font-extrabold text-3xl md:text-5xl text-neutral-900 tracking-tighter">
-                          {product.priceOnRequest ? t[lang].priceOnRequest : `${product.price.toLocaleString()} RON`}
+                          {product.priceOnRequest ? t[lang].priceOnRequest : `${product.price.toLocaleString()} EUR`}
                         </div>
                       </div>
 

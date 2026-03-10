@@ -1,4 +1,3 @@
-
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 import { initializeApp, getApps } from 'firebase/app';
@@ -56,7 +55,7 @@ export async function POST(request: Request) {
             <p style="margin: 5px 0 20px; font-weight: bold; font-size: 18px;">${offerId}</p>
             
             <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase;">Preț Unitar (Net)</p>
-            <p style="margin: 5px 0 0; font-weight: bold; font-size: 24px; color: #222;">${price.toLocaleString()} RON</p>
+            <p style="margin: 5px 0 0; font-weight: bold; font-size: 24px; color: #222;">${price.toLocaleString()} EUR</p>
           </div>
 
           <p>Vă vom contacta telefonic în cel mai scurt timp pentru a discuta detaliile tehnice și modalitățile de finanțare.</p>

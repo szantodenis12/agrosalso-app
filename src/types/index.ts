@@ -50,7 +50,7 @@ export interface Product {
   whyBrand?: string[];
   price: number;
   priceOnRequest: boolean;
-  currency: 'RON';
+  currency: 'EUR';
   images: string[];
   mainImage: string;
   specifications: Record<string, string>;
