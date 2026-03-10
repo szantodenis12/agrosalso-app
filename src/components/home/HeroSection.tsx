@@ -140,7 +140,7 @@ export function HeroSection() {
         >
           <motion.h1 
             variants={itemVariants}
-            className="font-headline font-bold text-3xl sm:text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8"
+            className="font-headline font-bold text-[26px] sm:text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8 break-words"
           >
             {t[lang].heroTitle.split('.').map((part, i, arr) => {
               const isLast = i === arr.length - 1;
@@ -148,7 +148,7 @@ export function HeroSection() {
                 <span key={i}>
                   {isLast ? <span className="text-accent-lime">{part.trim()}</span> : part.trim()}
                   {i < arr.length - 1 && '.'}
-                  {i < arr.length - 1 && <br className="hidden md:block" />}
+                  {i < arr.length - 1 && <br />}
                 </span>
               );
             })}
