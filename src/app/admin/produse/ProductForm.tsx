@@ -214,7 +214,7 @@ export default function ProductForm({ initialData, mode }: Props) {
       const data = {
         ...form,
         mainImage,
-        images: [mainImage, ...galleryImages],
+        images: [mainImage, ...galleryImages].filter(Boolean),
         whyBrand: form.whyBrand.split('\n').map(p => p.trim()).filter(Boolean),
         brandSlug: generateSlug(form.brand),
         price: parseFloat(form.price) || 0,
@@ -263,7 +263,7 @@ export default function ProductForm({ initialData, mode }: Props) {
             </Button>
           )}
           <Button 
-            type="button"
+            type="button" 
             onClick={handleAiGenerate}
             disabled={generating}
             className="flex-1 sm:flex-none bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold rounded-full h-12 px-4 lg:px-6 gap-2 text-xs shadow-lg shadow-accent-lime/20"
@@ -428,16 +428,59 @@ export default function ProductForm({ initialData, mode }: Props) {
              <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Galerie Media
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-start">
-              <Button type="button" variant="outline" onClick={() => mainImageInputRef.current?.click()} className="w-full h-14 border-dashed border-2 rounded-2xl">
-                {uploadingMain ? <Loader2 className="animate-spin" /> : <Upload size={18} />}
-                ÎNCARCĂ POZĂ PRINCIPALĂ
-              </Button>
-              {mainImage && (
-                <div className="relative aspect-video rounded-2xl overflow-hidden border border-neutral-100 shadow-sm">
-                  <Image src={mainImage} alt="Preview" fill className="object-cover" />
+            
+            <div className="space-y-8">
+              {/* Imagine Principală */}
+              <div className="space-y-4">
+                <label className={labelClass}>Imagine Principală (Copertă)</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                  <Button type="button" variant="outline" onClick={() => mainImageInputRef.current?.click()} className="w-full h-24 border-dashed border-2 rounded-2xl flex-col gap-2">
+                    {uploadingMain ? <Loader2 className="animate-spin" /> : <Upload size={24} />}
+                    <span className="text-[10px] font-bold uppercase tracking-widest">ÎNCARCĂ POZĂ PRINCIPALĂ</span>
+                  </Button>
+                  {mainImage && (
+                    <div className="relative aspect-video rounded-2xl overflow-hidden border border-neutral-100 shadow-sm group">
+                      <Image src={mainImage} alt="Preview Main" fill className="object-cover" />
+                      <button 
+                        type="button" 
+                        onClick={() => setMainImage('')}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
+
+              {/* Galerie Suplimentară */}
+              <div className="space-y-4 pt-4 border-t border-neutral-50">
+                <label className={labelClass}>Galerie Foto (Imagini suplimentare)</label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => galleryInputRef.current?.click()} 
+                    className="aspect-square border-dashed border-2 rounded-2xl flex-col gap-2 h-auto"
+                  >
+                    {uploadingGallery ? <Loader2 className="animate-spin" /> : <Plus size={24} />}
+                    <span className="text-[9px] font-bold uppercase tracking-tight">ADAUGĂ POZE</span>
+                  </Button>
+                  
+                  {galleryImages.map((url, idx) => (
+                    <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden border border-neutral-100 shadow-sm group">
+                      <Image src={url} alt={`Gallery ${idx}`} fill className="object-cover" />
+                      <button 
+                        type="button" 
+                        onClick={() => setGalleryImages(prev => prev.filter((_, i) => i !== idx))}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
