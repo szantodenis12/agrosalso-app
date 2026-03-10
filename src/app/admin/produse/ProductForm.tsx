@@ -1,19 +1,20 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFirestore, useStorage } from '@/firebase';
 import { addProduct, updateProduct } from '@/lib/firestore/products';
 import { uploadImage } from '@/lib/firebase/storage';
-import { Product, ProductCategory, ProductTranslation } from '@/types';
+import { Product, ProductCategory, ProductTranslation, SpecTable, SpecTableRow } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Sparkles, Save, ChevronLeft, Upload, Loader2, Languages, ShieldCheck } from 'lucide-react';
+import { Sparkles, Save, ChevronLeft, Upload, Loader2, Languages, ShieldCheck, Plus, Trash2, Search, Info } from 'lucide-react';
 import { adminProductDescriptionGenerator } from '@/ai/flows/admin-product-description-generator';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import { PRODUCT_CATEGORIES } from '@/lib/constants';
 import { LANGUAGES } from '@/context/LanguageContext';
+import { cn } from '@/lib/utils';
 
 interface Props {
   initialData?: Product;
@@ -36,6 +37,13 @@ export default function ProductForm({ initialData, mode }: Props) {
 
   const [galleryImages, setGalleryImages] = useState<string[]>(initialData?.images?.filter(img => img !== initialData?.mainImage) ?? []);
   const [mainImage, setMainImage] = useState<string>(initialData?.mainImage ?? '');
+
+  // State pentru tabelul de specificații
+  const [specHeaders, setSpecHeaders] = useState<string[]>(initialData?.specTable?.headers ?? ['Model', 'Putere (CP)', 'Lățime (m)']);
+  const [specRows, setSpecRows] = useState<SpecTableRow[]>(initialData?.specTable?.rows ?? [
+    { values: ['', '', ''], isPopular: false }
+  ]);
+  const [specFooterNote, setSpecFooterNote] = useState(initialData?.specTable?.footerNote ?? '');
 
   const [form, setForm] = useState({
     name: initialData?.name ?? '',
@@ -65,6 +73,46 @@ export default function ProductForm({ initialData, mode }: Props) {
 
   const set = (field: string, value: any) => setForm(prev => ({ ...prev, [field]: value }));
 
+  // --- Handlers Tabel Specificații ---
+  const addSpecHeader = () => {
+    setSpecHeaders([...specHeaders, 'Titlu Nou']);
+    setSpecRows(specRows.map(row => ({ ...row, values: [...row.values, ''] })));
+  };
+
+  const removeSpecHeader = (index: number) => {
+    if (specHeaders.length <= 1) return;
+    setSpecHeaders(specHeaders.filter((_, i) => i !== index));
+    setSpecRows(specRows.map(row => ({ ...row, values: row.values.filter((_, i) => i !== index) })));
+  };
+
+  const updateSpecHeader = (index: number, val: string) => {
+    const newHeaders = [...specHeaders];
+    newHeaders[index] = val;
+    setSpecHeaders(newHeaders);
+  };
+
+  const addSpecRow = () => {
+    setSpecRows([...specRows, { values: specHeaders.map(() => ''), isPopular: false }]);
+  };
+
+  const removeSpecRow = (index: number) => {
+    if (specRows.length <= 1) return;
+    setSpecRows(specRows.filter((_, i) => i !== index));
+  };
+
+  const updateSpecValue = (rowIndex: number, colIndex: number, val: string) => {
+    const newRows = [...specRows];
+    newRows[rowIndex].values[colIndex] = val;
+    setSpecRows(newRows);
+  };
+
+  const toggleRowPopular = (rowIndex: number) => {
+    const newRows = [...specRows];
+    newRows[rowIndex].isPopular = !newRows[rowIndex].isPopular;
+    setSpecRows(newRows);
+  };
+
+  // --- Traducere & AI ---
   const handleRetranslate = async () => {
     if (!initialData?.id) return;
     setTranslating(true);
@@ -157,6 +205,12 @@ export default function ProductForm({ initialData, mode }: Props) {
     e.preventDefault();
     setSaving(true);
     try {
+      const specTable: SpecTable = {
+        headers: specHeaders,
+        rows: specRows,
+        footerNote: specFooterNote
+      };
+
       const data = {
         ...form,
         mainImage,
@@ -165,6 +219,7 @@ export default function ProductForm({ initialData, mode }: Props) {
         brandSlug: generateSlug(form.brand),
         price: parseFloat(form.price) || 0,
         currency: 'RON',
+        specTable
       };
       if (mode === 'create') await addProduct(db, data);
       else if (initialData?.id) await updateProduct(db, initialData.id, data);
@@ -178,7 +233,7 @@ export default function ProductForm({ initialData, mode }: Props) {
   const inputClass = "h-12 rounded-xl bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm";
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-5xl mx-auto space-y-6 lg:space-y-10 pb-20">
+    <form onSubmit={handleSubmit} className="max-w-5xl mx-auto space-y-6 lg:space-y-10 pb-20 px-4 sm:px-0">
       <input type="file" ref={mainImageInputRef} onChange={handleMainImageFile} accept="image/*" className="hidden" />
       <input type="file" ref={galleryInputRef} onChange={handleGalleryFiles} accept="image/*" multiple className="hidden" />
 
@@ -220,6 +275,7 @@ export default function ProductForm({ initialData, mode }: Props) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
         <div className="lg:col-span-2 space-y-6 lg:space-y-10">
+          {/* SECȚIUNEA 1: Detalii Principale */}
           <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
             <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Detalii Principale
@@ -250,12 +306,88 @@ export default function ProductForm({ initialData, mode }: Props) {
                 <Input value={form.shortDescription} onChange={e => set('shortDescription', e.target.value)} className={inputClass} maxLength={160} />
               </div>
               <div>
-                <label className={labelClass}>Descriere Vizibilă (Pagina Produs)</label>
+                <label className={labelClass}>Descriere Vizibilă (Pagina Produs - HTML)</label>
                 <Textarea value={form.detailedDescription} onChange={e => set('detailedDescription', e.target.value)} className="min-h-[200px] lg:min-h-[250px] rounded-[1.5rem] bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm" />
               </div>
             </div>
           </div>
 
+          {/* SECȚIUNEA 2: Tabel Specificații Modele */}
+          <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Tabel Specificații (Modele)
+              </h3>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <Button type="button" variant="outline" size="sm" onClick={addSpecHeader} className="rounded-xl flex-1 sm:flex-none">
+                  <Plus size={14} className="mr-1" /> COLONĂ
+                </Button>
+                <Button type="button" variant="outline" size="sm" onClick={addSpecRow} className="rounded-xl flex-1 sm:flex-none">
+                  <Plus size={14} className="mr-1" /> RÂND
+                </Button>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto custom-scrollbar -mx-2 sm:mx-0">
+              <table className="w-full border-collapse min-w-[600px]">
+                <thead>
+                  <tr className="bg-neutral-50 border-b border-neutral-100">
+                    <th className="p-2 text-[10px] font-extrabold text-neutral-400 uppercase text-left w-12">Pop.</th>
+                    {specHeaders.map((header, i) => (
+                      <th key={i} className="p-2 group">
+                        <div className="flex items-center gap-1">
+                          <Input 
+                            value={header} 
+                            onChange={e => updateSpecHeader(i, e.target.value)} 
+                            className="h-8 text-[10px] font-bold uppercase tracking-widest border-none bg-transparent focus:bg-white"
+                          />
+                          <button type="button" onClick={() => removeSpecHeader(i)} className="text-red-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Trash2 size={12} />
+                          </button>
+                        </div>
+                      </th>
+                    ))}
+                    <th className="w-10"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {specRows.map((row, ri) => (
+                    <tr key={ri} className="border-b border-neutral-50 hover:bg-neutral-50/30 transition-colors">
+                      <td className="p-2 text-center">
+                        <input 
+                          type="checkbox" 
+                          checked={row.isPopular} 
+                          onChange={() => toggleRowPopular(ri)}
+                          className="w-4 h-4 accent-accent-lime"
+                        />
+                      </td>
+                      {row.values.map((val, ci) => (
+                        <td key={ci} className="p-2">
+                          <Input 
+                            value={val} 
+                            onChange={e => updateSpecValue(ri, ci, e.target.value)}
+                            className="h-10 text-sm border-none bg-transparent focus:bg-white shadow-none"
+                          />
+                        </td>
+                      ))}
+                      <td className="p-2">
+                        <button type="button" onClick={() => removeSpecRow(ri)} className="text-neutral-300 hover:text-red-500 transition-colors">
+                          <Trash2 size={14} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            
+            <div>
+              <label className={labelClass}>Notă subsol tabel (Ex: *Prețurile includ transportul)</label>
+              <Input value={specFooterNote} onChange={e => setSpecFooterNote(e.target.value)} className={inputClass} placeholder="Informații suplimentare despre modele..." />
+            </div>
+          </div>
+
+          {/* SECȚIUNEA 3: Argumente Brand */}
           <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
              <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2 text-accent-lime">
               <ShieldCheck size={22} /> Secțiunea Brand (Argumente cheie)
@@ -264,10 +396,33 @@ export default function ProductForm({ initialData, mode }: Props) {
               value={form.whyBrand} 
               onChange={e => set('whyBrand', e.target.value)} 
               className="min-h-[120px] lg:min-h-[150px] rounded-[1.5rem] bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm" 
-              placeholder="Ex: Experiență de peste 30 de ani..." 
+              placeholder="Ex: Experiență de peste 30 de ani... (un argument pe rând)" 
             />
           </div>
 
+          {/* SECȚIUNEA 4: SEO */}
+          <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
+            <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
+              <Search className="text-blue-500" size={22} /> Optimizare SEO
+            </h3>
+            <div className="space-y-6">
+              <div>
+                <label className={labelClass}>Meta Title (Google)</label>
+                <Input value={form.metaTitle} onChange={e => set('metaTitle', e.target.value)} className={inputClass} placeholder="Titlul care apare în căutările Google" />
+                <p className="text-[9px] text-neutral-400 mt-1 flex items-center gap-1"><Info size={10} /> Recomandat: 50-60 caractere.</p>
+              </div>
+              <div>
+                <label className={labelClass}>Meta Description (Google)</label>
+                <Textarea value={form.metaDescription} onChange={e => set('metaDescription', e.target.value)} className="min-h-[80px] rounded-xl bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm" maxLength={160} placeholder="Scurtă descriere pentru rezultatele căutării" />
+                <div className="flex justify-between mt-1">
+                  <p className="text-[9px] text-neutral-400 flex items-center gap-1"><Info size={10} /> Recomandat: 120-160 caractere.</p>
+                  <p className={cn("text-[9px] font-bold", form.metaDescription.length > 160 ? "text-red-500" : "text-neutral-400")}>{form.metaDescription.length}/160</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* SECȚIUNEA 5: Galerie Media */}
           <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
              <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Galerie Media
