@@ -66,7 +66,7 @@ export default function ProductForm({ initialData, mode }: Props) {
     isFeatured: initialData?.isFeatured ?? false,
     isOnSale: initialData?.isOnSale ?? false,
     salePercent: initialData?.salePercent?.toString() ?? '0',
-    tags: initialData?.tags?.join(', ') ?? '',
+    tags: Array.isArray(initialData?.tags) ? initialData.tags.join(', ') : '',
     metaTitle: initialData?.metaTitle ?? '',
     metaDescription: initialData?.metaDescription ?? '',
   });
@@ -219,7 +219,8 @@ export default function ProductForm({ initialData, mode }: Props) {
         brandSlug: generateSlug(form.brand),
         price: parseFloat(form.price) || 0,
         currency: 'RON',
-        specTable
+        specTable,
+        tags: form.tags.split(',').map(t => t.trim()).filter(Boolean)
       };
       if (mode === 'create') await addProduct(db, data);
       else if (initialData?.id) await updateProduct(db, initialData.id, data);
