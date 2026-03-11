@@ -23,7 +23,7 @@ export default function AboutPage() {
     <>
       <Navbar />
       <main className="bg-white min-h-screen">
-        {/* Hero Section - Matching the style from the image */}
+        {/* Hero Section */}
         <section className="relative h-[60vh] md:h-[80vh] w-full flex flex-col justify-end overflow-hidden bg-neutral-900">
           <Image 
             src="https://picsum.photos/seed/tractor_field_99/1920/1080" 
@@ -55,7 +55,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Content Section with Sidebar - Matching the layout from the image */}
+        {/* Content Section with Sidebar */}
         <section className="max-w-[1440px] mx-auto px-6 md:px-14 py-20 md:py-32">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24">
             
@@ -96,6 +96,7 @@ export default function AboutPage() {
               
               {/* Overview Section */}
               <motion.section 
+                id="overview"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -122,6 +123,7 @@ export default function AboutPage() {
 
               {/* Mission Section */}
               <motion.section 
+                id="mission"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -158,6 +160,7 @@ export default function AboutPage() {
 
               {/* History Section */}
               <motion.section 
+                id="history"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -182,6 +185,34 @@ export default function AboutPage() {
                     <div key={i} className="space-y-1">
                       <div className="text-3xl font-headline font-extrabold text-accent-lime">{stat.val}</div>
                       <div className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </motion.section>
+
+              {/* Partners Section */}
+              <motion.section 
+                id="partners"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="space-y-12"
+              >
+                <div className="max-w-3xl space-y-6">
+                  <h3 className="font-headline font-extrabold text-2xl md:text-4xl text-neutral-900">
+                    {t[lang].aboutPartnersTitle}
+                  </h3>
+                  <p className="text-neutral-500 text-lg leading-relaxed">
+                    {t[lang].aboutPartnersText}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                  {['Dexwal', 'Letak', 'MegaMetal', 'Turan'].map((brand, i) => (
+                    <div key={i} className="aspect-[3/2] bg-neutral-50 rounded-2xl flex items-center justify-center border border-neutral-100 group hover:bg-white hover:shadow-xl transition-all duration-500">
+                      <div className="text-neutral-300 font-headline font-extrabold text-xl group-hover:text-neutral-900 transition-colors">
+                        {brand}
+                      </div>
                     </div>
                   ))}
                 </div>
