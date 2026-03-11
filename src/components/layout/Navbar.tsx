@@ -128,9 +128,6 @@ export function Navbar() {
 
   const isAboutPage = pathname === '/despre';
   const isContactPage = pathname === '/contact';
-  const isProductsPage = pathname?.startsWith('/produse');
-  const isPrivacyPage = pathname === '/politica-de-confidentialitate';
-  const isTermsPage = pathname === '/termeni-si-conditii';
   
   const isTransparentInitial = (isAboutPage || pathname === '/') && !scrolled && !isOpen && !isContactPage;
 
@@ -143,16 +140,19 @@ export function Navbar() {
         )}
       >
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group relative z-[70]">
-            <div className="flex items-center gap-1">
-               <div className="w-6 h-4 bg-accent-lime rounded-sm rotate-12" />
-               <span className="font-headline font-extrabold text-2xl tracking-tighter text-white">
-                 AgroSalso
-               </span>
-            </div>
-          </Link>
+          {/* Logo Section - Balances space on the left */}
+          <div className="flex-1 flex justify-start items-center">
+            <Link href="/" className="flex items-center gap-2 group relative z-[70]">
+              <div className="flex items-center gap-1">
+                 <div className="w-6 h-4 bg-accent-lime rounded-sm rotate-12" />
+                 <span className="font-headline font-extrabold text-2xl tracking-tighter text-white">
+                   AgroSalso
+                 </span>
+              </div>
+            </Link>
+          </div>
 
-          {/* Desktop Nav */}
+          {/* Desktop Nav - Centered */}
           <div className="hidden lg:flex items-center gap-10">
             {NAV_LINKS.map((link) => (
               <Link 
@@ -168,7 +168,8 @@ export function Navbar() {
             ))}
           </div>
 
-          <div className="hidden lg:flex items-center gap-6">
+          {/* Actions Section - Balances space on the right */}
+          <div className="hidden lg:flex flex-1 items-center justify-end gap-6">
             <LanguageSwitcher />
 
             <Link href="/contact">
@@ -181,7 +182,7 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile Toggle */}
+          {/* Mobile Toggle Group */}
           <div className="flex items-center gap-4 lg:hidden">
              <LanguageSwitcher />
 
