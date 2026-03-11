@@ -3,8 +3,9 @@
 # https://firebase.google.com/docs/app-hosting/configure
 
 runConfig:
-  # Instanțe cu resurse mărite pentru a susține generarea ZIP și AI
+  # Optimized resources for build stability and AI processing
   minInstances: 0
   maxInstances: 2
   memoryMiB: 2048
   cpu: 1
+  concurrency: 80

@@ -1,3 +1,4 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -6,7 +7,7 @@ service cloud.firestore {
      * AGROSALSO SECURITY RULES
      * Permite accesul public la catalogul de produse și categorii.
      * Restricționează scrierea doar pentru utilizatorii autentificați (Admin).
-     * Sincronizare reguli forțată prin comentariu: 1772656790
+     * Sincronizare reguli forțată prin comentariu: 1772656800
      */
 
     function isAdmin() {
