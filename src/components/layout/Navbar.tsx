@@ -1,3 +1,4 @@
+
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -109,7 +110,7 @@ export function Navbar() {
     { name: t[lang].products, href: '/produse' },
     { name: t[lang].about, href: '/despre' },
     { name: t[lang].services, href: '/servicii' },
-    { name: t[lang].prices, href: '/preturi' },
+    { name: t[lang].contact, href: '/contact' },
   ];
 
   useEffect(() => {
@@ -129,7 +130,9 @@ export function Navbar() {
   const isProductsPage = pathname?.startsWith('/produse');
   const isPrivacyPage = pathname === '/politica-de-confidentialitate';
   const isTermsPage = pathname === '/termeni-si-conditii';
-  const shouldBeVisible = scrolled || isOpen || isProductsPage || isPrivacyPage || isTermsPage;
+  const isAboutPage = pathname === '/despre';
+  const isContactPage = pathname === '/contact';
+  const shouldBeVisible = scrolled || isOpen || isProductsPage || isPrivacyPage || isTermsPage || isAboutPage || isContactPage;
 
   return (
     <>

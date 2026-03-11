@@ -1,3 +1,4 @@
+
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -15,7 +16,7 @@ export function Footer() {
       <section className="relative h-[600px] w-full flex items-center px-6 md:px-14 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
-            src="/thumb-0.jpg" 
+            src="https://picsum.photos/seed/tractor_field_99/1920/1080" 
             alt="Ready to Transform" 
             fill 
             className="object-cover"
@@ -92,7 +93,7 @@ export function Footer() {
               <ul className="space-y-4">
                 <li><Link href="/servicii" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].services}</Link></li>
                 <li><Link href="/produse" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].products}</Link></li>
-                <li><Link href="/preturi" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].prices}</Link></li>
+                <li><Link href="/contact" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].contact}</Link></li>
               </ul>
             </div>
 
