@@ -67,7 +67,7 @@ export default function AboutPage() {
                     key={section.id}
                     onClick={() => setActiveIndex(idx)}
                     className={cn(
-                      "w-full text-left px-6 py-4 rounded-xl text-sm font-extrabold uppercase tracking-widest transition-all flex items-center justify-between group",
+                      "w-full text-left px-8 py-4 rounded-full text-sm font-extrabold uppercase tracking-widest transition-all flex items-center justify-between group",
                       activeSection === idx 
                         ? "bg-accent-lime text-black shadow-lg shadow-accent-lime/20" 
                         : "text-neutral-400 hover:bg-neutral-50 hover:text-neutral-900"
