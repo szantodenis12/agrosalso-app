@@ -1,3 +1,4 @@
+
 'use client';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -6,7 +7,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function AboutPage() {
   const { lang } = useLanguage();
@@ -18,6 +19,35 @@ export default function AboutPage() {
     { id: 'history', label: t[lang].aboutNavHistory },
     { id: 'partners', label: t[lang].aboutNavPartners },
   ];
+
+  // Funcție pentru scroll lin la secțiune
+  const scrollToSection = (id: string, idx: number) => {
+    setActiveIndex(idx);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Scroll spy pentru a actualiza meniul activ în funcție de poziția paginii
+  useEffect(() => {
+    const handleScrollSpy = () => {
+      const scrollPosition = window.scrollY + 200;
+
+      SECTIONS.forEach((section, idx) => {
+        const element = document.getElementById(section.id);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveIndex(idx);
+          }
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScrollSpy);
+    return () => window.removeEventListener('scroll', handleScrollSpy);
+  }, [lang]);
 
   return (
     <>
@@ -65,7 +95,7 @@ export default function AboutPage() {
                 {SECTIONS.map((section, idx) => (
                   <button
                     key={section.id}
-                    onClick={() => setActiveIndex(idx)}
+                    onClick={() => scrollToSection(section.id, idx)}
                     className={cn(
                       "w-full text-left px-8 py-4 rounded-full text-sm font-extrabold uppercase tracking-widest transition-all flex items-center justify-between group",
                       activeSection === idx 
@@ -97,10 +127,10 @@ export default function AboutPage() {
               {/* Overview Section */}
               <motion.section 
                 id="overview"
+                className="space-y-8 scroll-mt-32"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="space-y-8"
               >
                 <h2 className="font-headline font-extrabold text-3xl md:text-5xl text-neutral-900 tracking-tight">
                   {t[lang].aboutOverviewTitle}
@@ -124,10 +154,10 @@ export default function AboutPage() {
               {/* Mission Section */}
               <motion.section 
                 id="mission"
+                className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center scroll-mt-32"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
               >
                 <div className="space-y-6">
                   <h3 className="font-headline font-extrabold text-2xl md:text-4xl text-neutral-900">
@@ -161,10 +191,10 @@ export default function AboutPage() {
               {/* History Section */}
               <motion.section 
                 id="history"
+                className="space-y-12 bg-neutral-50 p-8 md:p-16 rounded-[3rem] border border-neutral-100 scroll-mt-32"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="space-y-12 bg-neutral-50 p-8 md:p-16 rounded-[3rem] border border-neutral-100"
               >
                 <div className="max-w-3xl">
                   <h3 className="font-headline font-extrabold text-2xl md:text-4xl text-neutral-900 mb-6">
@@ -193,10 +223,10 @@ export default function AboutPage() {
               {/* Partners Section */}
               <motion.section 
                 id="partners"
+                className="space-y-12 scroll-mt-32"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="space-y-12"
               >
                 <div className="max-w-3xl space-y-6">
                   <h3 className="font-headline font-extrabold text-2xl md:text-4xl text-neutral-900">
