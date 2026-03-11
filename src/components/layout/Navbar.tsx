@@ -1,4 +1,3 @@
-
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -130,10 +129,11 @@ export function Navbar() {
   const isProductsPage = pathname?.startsWith('/produse');
   const isPrivacyPage = pathname === '/politica-de-confidentialitate';
   const isTermsPage = pathname === '/termeni-si-conditii';
+  const isContactPage = pathname === '/contact';
   
   // Navbar-ul este transparent la început pe Home și pe Despre noi. 
-  // Rămâne colorat permanent pe paginile de text sau catalog pentru lizibilitate.
-  const shouldBeVisible = scrolled || isOpen || isProductsPage || isPrivacyPage || isTermsPage;
+  // Rămâne colorat permanent pe paginile de text, catalog sau CONTACT pentru lizibilitate.
+  const shouldBeVisible = scrolled || isOpen || isProductsPage || isPrivacyPage || isTermsPage || isContactPage;
 
   return (
     <>
