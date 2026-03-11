@@ -48,7 +48,6 @@ export async function exportCatalogToZip(products: Product[]) {
     productFolder?.file('detalii-produs.txt', infoContent);
 
     // 2. Descărcare și adăugare imagini
-    // Colectăm toate imaginile (principală + galerie), eliminând duplicatele
     const imageUrls = [product.mainImage, ...(product.images || [])].filter(Boolean);
     const uniqueImages = Array.from(new Set(imageUrls));
 
@@ -59,7 +58,6 @@ export async function exportCatalogToZip(products: Product[]) {
         
         const blob = await response.blob();
         
-        // Determinăm extensia corectă din tipul MIME
         let extension = 'jpg';
         if (blob.type === 'image/png') extension = 'png';
         if (blob.type === 'image/webp') extension = 'webp';
@@ -68,13 +66,11 @@ export async function exportCatalogToZip(products: Product[]) {
         productFolder?.file(fileName, blob);
       } catch (error) {
         console.error(`Eroare la descărcarea imaginii ${uniqueImages[i]}:`, error);
-        // Adăugăm un fișier de eroare mic în folder pentru a notifica echipa de marketing
         productFolder?.file(`EROARE-IMAGINE-${i}.txt`, `Nu s-a putut descărca imaginea de la adresa: ${uniqueImages[i]}`);
       }
     }
   }
 
-  // Generare și declanșare download
   const content = await zip.generateAsync({ type: 'blob' });
   const dateStr = new Date().toISOString().split('T')[0];
   saveAs(content, `Catalog-AgroSalso-${dateStr}.zip`);

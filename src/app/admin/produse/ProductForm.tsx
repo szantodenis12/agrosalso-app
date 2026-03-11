@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -499,7 +500,7 @@ export default function ProductForm({ initialData, mode }: Props) {
                       <span className="text-sm font-bold text-white/60 group-hover:text-white transition-colors">
                         {field === 'priceOnRequest' ? 'La cerere' : 
                          field === 'inStock' ? 'În stoc' : 
-                         field === 'isNew' ? 'Produs nou' : 
+                         field === 'isNew' ? 'Utilaj nou' : 
                          field === 'isFeatured' ? 'Recomandat' : 'Promoție'}
                       </span>
                       <input type="checkbox" checked={form[field as keyof typeof form] as boolean} onChange={e => set(field, e.target.checked)} className="w-5 h-5 accent-accent-lime rounded-md" />

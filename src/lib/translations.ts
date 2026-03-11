@@ -581,7 +581,7 @@ export const t = {
     heroBtn: 'Empezar ahora',
     topEquipment: 'Maquinaria de primera',
     featuredProducts: 'Productos destacados',
-    innovation: 'Innovación',
+    innovation: 'Innovation',
     aboutStory: 'Nuestra historia',
     aboutTitle: 'Sobre nosotros',
     aboutText: 'Una empresa familiar fundada en 2012, AgroSalso distribuye maquinaria y repuestos de alta calidad directamente de fabricantes europeos de renombre.',

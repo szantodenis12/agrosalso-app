@@ -2,6 +2,8 @@
 # https://firebase.google.com/docs/app-hosting/configure
 
 runConfig:
-  # Increase this value if you'd like to automatically spin up
-  # more instances in response to increased traffic.
-  maxInstances: 1
+  # Instanțe cu resurse mărite pentru a susține generarea ZIP și AI
+  minInstances: 0
+  maxInstances: 2
+  memoryMiB: 2048
+  cpu: 1
