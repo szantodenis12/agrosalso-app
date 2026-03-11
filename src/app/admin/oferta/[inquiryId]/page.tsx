@@ -66,6 +66,20 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
     load();
   }, [db, inquiryId]);
 
+  // Logic to determine which rows to display in the offer table
+  const displayRows = useMemo(() => {
+    if (!product?.specTable?.rows) return [];
+    
+    // If client selected a specific model, try to find and show only that row
+    if (inquiry?.selectedModel) {
+      const matchedRow = product.specTable.rows.find(row => row.values[0] === inquiry.selectedModel);
+      if (matchedRow) return [matchedRow];
+    }
+    
+    // Fallback to all rows if no specific model selected or matched
+    return product.specTable.rows;
+  }, [product, inquiry]);
+
   const handlePrint = () => {
     if (typeof window !== 'undefined') {
       window.print();
@@ -253,9 +267,11 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
               </p>
             </div>
 
-            {product.specTable && product.specTable.rows.length > 0 && (
+            {product.specTable && displayRows.length > 0 && (
               <div className="pt-4 space-y-3">
-                <h4 className="font-headline font-bold text-sm uppercase tracking-tight border-b border-neutral-100 pb-1.5">Specificații Tehnice Modele</h4>
+                <h4 className="font-headline font-bold text-sm uppercase tracking-tight border-b border-neutral-100 pb-1.5">
+                  {inquiry.selectedModel ? `Specificații Tehnice: Model ${inquiry.selectedModel}` : 'Specificații Tehnice Modele'}
+                </h4>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-[10px] border-collapse">
                     <thead className="bg-neutral-50">
@@ -266,7 +282,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                       </tr>
                     </thead>
                     <tbody>
-                      {product.specTable.rows.map((row, ri) => (
+                      {displayRows.map((row, ri) => (
                         <tr key={ri} className={row.isPopular ? "bg-accent-lime/5" : ""}>
                           {row.values.map((v, ci) => (
                             <td key={ci} className="p-2 border border-neutral-100 font-bold">{v}</td>
