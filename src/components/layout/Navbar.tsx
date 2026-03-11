@@ -126,21 +126,22 @@ export function Navbar() {
     }
   }, [isOpen]);
 
+  const isAboutPage = pathname === '/despre';
+  const isContactPage = pathname === '/contact';
   const isProductsPage = pathname?.startsWith('/produse');
   const isPrivacyPage = pathname === '/politica-de-confidentialitate';
   const isTermsPage = pathname === '/termeni-si-conditii';
-  const isContactPage = pathname === '/contact';
   
-  // Navbar-ul este transparent la început pe Home și pe Despre noi. 
-  // Rămâne colorat permanent pe paginile de text, catalog sau CONTACT pentru lizibilitate.
+  // Pe Contact ramane mereu negru. Pe Despre si Home este transparent initial.
   const shouldBeVisible = scrolled || isOpen || isProductsPage || isPrivacyPage || isTermsPage || isContactPage;
+  const isTransparentInitial = (isAboutPage || pathname === '/') && !scrolled && !isOpen && !isContactPage;
 
   return (
     <>
       <nav 
         className={cn(
           "fixed top-0 left-0 right-0 z-[60] transition-all duration-500 px-6 py-6 md:px-14",
-          shouldBeVisible ? "bg-neutral-950/95 backdrop-blur-md py-4 shadow-lg" : "bg-transparent"
+          !isTransparentInitial ? "bg-neutral-950/95 backdrop-blur-md py-4 shadow-lg" : "bg-transparent"
         )}
       >
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">

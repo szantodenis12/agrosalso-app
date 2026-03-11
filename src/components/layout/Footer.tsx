@@ -1,4 +1,3 @@
-
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -16,7 +15,7 @@ export function Footer() {
       <section className="relative h-[600px] w-full flex items-center px-6 md:px-14 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
-            src="https://picsum.photos/seed/tractor_field_99/1920/1080" 
+            src="/thumb-0.jpg" 
             alt="Ready to Transform" 
             fill 
             className="object-cover"
