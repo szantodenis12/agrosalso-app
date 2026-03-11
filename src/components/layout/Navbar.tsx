@@ -1,4 +1,3 @@
-
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -16,41 +15,36 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function Navbar() {
-  const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+function LanguageSwitcher() {
   const { lang, setLang } = useLanguage();
-
-  const NAV_LINKS = [
-    { name: t[lang].products, href: '/produse' },
-    { name: t[lang].about, href: '/despre' },
-    { name: t[lang].services, href: '/servicii' },
-    { name: t[lang].prices, href: '/preturi' },
-  ];
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    setMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-  }, [isOpen]);
-
-  const isProductsPage = pathname?.startsWith('/produse');
-  const isPrivacyPage = pathname === '/politica-de-confidentialitate';
-  const isTermsPage = pathname === '/termeni-si-conditii';
-  const shouldBeVisible = scrolled || isOpen || isProductsPage || isPrivacyPage || isTermsPage;
 
   const activeLang = LANGUAGES.find(l => l.code === lang) || LANGUAGES[0];
 
-  const LanguageSwitcher = () => (
+  // Static placeholder for hydration consistency
+  if (!mounted) {
+    const defaultLang = LANGUAGES[0]; // Romanian
+    return (
+      <div className="flex items-center gap-2 px-3 py-2 bg-white/10 border border-white/10 rounded-full opacity-50 cursor-default backdrop-blur-sm">
+        <div className="relative w-5 h-3.5 rounded-sm overflow-hidden border border-white/20 shrink-0">
+          <Image 
+            src={`https://flagcdn.com/w40/${defaultLang.countryCode}.png`}
+            alt={defaultLang.label}
+            fill
+            className="object-cover"
+          />
+        </div>
+        <span className="text-[10px] font-extrabold text-white uppercase tracking-widest">{defaultLang.short}</span>
+        <ChevronDown size={12} className="text-white/40" />
+      </div>
+    );
+  }
+
+  return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="flex items-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/20 border border-white/10 rounded-full transition-all focus:outline-none backdrop-blur-sm">
@@ -103,6 +97,39 @@ export function Navbar() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
+}
+
+export function Navbar() {
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { lang } = useLanguage();
+
+  const NAV_LINKS = [
+    { name: t[lang].products, href: '/produse' },
+    { name: t[lang].about, href: '/despre' },
+    { name: t[lang].services, href: '/servicii' },
+    { name: t[lang].prices, href: '/preturi' },
+  ];
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isOpen]);
+
+  const isProductsPage = pathname?.startsWith('/produse');
+  const isPrivacyPage = pathname === '/politica-de-confidentialitate';
+  const isTermsPage = pathname === '/termeni-si-conditii';
+  const shouldBeVisible = scrolled || isOpen || isProductsPage || isPrivacyPage || isTermsPage;
 
   return (
     <>
