@@ -106,9 +106,9 @@ export function Navbar() {
   const { lang } = useLanguage();
 
   const NAV_LINKS = [
+    { name: t[lang].home, href: '/' },
     { name: t[lang].products, href: '/produse' },
     { name: t[lang].about, href: '/despre' },
-    { name: t[lang].services, href: '/servicii' },
     { name: t[lang].contact, href: '/contact' },
   ];
 
@@ -132,8 +132,6 @@ export function Navbar() {
   const isPrivacyPage = pathname === '/politica-de-confidentialitate';
   const isTermsPage = pathname === '/termeni-si-conditii';
   
-  // Pe Contact ramane mereu negru. Pe Despre si Home este transparent initial.
-  const shouldBeVisible = scrolled || isOpen || isProductsPage || isPrivacyPage || isTermsPage || isContactPage;
   const isTransparentInitial = (isAboutPage || pathname === '/') && !scrolled && !isOpen && !isContactPage;
 
   return (
