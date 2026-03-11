@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Mail, Phone, Package, FileText, ArrowRight, Trash2, Eye } from 'lucide-react';
+import { Mail, Phone, Package, FileText, ArrowRight, Trash2, Eye, Tag } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from '@/hooks/use-toast';
 
@@ -98,6 +98,9 @@ export default function AdminInquiriesPage() {
                   </TableCell>
                   <TableCell className="text-center">
                     <div className="font-bold text-sm text-neutral-900">{inq.productName}</div>
+                    {inq.selectedModel && (
+                      <div className="text-[9px] font-extrabold text-accent-lime uppercase tracking-widest mt-0.5">Model: {inq.selectedModel}</div>
+                    )}
                   </TableCell>
                   <TableCell className="text-center">
                     <div className="text-xs font-medium text-neutral-500">
@@ -235,6 +238,12 @@ export default function AdminInquiriesPage() {
                     <div>
                       <p className="font-headline font-extrabold text-base lg:text-lg uppercase">{selectedInquiry.productName}</p>
                       <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">ID: {selectedInquiry.productId.slice(0, 8)}</p>
+                      {selectedInquiry.selectedModel && (
+                        <div className="flex items-center gap-2 mt-3 bg-accent-lime/10 px-3 py-1.5 rounded-lg border border-accent-lime/20 w-fit">
+                          <Tag size={12} className="text-accent-lime" />
+                          <p className="text-[11px] font-extrabold text-accent-lime uppercase tracking-widest">Model solicitat: {selectedInquiry.selectedModel}</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

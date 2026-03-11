@@ -102,6 +102,7 @@ export interface Inquiry {
   message: string;
   productId: string;
   productName: string;
+  selectedModel?: string;
   status: 'new' | 'read' | 'replied';
   createdAt: any;
   repliedAt?: any;

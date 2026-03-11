@@ -42,6 +42,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
     email: '',
     phone: '',
     message: '',
+    selectedModel: '',
   });
 
   useEffect(() => {
@@ -72,7 +73,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
         title: lang === 'ro' ? "Cerere trimisă!" : "Request sent!",
         description: lang === 'ro' ? "Vă vom contacta în cel mai scurt timp posibil." : "We will contact you as soon as possible.",
       });
-      setInquiry({ name: '', email: '', phone: '', message: '' });
+      setInquiry({ name: '', email: '', phone: '', message: '', selectedModel: '' });
       setTermsAccepted(false);
     } catch (error) {
       toast({ variant: "destructive", title: "Error", description: "Could not send request." });
@@ -106,6 +107,12 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
 
   const extraImages = Array.from(new Set(product.images || []))
     .filter(img => img !== product.mainImage);
+
+  // Extract models from specTable
+  const productModels = product.specTable?.rows?.map(row => ({
+    name: row.values[0],
+    isPopular: row.isPopular
+  })).filter(m => m.name && m.name.trim() !== "") || [];
 
   return (
     <>
@@ -241,6 +248,25 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                           className="h-12 md:h-14 bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
                         />
                       </div>
+
+                      {productModels.length > 0 && (
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest ml-1">{lang === 'ro' ? 'Selectează Modelul' : 'Select Model'}</label>
+                          <select 
+                            value={inquiry.selectedModel}
+                            onChange={(e) => setInquiry({...inquiry, selectedModel: e.target.value})}
+                            className="w-full h-12 md:h-14 bg-neutral-50 border border-neutral-100 rounded-xl md:rounded-2xl px-4 text-sm font-bold focus:ring-2 focus:ring-accent-lime outline-none transition-all cursor-pointer"
+                          >
+                            <option value="" disabled>{lang === 'ro' ? 'Selectează modelul dorit...' : 'Choose model...'}</option>
+                            {productModels.map((m, i) => (
+                              <option key={i} value={m.name}>
+                                {m.isPopular ? `⭐ ${m.name}` : m.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+
                       <Textarea 
                         placeholder={t[lang].message} 
                         value={inquiry.message}
