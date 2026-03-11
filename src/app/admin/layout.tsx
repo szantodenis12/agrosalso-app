@@ -86,8 +86,8 @@ function AdminShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen bg-neutral-50">
-      {/* Mobile Top Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-neutral-900 text-white flex items-center justify-between px-6 z-50 border-b border-white/5">
+      {/* Mobile Top Header - Ascuns la printare */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-neutral-900 text-white flex items-center justify-between px-6 z-50 border-b border-white/5 print:hidden">
         <Link href="/admin" className="flex items-center gap-2">
           <div className="w-4 h-2.5 bg-accent-lime rounded-sm rotate-12" />
           <span className="font-headline font-extrabold text-lg tracking-tighter">Admin</span>
@@ -107,8 +107,8 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         </Sheet>
       </div>
 
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-64 bg-neutral-900 text-white shrink-0 fixed h-full flex-col z-40">
+      {/* Desktop Sidebar - Deja gestionat de globals.css dar adăugăm clasa pentru siguranță */}
+      <aside className="hidden lg:flex w-64 bg-neutral-900 text-white shrink-0 fixed h-full flex-col z-40 print:hidden">
         <NavContent />
       </aside>
 
