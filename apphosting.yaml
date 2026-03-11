@@ -1,3 +1,4 @@
+
 # Configuratie optimizata pentru AgroSalso rollout stability
 runConfig:
   minInstances: 0
