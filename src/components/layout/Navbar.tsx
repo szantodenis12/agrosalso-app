@@ -130,9 +130,10 @@ export function Navbar() {
   const isProductsPage = pathname?.startsWith('/produse');
   const isPrivacyPage = pathname === '/politica-de-confidentialitate';
   const isTermsPage = pathname === '/termeni-si-conditii';
-  const isAboutPage = pathname === '/despre';
-  const isContactPage = pathname === '/contact';
-  const shouldBeVisible = scrolled || isOpen || isProductsPage || isPrivacyPage || isTermsPage || isAboutPage || isContactPage;
+  
+  // Navbar-ul este transparent la început pe Home și pe Despre noi. 
+  // Rămâne colorat permanent pe paginile de text sau catalog pentru lizibilitate.
+  const shouldBeVisible = scrolled || isOpen || isProductsPage || isPrivacyPage || isTermsPage;
 
   return (
     <>
