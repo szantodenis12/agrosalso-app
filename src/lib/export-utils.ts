@@ -12,14 +12,12 @@ export async function exportCatalogToZip(products: Product[]) {
   const zip = new JSZip();
 
   for (const product of products) {
-    // Curățăm numele folderelor de caractere interzise în sistemele de fișiere
     const cleanCategory = (product.category || 'Altele').replace(/[/\\?%*:|"<>\.]/g, '-');
     const cleanName = product.name.replace(/[/\\?%*:|"<>\.]/g, '-');
     
     const categoryFolder = zip.folder(cleanCategory);
     const productFolder = categoryFolder?.folder(cleanName);
 
-    // 1. Generare fișier text cu informații
     let infoContent = `NUME PRODUS: ${product.name}\n`;
     infoContent += `MARCĂ: ${product.brand}\n`;
     infoContent += `CATEGORIE: ${product.category}\n`;
@@ -28,8 +26,6 @@ export async function exportCatalogToZip(products: Product[]) {
     infoContent += `--------------------------------------------------\n\n`;
     
     infoContent += `DESCRIERE SCURTĂ:\n${product.shortDescription}\n\n`;
-    
-    // Eliminăm tag-urile HTML din descrierea detaliată pentru fișierul text
     const plainDescription = product.detailedDescription?.replace(/<[^>]*>?/gm, '') || '';
     infoContent += `DESCRIERE DETALIATĂ:\n${plainDescription}\n\n`;
 
@@ -47,7 +43,6 @@ export async function exportCatalogToZip(products: Product[]) {
 
     productFolder?.file('detalii-produs.txt', infoContent);
 
-    // 2. Descărcare și adăugare imagini
     const imageUrls = [product.mainImage, ...(product.images || [])].filter(Boolean);
     const uniqueImages = Array.from(new Set(imageUrls));
 
@@ -55,18 +50,14 @@ export async function exportCatalogToZip(products: Product[]) {
       try {
         const response = await fetch(uniqueImages[i]);
         if (!response.ok) throw new Error(`Fetch failed for ${uniqueImages[i]}`);
-        
         const blob = await response.blob();
-        
         let extension = 'jpg';
         if (blob.type === 'image/png') extension = 'png';
         if (blob.type === 'image/webp') extension = 'webp';
-        
         const fileName = i === 0 ? `imagine-principala.${extension}` : `galerie-${i}.${extension}`;
         productFolder?.file(fileName, blob);
       } catch (error) {
         console.error(`Eroare la descărcarea imaginii ${uniqueImages[i]}:`, error);
-        productFolder?.file(`EROARE-IMAGINE-${i}.txt`, `Nu s-a putut descărca imaginea de la adresa: ${uniqueImages[i]}`);
       }
     }
   }

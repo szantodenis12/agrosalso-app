@@ -1,3 +1,4 @@
+
 export const t = {
   ro: {
     home: 'Acasă',
@@ -476,7 +477,7 @@ export const t = {
     contactTitle: 'Lassen Sie uns gemeinsam wachsen',
     contactSub: 'Egal, ob Sie Landwirt, Partner oder Investor sind, unser Team hilft Ihnen gerne dabei, zu entdecken, wie die AgroSalso-Technologie Ihren Weg zu einer intelligenten Landwirtschaft unterstützen kann.',
     heroTitle: 'Technologie. Leistung. Die Zukunft der Landwirtschaft',
-    heroSub: 'AgroSalso unterstützt Landwirte mit intelligenten und nachhaltigen Lösungen, die Produktivität und Rentabilität steigern — und gleichzeitig den Planeten schützen.',
+    heroSub: 'AgroSalso unterstützt Landwirte mit intelligenten und nachhaltigen Lösungen, die Produktivität und Rentabilität steigern — und gleichzeitig den Landwirten helfen, die Umwelt zu schützen.',
     heroBtn: 'Jetzt starten',
     topEquipment: 'Top-Maschinen',
     featuredProducts: 'Ausgewählte Produkte',
@@ -624,5 +625,3 @@ export const t = {
     startingFrom: 'Precio desde',
   }
 } as const;
-
-export type TranslationKey = keyof typeof t.ro;

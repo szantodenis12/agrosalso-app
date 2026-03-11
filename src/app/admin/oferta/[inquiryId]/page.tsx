@@ -1,3 +1,4 @@
+
 'use client';
 import { use, useEffect, useState, useMemo } from 'react';
 import { useFirestore } from '@/firebase';
@@ -28,7 +29,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const [sending, setSending] = useState(false);
   const [offerType, setOfferType] = useState<OfferType>('standard');
 
-  // Date editabile Furnizor/Contact/Preț
   const [editPrice, setEditPrice] = useState<number>(0);
   const [contactPerson, setContactPerson] = useState("Doru Salso");
   const [contactPosition, setContactPosition] = useState("Manager Vânzări");
@@ -36,7 +36,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const [deliveryTerm, setDeliveryTerm] = useState("2-5 zile lucrătoare");
   const [paymentTerms, setPaymentTerms] = useState("Transfer Bancar / Ordin de plată la livrare");
 
-  // Date editabile Beneficiar
   const [beneficiaryCui, setBeneficiaryCui] = useState(PLACEHOLDER_CUI);
   const [beneficiaryAddress, setBeneficiaryAddress] = useState(PLACEHOLDER_ADDRESS);
 
@@ -109,7 +108,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
 
   return (
     <div className="min-h-screen bg-neutral-100 pb-20 print:bg-white print:pb-0 print:min-h-0">
-      {/* Toolbar - Ascuns la Print */}
       <div className="bg-white border-b border-neutral-200 p-6 sticky top-0 z-[100] shadow-md print:hidden toolbar">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -136,11 +134,8 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
         </div>
       </div>
 
-      {/* Pagina de Ofertă - Format A4 Simulat */}
       <div className="max-w-[210mm] mx-auto my-10 bg-white shadow-2xl min-h-[297mm] p-[15mm] print:m-0 print:shadow-none print:p-[10mm] relative border border-neutral-200 print:border-none flex flex-col justify-between overflow-hidden">
-        
         <div>
-          {/* Header Layout */}
           <div className="flex justify-between items-start mb-6">
             <div className="space-y-1">
                <div className="flex items-center gap-2">
@@ -169,7 +164,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
 
           <div className="w-full h-px bg-neutral-100 mb-8" />
 
-          {/* Furnizor vs Beneficiar */}
           <div className="grid grid-cols-2 gap-12 mb-12">
             <div>
               <h4 className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest mb-4">Furnizor</h4>
@@ -222,7 +216,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             </div>
           </div>
 
-          {/* Banner Urgență */}
           {offerType === 'urgent' && (
             <div className="bg-red-600 text-white p-6 rounded-2xl mb-8 flex items-center gap-4">
               <AlertTriangle className="shrink-0" size={32} />
@@ -233,7 +226,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             </div>
           )}
 
-          {/* Detalii Utilaj */}
           <div className="space-y-6 mb-12">
             <div className="relative w-full aspect-[16/8] rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-100 shadow-sm">
               <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
@@ -291,7 +283,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             )}
           </div>
 
-          {/* Calcul Preț */}
           <div className="flex justify-end mb-12">
             <div className="w-[320px] space-y-4">
               <div className="flex justify-between items-end pb-2 border-b border-neutral-100">
@@ -336,7 +327,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             </div>
           </div>
 
-          {/* AFIR Compliance Section */}
           {offerType === 'afir' && (
             <div className="bg-neutral-50 p-6 rounded-[2rem] mb-12 border border-neutral-100 space-y-4">
               <div className="flex items-center gap-3">
@@ -362,7 +352,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             </div>
           )}
 
-          {/* Condiții comerciale */}
           <div className="grid grid-cols-2 gap-12 pt-8 border-t border-neutral-100">
             <div className="space-y-4">
                <h4 className="text-[8px] font-extrabold text-neutral-400 uppercase tracking-widest">Condiții comerciale:</h4>
@@ -423,7 +412,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
           </div>
         </div>
 
-        {/* Footer Pagina */}
         <div className="border-t border-neutral-50 pt-6 flex justify-between items-center text-[7px] font-bold text-neutral-300 uppercase tracking-widest mt-8">
            <div>© {new Date().getFullYear()} AGRO SALSO SRL — BIHOR, ROMÂNIA</div>
            <div className="flex gap-6">

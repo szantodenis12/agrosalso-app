@@ -34,7 +34,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
 
   const { translatedData, isTranslating } = useTranslation(product, product?.id);
 
-  // Carousel pentru galeria de jos
   const [emblaRef] = useEmblaCarousel({ loop: true, align: 'start' }, [
     Autoplay({ delay: 4000, stopOnInteraction: false })
   ]);
@@ -113,7 +112,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
     <>
       <Navbar />
       <main className="bg-neutral-50 min-h-screen">
-        {/* Static Hero Header */}
         <section className="relative h-[60vh] md:h-[70vh] w-full overflow-hidden bg-neutral-900">
           <Image 
             src={product.mainImage} 
@@ -161,7 +159,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
             <div className="lg:col-span-12 space-y-8 md:space-y-12">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
                 <div className="lg:col-span-7 space-y-8 md:space-y-12">
-                  {/* Detailed Content */}
                   <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-12 border border-neutral-100 shadow-sm space-y-6 md:space-y-8">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 md:w-10 md:h-10 bg-accent-lime/10 rounded-lg md:rounded-xl flex items-center justify-center">
@@ -283,7 +280,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 </div>
               </div>
 
-              {/* TABEL SPECIFICAȚII (MODELE) */}
               {product.specTable && product.specTable.rows.length > 0 && (
                 <div className="space-y-6 md:space-y-8 pt-6 md:pt-10">
                   <div className="text-center space-y-3 md:space-y-4">
@@ -333,7 +329,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 </div>
               )}
 
-              {/* WHY BRAND SECTION */}
               {Array.isArray(translatedData?.whyBrand) && translatedData.whyBrand.length > 0 && (
                 <section className="pt-10 md:pt-20 pb-10">
                   <div className="max-w-4xl mx-auto space-y-8 md:space-y-12">
@@ -369,7 +364,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 </section>
               )}
 
-              {/* Gallery Section */}
               {extraImages.length > 0 && (
                 <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-12 border border-neutral-100 shadow-sm space-y-6 md:space-y-8">
                    <div className="flex items-center gap-3">
