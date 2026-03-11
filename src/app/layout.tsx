@@ -4,6 +4,7 @@ import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { VisitorTracker } from '@/components/analytics/VisitorTracker';
 import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/context/LanguageContext';
+import { CookieConsent } from '@/components/legal/CookieConsent';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://agrosalso.ro'),
@@ -39,6 +40,7 @@ export default function RootLayout({
             <VisitorTracker />
             {children}
             <Toaster />
+            <CookieConsent />
           </FirebaseClientProvider>
         </LanguageProvider>
       </body>

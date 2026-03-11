@@ -67,7 +67,7 @@ export const t = {
     innovation: 'Inovație',
     aboutStory: 'Povestea noastră',
     aboutTitle: 'Despre noi',
-    aboutText: 'Afacere de familie fondată în 2012, AgroSalso distribuie utilaje și piese de top direct de la producători europeni renumiți. Oferim calitate garantată și peste un deceniu de experiență în serviciul agriculturii românești.',
+    aboutText: 'Afacere de familie fondată in 2012, AgroSalso distribuie utilaje și piese de top direct de la producători europeni renumiți. Oferim calitate garantată și peste un deceniu de experiență în serviciul agriculturii românești.',
     aboutBtn: 'Află mai multe',
     aboutValues: 'Valorile noastre',
     aboutMission: 'Misiune',
@@ -120,6 +120,11 @@ export const t = {
     aboutHistoryText: 'Fondată în 2012 în județul Bihor ca o afacere de familie, AgroSalso a crescut organic, de la un mic depozit de piese la un distribuitor regional recunoscut. Parteneriatele noastre cu producători de elită precum Dexwal, Letak sau Turan ne-au permis să garantăm fiabilitatea fiecărui utilaj vândut. Astăzi, suntem mândri să deservim mii de fermieri din toată țara.',
     aboutPartnersTitle: 'Calitate garantată prin parteneri de elită',
     aboutPartnersText: 'Colaborăm exclusiv cu producători care împărtășesc viziunea noastră despre durabilitate și eficiență. Portofoliul nostru include mărci recunoscute la nivel european pentru robustețea lor în condiții de lucru dificile. Fiecare partener este ales pe baza unui istoric dovedit de inovație și fiabilitate.',
+    // Cookie Consent
+    cookieTitle: 'Politica de Cookie-uri',
+    cookieText: 'Folosim cookie-uri pentru a îmbunătăți experiența ta de navigare, pentru a analiza traficul site-ului (Google Analytics) și pentru a personaliza reclamele (Google Ads, Meta Ads). Prin apăsarea butonului "Acceptă tot", ești de acord cu utilizarea acestora conform politicilor noastre.',
+    cookieAccept: 'ACCEPTĂ TOT',
+    cookiePolicy: 'Politica de Confidențialitate',
   },
   en: {
     home: 'Home',
@@ -242,6 +247,11 @@ export const t = {
     aboutHistoryText: 'Founded in 2012 in Bihor county as a family business, AgroSalso grew organically from a small parts warehouse to a recognized regional distributor. Our partnerships with elite manufacturers like Dexwal, Letak, or Turan allow us to guarantee the reliability of every component sold.',
     aboutPartnersTitle: 'Guaranteed quality through elite partners',
     aboutPartnersText: 'We exclusively collaborate with manufacturers who share our vision of durability and efficiency. Our portfolio includes brands recognized at the European level for their robustness in difficult working conditions.',
+    // Cookie Consent
+    cookieTitle: 'Cookie Policy',
+    cookieText: 'We use cookies to improve your browsing experience, analyze site traffic (Google Analytics), and personalize ads (Google Ads, Meta Ads). By clicking "Accept all", you agree to their use according to our policies.',
+    cookieAccept: 'ACCEPT ALL',
+    cookiePolicy: 'Privacy Policy',
   },
   hu: {
     home: 'Kezdőlap',
@@ -363,5 +373,10 @@ export const t = {
     aboutHistoryText: 'A 2012-ben Bihar megyében alapított AgroSalso organikusan nőtt egy kis alkatrészraktárból elismert regionális forgalmazóvá.',
     aboutPartnersTitle: 'Garantált minőség elit partnereken keresztül',
     aboutPartnersText: 'Kizárólag olyan gyártókkal dolgozunk együtt, akik osztoznak a tartósságról és a hatékonyságról alkotott elképzelésünkben.',
+    // Cookie Consent
+    cookieTitle: 'Cookie Szabályzat',
+    cookieText: 'Sütiket használunk a böngészési élmény javítása, a webhelyforgalom elemzése (Google Analytics) és a hirdetések személyre szabása (Google Ads, Meta Ads) érdekében. Az "Acceptá tot" gombra kattintva elfogadja azok használatát.',
+    cookieAccept: 'ELFOGADOM',
+    cookiePolicy: 'Adatvédelmi Szabályzat',
   }
 } as const;
