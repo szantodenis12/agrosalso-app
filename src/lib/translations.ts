@@ -1,4 +1,3 @@
-
 export const t = {
   ro: {
     home: 'Acasă',
@@ -495,7 +494,7 @@ export const t = {
     ],
     testimonialsTitle: 'Kundenstimmen',
     testimonialsSub: 'Was unsere Partner und Landwirte sagen',
-    testimonialsText: 'Seit über einem Jahrzehnt unterstützt AgroSalso Landwirtschaftsbetriebe in Rumänien mit Spitzentechnologie und Originalteilen.',
+    testimonialsText: 'Seit over einem Jahrzehnt unterstützt AgroSalso Landwirtschaftsbetriebe in Rumänien mit Spitzentechnologie und Originalteilen.',
     readyToTransform: 'Bereit, Ihren Hof zu transformieren?',
     transformSub: 'Buchen Sie eine kostenlose Beratung und lassen Sie sich von AgroSalso zeigen, wie moderne und nachhaltige Landwirtschaft funktioniert.',
     footerQuickLinks: 'Schnelllinks',

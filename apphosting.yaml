@@ -2,7 +2,6 @@
 # https://firebase.google.com/docs/app-hosting/configure
 
 runConfig:
-  # Resurse crescute pentru stabilitate build și procesare AI/ZIP
   minInstances: 0
   maxInstances: 2
   memoryMiB: 2048

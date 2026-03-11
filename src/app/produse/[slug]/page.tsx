@@ -1,4 +1,3 @@
-
 'use client';
 import { use, useEffect, useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -32,7 +31,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
   const db = useFirestore();
   const { lang } = useLanguage();
 
-  const { translatedData, isTranslating } = useTranslation(product, product?.id);
+  const { translatedData, isTranslating } = useTranslation(product);
 
   const [emblaRef] = useEmblaCarousel({ loop: true, align: 'start' }, [
     Autoplay({ delay: 4000, stopOnInteraction: false })
