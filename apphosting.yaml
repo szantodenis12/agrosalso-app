@@ -1,9 +1,8 @@
-
 # Settings to manage and configure a Firebase App Hosting backend.
 # https://firebase.google.com/docs/app-hosting/configure
 
 runConfig:
-  # Optimized resources for build stability and AI processing
+  # Resurse crescute pentru stabilitate build și procesare AI/ZIP
   minInstances: 0
   maxInstances: 2
   memoryMiB: 2048
