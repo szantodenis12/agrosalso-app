@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -9,7 +8,7 @@ import { Product, ProductCategory, ProductTranslation, SpecTable, SpecTableRow }
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Sparkles, Save, ChevronLeft, Upload, Loader2, Languages, ShieldCheck, Plus, Trash2, Search, Info } from 'lucide-react';
+import { Sparkles, Save, ChevronLeft, Upload, Loader2, Languages, ShieldCheck, Plus, Trash2, Search, Info, AlertCircle } from 'lucide-react';
 import { adminProductDescriptionGenerator } from '@/ai/flows/admin-product-description-generator';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -39,7 +38,7 @@ export default function ProductForm({ initialData, mode }: Props) {
   const [galleryImages, setGalleryImages] = useState<string[]>(initialData?.images?.filter(img => img !== initialData?.mainImage) ?? []);
   const [mainImage, setMainImage] = useState<string>(initialData?.mainImage ?? '');
 
-  // State pentru tabelul de specificații
+  // State pentru tabelul de specificații - permitem liste goale
   const [specHeaders, setSpecHeaders] = useState<string[]>(initialData?.specTable?.headers ?? ['Model', 'Putere (CP)', 'Lățime (m)']);
   const [specRows, setSpecRows] = useState<SpecTableRow[]>(initialData?.specTable?.rows ?? [
     { values: ['', '', ''], isPopular: false }
@@ -81,8 +80,8 @@ export default function ProductForm({ initialData, mode }: Props) {
   };
 
   const removeSpecHeader = (index: number) => {
-    if (specHeaders.length <= 1) return;
-    setSpecHeaders(specHeaders.filter((_, i) => i !== index));
+    const newHeaders = specHeaders.filter((_, i) => i !== index);
+    setSpecHeaders(newHeaders);
     setSpecRows(specRows.map(row => ({ ...row, values: row.values.filter((_, i) => i !== index) })));
   };
 
@@ -93,11 +92,15 @@ export default function ProductForm({ initialData, mode }: Props) {
   };
 
   const addSpecRow = () => {
-    setSpecRows([...specRows, { values: specHeaders.map(() => ''), isPopular: false }]);
+    if (specHeaders.length === 0) {
+      setSpecHeaders(['Specificație']);
+      setSpecRows([{ values: [''], isPopular: false }]);
+    } else {
+      setSpecRows([...specRows, { values: specHeaders.map(() => ''), isPopular: false }]);
+    }
   };
 
   const removeSpecRow = (index: number) => {
-    if (specRows.length <= 1) return;
     setSpecRows(specRows.filter((_, i) => i !== index));
   };
 
@@ -206,11 +209,12 @@ export default function ProductForm({ initialData, mode }: Props) {
     e.preventDefault();
     setSaving(true);
     try {
-      const specTable: SpecTable = {
+      // Dacă nu există coloane sau rânduri, nu salvăm tabelul
+      const specTable: SpecTable | null = (specHeaders.length > 0 && specRows.length > 0) ? {
         headers: specHeaders,
         rows: specRows,
         footerNote: specFooterNote
-      };
+      } : null;
 
       const data = {
         ...form,
@@ -330,63 +334,82 @@ export default function ProductForm({ initialData, mode }: Props) {
               </div>
             </div>
 
-            <div className="overflow-x-auto custom-scrollbar -mx-2 sm:mx-0">
-              <table className="w-full border-collapse min-w-[600px]">
-                <thead>
-                  <tr className="bg-neutral-50 border-b border-neutral-100">
-                    <th className="p-2 text-[10px] font-extrabold text-neutral-400 uppercase text-left w-12">Pop.</th>
-                    {specHeaders.map((header, i) => (
-                      <th key={i} className="p-2 group">
-                        <div className="flex items-center gap-1">
-                          <Input 
-                            value={header} 
-                            onChange={e => updateSpecHeader(i, e.target.value)} 
-                            className="h-8 text-[10px] font-bold uppercase tracking-widest border-none bg-transparent focus:bg-white"
-                          />
-                          <button type="button" onClick={() => removeSpecHeader(i)} className="text-red-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Trash2 size={12} />
-                          </button>
-                        </div>
-                      </th>
-                    ))}
-                    <th className="w-10"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {specRows.map((row, ri) => (
-                    <tr key={ri} className="border-b border-neutral-50 hover:bg-neutral-50/30 transition-colors">
-                      <td className="p-2 text-center">
-                        <input 
-                          type="checkbox" 
-                          checked={row.isPopular} 
-                          onChange={() => toggleRowPopular(ri)}
-                          className="w-4 h-4 accent-accent-lime"
-                        />
-                      </td>
-                      {row.values.map((val, ci) => (
-                        <td key={ci} className="p-2">
-                          <Input 
-                            value={val} 
-                            onChange={e => updateSpecValue(ri, ci, e.target.value)}
-                            className="h-10 text-sm border-none bg-transparent focus:bg-white shadow-none"
-                          />
-                        </td>
+            {specHeaders.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-10 bg-neutral-50 rounded-2xl border border-dashed border-neutral-200">
+                <AlertCircle className="text-neutral-300 mb-2" size={24} />
+                <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Tabelul este dezactivat</p>
+                <p className="text-[10px] text-neutral-400 mt-1">Adaugă o coloană pentru a începe construcția tabelului.</p>
+                <Button type="button" variant="ghost" size="sm" onClick={addSpecHeader} className="mt-4 text-accent-lime hover:bg-accent-lime/10 rounded-xl font-bold">
+                  ACTIVEAZĂ TABELUL
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                <div className="overflow-x-auto custom-scrollbar -mx-2 sm:mx-0">
+                  <table className="w-full border-collapse min-w-[600px]">
+                    <thead>
+                      <tr className="bg-neutral-50 border-b border-neutral-100">
+                        <th className="p-2 text-[10px] font-extrabold text-neutral-400 uppercase text-left w-12">Pop.</th>
+                        {specHeaders.map((header, i) => (
+                          <th key={i} className="p-2 group">
+                            <div className="flex items-center gap-1">
+                              <Input 
+                                value={header} 
+                                onChange={e => updateSpecHeader(i, e.target.value)} 
+                                className="h-8 text-[10px] font-bold uppercase tracking-widest border-none bg-transparent focus:bg-white"
+                              />
+                              <button type="button" onClick={() => removeSpecHeader(i)} className="text-red-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Trash2 size={12} />
+                              </button>
+                            </div>
+                          </th>
+                        ))}
+                        <th className="w-10"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {specRows.length === 0 ? (
+                        <tr>
+                          <td colSpan={specHeaders.length + 2} className="p-8 text-center text-xs font-medium text-neutral-400 italic">
+                            Niciun rând adăugat. Apasă butonul "RÂND" pentru a adăuga date.
+                          </td>
+                        </tr>
+                      ) : specRows.map((row, ri) => (
+                        <tr key={ri} className="border-b border-neutral-50 hover:bg-neutral-50/30 transition-colors">
+                          <td className="p-2 text-center">
+                            <input 
+                              type="checkbox" 
+                              checked={row.isPopular} 
+                              onChange={() => toggleRowPopular(ri)}
+                              className="w-4 h-4 accent-accent-lime"
+                            />
+                          </td>
+                          {row.values.map((val, ci) => (
+                            <td key={ci} className="p-2">
+                              <Input 
+                                value={val} 
+                                onChange={e => updateSpecValue(ri, ci, e.target.value)}
+                                className="h-10 text-sm border-none bg-transparent focus:bg-white shadow-none"
+                              />
+                            </td>
+                          ))}
+                          <td className="p-2">
+                            <button type="button" onClick={() => removeSpecRow(ri)} className="text-neutral-300 hover:text-red-500 transition-colors">
+                              <Trash2 size={14} />
+                            </button>
+                          </td>
+                        </tr>
                       ))}
-                      <td className="p-2">
-                        <button type="button" onClick={() => removeSpecRow(ri)} className="text-neutral-300 hover:text-red-500 transition-colors">
-                          <Trash2 size={14} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            
-            <div>
-              <label className={labelClass}>Notă subsol tabel (Ex: *Prețurile includ transportul)</label>
-              <Input value={specFooterNote} onChange={e => setSpecFooterNote(e.target.value)} className={inputClass} placeholder="Informații suplimentare despre modele..." />
-            </div>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <div>
+                  <label className={labelClass}>Notă subsol tabel (Ex: *Prețurile includ transportul)</label>
+                  <Input value={specFooterNote} onChange={e => setSpecFooterNote(e.target.value)} className={inputClass} placeholder="Informații suplimentare despre modele..." />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* SECȚIUNEA 3: Argumente Brand */}
