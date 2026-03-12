@@ -20,9 +20,11 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  // Initialize with a fixed value to avoid hydration mismatch
   const [lang, setLangState] = useState<Language>('ro');
 
   useEffect(() => {
+    // Only access localStorage after mount
     const saved = localStorage.getItem('agro_lang') as Language;
     if (saved && LANGUAGES.some(l => l.code === saved)) {
       setLangState(saved);
