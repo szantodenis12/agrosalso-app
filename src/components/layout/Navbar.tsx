@@ -105,11 +105,14 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { lang } = useLanguage();
 
+  // Safety fallback for translation data to prevent Runtime TypeError
+  const langData = (t as any)[lang] || t.ro;
+
   const NAV_LINKS = [
-    { name: t[lang].home, href: '/' },
-    { name: t[lang].products, href: '/produse' },
-    { name: t[lang].about, href: '/despre' },
-    { name: t[lang].contact, href: '/contact' },
+    { name: langData.home, href: '/' },
+    { name: langData.products, href: '/produse' },
+    { name: langData.about, href: '/despre' },
+    { name: langData.contact, href: '/contact' },
   ];
 
   useEffect(() => {
@@ -174,7 +177,7 @@ export function Navbar() {
 
             <Link href="/contact">
               <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-6 pr-1 rounded-full flex items-center gap-4 transition-all text-sm group">
-                {t[lang].contactUs}
+                {langData.contactUs}
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
                   <ArrowUpRight size={18} className="text-black" strokeWidth={2.5} />
                 </div>
@@ -237,7 +240,7 @@ export function Navbar() {
             >
               <Link href="/contact" onClick={() => setIsOpen(false)}>
                 <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-14 pl-8 pr-1.5 rounded-full flex items-center justify-between transition-all text-sm group w-full shadow-2xl shadow-accent-lime/20">
-                  <span className="font-extrabold uppercase tracking-widest">{t[lang].contactUs}</span>
+                  <span className="font-extrabold uppercase tracking-widest">{langData.contactUs}</span>
                   <div className="w-11 h-11 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
                     <ArrowUpRight size={20} className="text-black" strokeWidth={3} />
                   </div>
