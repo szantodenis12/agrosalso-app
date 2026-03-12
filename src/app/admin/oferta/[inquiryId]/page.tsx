@@ -1,12 +1,12 @@
 'use client';
 import { use, useEffect, useState, useMemo } from 'react';
 import { useFirestore } from '@/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { Inquiry, Product } from '@/types';
 import { format } from 'date-fns';
 import { ro } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
-import { Printer, Send, ChevronLeft, AlertTriangle, Loader2, CheckCircle2 } from 'lucide-react';
+import { Printer, Send, ChevronLeft, AlertTriangle, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -65,17 +65,12 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
     load();
   }, [db, inquiryId]);
 
-  // Logic to determine which rows to display in the offer table
   const displayRows = useMemo(() => {
     if (!product?.specTable?.rows) return [];
-    
-    // If client selected a specific model, try to find and show only that row
     if (inquiry?.selectedModel) {
       const matchedRow = product.specTable.rows.find(row => row.values[0] === inquiry.selectedModel);
       if (matchedRow) return [matchedRow];
     }
-    
-    // Fallback to all rows if no specific model selected or matched
     return product.specTable.rows;
   }, [product, inquiry]);
 
@@ -88,6 +83,19 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const handleSendEmail = async () => {
     setSending(true);
     try {
+      // SECURITY: Update database from client to enforce Firestore Security Rules (isAdmin)
+      const inquiryRef = doc(db, 'inquiries', inquiryId);
+      await updateDoc(inquiryRef, {
+        status: 'replied',
+        repliedAt: serverTimestamp(),
+        offerId: offerNumber,
+        updatedAt: serverTimestamp(),
+        offeredPrice: editPrice,
+        beneficiaryCui: beneficiaryCui !== PLACEHOLDER_CUI ? beneficiaryCui : '',
+        beneficiaryAddress: beneficiaryAddress !== PLACEHOLDER_ADDRESS ? beneficiaryAddress : ''
+      });
+
+      // Then trigger external side-effects (email notification)
       const response = await fetch('/api/send-offer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -99,12 +107,14 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
         }),
       });
 
-      if (!response.ok) throw new Error('Ereare trimitere');
+      if (!response.ok) {
+        console.warn('API Notification error, but DB was updated successfully');
+      }
 
-      toast({ title: "Ofertă trimisă!", description: "Clientul va primi email-ul în curând." });
+      toast({ title: "Ofertă procesată!", description: "Statusul a fost actualizat și documentul este pregătit." });
       router.push('/admin/cereri');
     } catch (err) {
-      toast({ variant: "destructive", title: "Eroare", description: "Nu s-a putut trimite email-ul." });
+      toast({ variant: "destructive", title: "Eroare Securitate", description: "Nu aveți permisiunea de a actualiza această cerere." });
     } finally {
       setSending(false);
     }
@@ -141,7 +151,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
               <Printer size={18} /> DESCĂRCĂ PDF
             </Button>
             <Button type="button" className="bg-neutral-900 hover:bg-black text-white rounded-xl h-11 px-6 gap-2" onClick={handleSendEmail} disabled={sending}>
-              {sending ? <Loader2 className="animate-spin size-4" /> : <Send size={18} />} TRIMITE EMAIL
+              {sending ? <Loader2 className="animate-spin size-4" /> : <Send size={18} />} SALVEAZĂ & TRIMITE
             </Button>
           </div>
         </div>
@@ -345,7 +355,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
           {offerType === 'afir' && (
             <div className="bg-neutral-50 p-6 rounded-[2rem] mb-12 border border-neutral-100 space-y-4">
               <div className="flex items-center gap-3">
-                <CheckCircle2 className="text-green-600 size-4" />
+                <div className="w-1.5 h-1.5 bg-green-600 rounded-full" />
                 <h4 className="font-headline font-extrabold text-sm uppercase tracking-tight">Criterii Conformitate AFIR</h4>
               </div>
               <div className="grid grid-cols-1 gap-2">

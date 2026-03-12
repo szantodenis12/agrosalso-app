@@ -3,7 +3,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * AGROSALSO SECURITY RULES - HARDENED V1
+     * AGROSALSO SECURITY RULES - HARDENED V2 (Bulletproof)
      */
 
     function isAdmin() {
@@ -31,14 +31,16 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Securizare statistici: Vizitatorii pot doar incrementa contorul, nu pot citi sau modifica altceva
+    // Securizare statistici: Vizitatorii pot doar incrementa strict contorul
     match /siteMetadata/stats {
       allow read: if isAdmin();
       allow create: if true;
-      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['visitCount']);
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['visitCount']) 
+                   && request.resource.data.visitCount is int 
+                   && request.resource.data.visitCount > resource.data.visitCount;
     }
 
-    // Lead-urile sunt strict private
+    // Lead-urile sunt strict private. Crearea este permisă oricui pentru formularul de contact.
     match /inquiries/{inquiryId} {
       allow create: if true;
       allow read, update, delete: if isAdmin();
