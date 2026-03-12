@@ -8,7 +8,7 @@ import { Product, ProductCategory, ProductTranslation, SpecTable, SpecTableRow }
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Sparkles, Save, ChevronLeft, Upload, Loader2, Languages, ShieldCheck, Plus, Trash2, Search, Info, AlertCircle } from 'lucide-react';
+import { Sparkles, Save, ChevronLeft, Upload, Loader2, Languages, ShieldCheck, Plus, Trash2, Search, Info, AlertCircle, Star, Columns, Rows, ListOrdered } from 'lucide-react';
 import { adminProductDescriptionGenerator } from '@/ai/flows/admin-product-description-generator';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -319,84 +319,114 @@ export default function ProductForm({ initialData, mode }: Props) {
             </div>
           </div>
 
-          {/* CARD 2: Tabel Specificații Modele */}
+          {/* CARD 2: Tabel Specificații Modele (THE REDESIGNED ONE) */}
           <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
-                <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Tabel Specificații (Modele)
-              </h3>
-              <div className="flex gap-2 w-full sm:w-auto">
-                <Button type="button" variant="outline" size="sm" onClick={addSpecHeader} className="rounded-xl flex-1 sm:flex-none">
-                  <Plus size={14} className="mr-1" /> COLONĂ
+              <div className="space-y-1">
+                <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
+                  <ListOrdered className="text-accent-lime" size={24} /> Generator Specificații
+                </h3>
+                <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest ml-8">Configurează variantele și dotările utilajului</p>
+              </div>
+              <div className="flex gap-2 w-full sm:w-auto bg-neutral-50 p-1.5 rounded-2xl">
+                <Button type="button" variant="ghost" size="sm" onClick={addSpecHeader} className="rounded-xl flex-1 sm:flex-none h-10 hover:bg-white hover:shadow-sm gap-2">
+                  <Columns size={14} className="text-blue-500" />
+                  <span className="text-[10px] font-bold uppercase">Coloană</span>
                 </Button>
-                <Button type="button" variant="outline" size="sm" onClick={addSpecRow} className="rounded-xl flex-1 sm:flex-none">
-                  <Plus size={14} className="mr-1" /> RÂND
+                <Button type="button" variant="ghost" size="sm" onClick={addSpecRow} className="rounded-xl flex-1 sm:flex-none h-10 hover:bg-white hover:shadow-sm gap-2">
+                  <Rows size={14} className="text-accent-lime" />
+                  <span className="text-[10px] font-bold uppercase">Rând Nou</span>
                 </Button>
               </div>
             </div>
 
             {specHeaders.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10 bg-neutral-50 rounded-2xl border border-dashed border-neutral-200">
-                <AlertCircle className="text-neutral-300 mb-2" size={24} />
-                <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Tabelul este dezactivat</p>
-                <p className="text-[10px] text-neutral-400 mt-1">Adaugă o coloană pentru a începe construcția tabelului.</p>
-                <Button type="button" variant="ghost" size="sm" onClick={addSpecHeader} className="mt-4 text-accent-lime hover:bg-accent-lime/10 rounded-xl font-bold">
-                  ACTIVEAZĂ TABELUL
+              <div className="flex flex-col items-center justify-center py-16 bg-neutral-50 rounded-[2rem] border border-dashed border-neutral-200">
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm">
+                  <AlertCircle className="text-neutral-200" size={32} />
+                </div>
+                <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Tabelul este gol</p>
+                <p className="text-[10px] text-neutral-400 mt-1 max-w-[200px] text-center">Adaugă prima coloană pentru a începe construcția specificațiilor tehnice.</p>
+                <Button type="button" variant="default" size="sm" onClick={addSpecHeader} className="mt-6 bg-neutral-900 text-white hover:bg-black rounded-full px-6 font-bold h-11 uppercase text-[10px] tracking-widest">
+                  START CONSTRUCȚIE
                 </Button>
               </div>
             ) : (
               <div className="space-y-6">
-                <div className="overflow-x-auto custom-scrollbar -mx-2 sm:mx-0">
-                  <table className="w-full border-collapse min-w-[600px]">
+                <div className="overflow-x-auto custom-scrollbar -mx-2 sm:mx-0 rounded-[1.5rem] border border-neutral-100 shadow-sm">
+                  <table className="w-full border-collapse min-w-[700px]">
                     <thead>
-                      <tr className="bg-neutral-50 border-b border-neutral-100">
-                        <th className="p-2 text-[10px] font-extrabold text-neutral-400 uppercase text-left w-12">Pop.</th>
+                      <tr className="bg-neutral-50/80 border-b border-neutral-100">
+                        <th className="p-4 text-[9px] font-extrabold text-neutral-400 uppercase text-center w-16 border-r border-neutral-100/50">
+                          <Star size={14} className="mx-auto" />
+                        </th>
                         {specHeaders.map((header, i) => (
-                          <th key={i} className="p-2 group">
-                            <div className="flex items-center gap-1">
+                          <th key={i} className="p-4 group border-r border-neutral-100/50 last:border-0 relative">
+                            <div className="flex items-center gap-2">
                               <Input 
                                 value={header} 
                                 onChange={e => updateSpecHeader(i, e.target.value)} 
-                                className="h-8 text-[10px] font-bold uppercase tracking-widest border-none bg-transparent focus:bg-white"
+                                className="h-8 text-[10px] font-extrabold uppercase tracking-widest border-none bg-transparent focus:bg-white text-neutral-900 placeholder:text-neutral-300"
+                                placeholder="TITLU COLOANĂ..."
                               />
-                              <button type="button" onClick={() => removeSpecHeader(i)} className="text-red-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <Trash2 size={12} />
+                              <button 
+                                type="button" 
+                                onClick={() => removeSpecHeader(i)} 
+                                className="absolute -top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-lg scale-75 hover:scale-100"
+                              >
+                                <Trash2 size={10} />
                               </button>
                             </div>
                           </th>
                         ))}
-                        <th className="w-10"></th>
+                        <th className="w-12 bg-neutral-50/30"></th>
                       </tr>
                     </thead>
                     <tbody>
                       {specRows.length === 0 ? (
                         <tr>
-                          <td colSpan={specHeaders.length + 2} className="p-8 text-center text-xs font-medium text-neutral-400 italic">
-                            Niciun rând adăugat. Apasă butonul "RÂND" pentru a adăuga date.
+                          <td colSpan={specHeaders.length + 2} className="p-12 text-center text-xs font-medium text-neutral-400 italic bg-white">
+                            Niciun rând de date. Folosește butonul "Rând Nou" pentru a introduce specificații.
                           </td>
                         </tr>
                       ) : specRows.map((row, ri) => (
-                        <tr key={ri} className="border-b border-neutral-50 hover:bg-neutral-50/30 transition-colors">
-                          <td className="p-2 text-center">
-                            <input 
-                              type="checkbox" 
-                              checked={row.isPopular} 
-                              onChange={() => toggleRowPopular(ri)}
-                              className="w-4 h-4 accent-accent-lime"
-                            />
+                        <tr key={ri} className={cn(
+                          "border-b border-neutral-50 transition-colors group",
+                          row.isPopular ? "bg-accent-lime/[0.03]" : "hover:bg-neutral-50/30"
+                        )}>
+                          <td className="p-4 text-center border-r border-neutral-100/50">
+                            <label className="cursor-pointer">
+                              <input 
+                                type="checkbox" 
+                                checked={row.isPopular} 
+                                onChange={() => toggleRowPopular(ri)}
+                                className="hidden"
+                              />
+                              <div className={cn(
+                                "w-8 h-8 rounded-full flex items-center justify-center transition-all mx-auto",
+                                row.isPopular ? "bg-accent-lime text-black shadow-lg shadow-accent-lime/20 scale-110" : "bg-neutral-100 text-neutral-300 hover:text-neutral-400"
+                              )}>
+                                <Star size={14} fill={row.isPopular ? "currentColor" : "none"} />
+                              </div>
+                            </label>
                           </td>
                           {row.values.map((val, ci) => (
-                            <td key={ci} className="p-2">
+                            <td key={ci} className="p-4 border-r border-neutral-100/50 last:border-0">
                               <Input 
                                 value={val} 
                                 onChange={e => updateSpecValue(ri, ci, e.target.value)}
-                                className="h-10 text-sm border-none bg-transparent focus:bg-white shadow-none"
+                                className="h-10 text-sm border-none bg-transparent focus:bg-white shadow-none font-medium text-neutral-700 placeholder:text-neutral-200"
+                                placeholder="..."
                               />
                             </td>
                           ))}
-                          <td className="p-2">
-                            <button type="button" onClick={() => removeSpecRow(ri)} className="text-neutral-300 hover:text-red-500 transition-colors">
-                              <Trash2 size={14} />
+                          <td className="p-4 text-center">
+                            <button 
+                              type="button" 
+                              onClick={() => removeSpecRow(ri)} 
+                              className="text-neutral-200 hover:text-red-500 transition-all opacity-0 group-hover:opacity-100 hover:scale-110"
+                            >
+                              <Trash2 size={16} />
                             </button>
                           </td>
                         </tr>
@@ -405,9 +435,17 @@ export default function ProductForm({ initialData, mode }: Props) {
                   </table>
                 </div>
                 
-                <div>
-                  <label className={labelClass}>Notă subsol tabel (Ex: *Prețurile includ transportul)</label>
-                  <Input value={specFooterNote} onChange={e => setSpecFooterNote(e.target.value)} className={inputClass} placeholder="Informații suplimentare despre modele..." />
+                <div className="bg-neutral-50 p-4 rounded-2xl border border-neutral-100">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Info size={14} className="text-neutral-400" />
+                    <label className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Notă subsol tabel</label>
+                  </div>
+                  <Input 
+                    value={specFooterNote} 
+                    onChange={e => setSpecFooterNote(e.target.value)} 
+                    className="h-10 rounded-xl bg-white border-none shadow-sm text-xs italic" 
+                    placeholder="Ex: *Prețurile nu includ transportul sau dotări opționale..." 
+                  />
                 </div>
               </div>
             )}
