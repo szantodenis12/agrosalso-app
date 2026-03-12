@@ -3,14 +3,14 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * AGROSALSO SECURITY RULES
-     * Sincronizare forțată pentru rollout: 1772656801
+     * AGROSALSO SECURITY RULES - HARDENED V1
      */
 
     function isAdmin() {
       return request.auth != null;
     }
 
+    // Catalogul de produse este public pentru citire
     match /products/{productId} {
       allow read: if true;
       allow write: if isAdmin();
@@ -31,11 +31,14 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    match /siteMetadata/{docId} {
+    // Securizare statistici: Vizitatorii pot doar incrementa contorul, nu pot citi sau modifica altceva
+    match /siteMetadata/stats {
       allow read: if isAdmin();
-      allow create, update: if true;
+      allow create: if true;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['visitCount']);
     }
 
+    // Lead-urile sunt strict private
     match /inquiries/{inquiryId} {
       allow create: if true;
       allow read, update, delete: if isAdmin();
