@@ -12,17 +12,20 @@ const EXPIRY_DAYS = 90;
 
 export function CookieConsent() {
   const [isVisible, setIsVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { lang } = useLanguage();
 
   useEffect(() => {
+    setMounted(true);
     const savedConsent = localStorage.getItem(CONSENT_KEY);
     
     if (savedConsent) {
-      const { timestamp } = JSON.parse(savedConsent);
-      const now = Date.now();
-      const diffDays = (now - timestamp) / (1000 * 60 * 60 * 24);
-      
-      if (diffDays > EXPIRY_DAYS) {
+      try {
+        const { timestamp } = JSON.parse(savedConsent);
+        const now = Date.now();
+        const diffDays = (now - timestamp) / (1000 * 60 * 60 * 24);
+        if (diffDays > EXPIRY_DAYS) setIsVisible(true);
+      } catch (e) {
         setIsVisible(true);
       }
     } else {
@@ -31,13 +34,12 @@ export function CookieConsent() {
   }, []);
 
   const handleAccept = () => {
-    const consentData = {
-      accepted: true,
-      timestamp: Date.now()
-    };
+    const consentData = { accepted: true, timestamp: Date.now() };
     localStorage.setItem(CONSENT_KEY, JSON.stringify(consentData));
     setIsVisible(false);
   };
+
+  if (!mounted) return null;
 
   return (
     <AnimatePresence>
@@ -49,7 +51,6 @@ export function CookieConsent() {
           className="fixed bottom-6 left-6 right-6 md:left-14 md:right-auto md:max-w-md z-[100]"
         >
           <div className="bg-neutral-950 border border-white/10 rounded-[2rem] p-6 md:p-8 shadow-2xl shadow-black/50 backdrop-blur-xl relative overflow-hidden group">
-            {/* Background Accent */}
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent-lime/10 rounded-full blur-3xl" />
             
             <div className="relative z-10 space-y-6">
@@ -87,6 +88,7 @@ export function CookieConsent() {
             <button 
               onClick={() => setIsVisible(false)}
               className="absolute top-4 right-4 text-white/20 hover:text-white transition-colors"
+              aria-label="Închide notificare"
             >
               <X size={18} />
             </button>

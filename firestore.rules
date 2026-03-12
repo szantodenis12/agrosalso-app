@@ -3,14 +3,14 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * AGROSALSO SECURITY RULES - HARDENED V2 (Bulletproof)
+     * AGROSALSO SECURITY RULES - HARDENED V3 (Bulletproof)
      */
 
     function isAdmin() {
       return request.auth != null;
     }
 
-    // Catalogul de produse este public pentru citire
+    // Catalogul de produse și resursele auxiliare sunt publice pentru citire
     match /products/{productId} {
       allow read: if true;
       allow write: if isAdmin();
@@ -40,7 +40,7 @@ service cloud.firestore {
                    && request.resource.data.visitCount > resource.data.visitCount;
     }
 
-    // Lead-urile sunt strict private. Crearea este permisă oricui pentru formularul de contact.
+    // Lead-urile sunt strict private. Crearea este permisă oricui.
     match /inquiries/{inquiryId} {
       allow create: if true;
       allow read, update, delete: if isAdmin();

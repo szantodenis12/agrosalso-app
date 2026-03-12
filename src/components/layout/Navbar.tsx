@@ -27,7 +27,7 @@ function LanguageSwitcher() {
 
   // Static placeholder for hydration consistency
   if (!mounted) {
-    const defaultLang = LANGUAGES[0]; // Romanian
+    const defaultLang = LANGUAGES[0];
     return (
       <div className="flex items-center gap-2 px-3 py-2 bg-white/10 border border-white/10 rounded-full opacity-50 cursor-default backdrop-blur-sm">
         <div className="relative w-5 h-3.5 rounded-sm overflow-hidden border border-white/20 shrink-0">
@@ -105,19 +105,16 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { lang } = useLanguage();
 
-  // Safety fallback for translation data to prevent Runtime TypeError
-  const langData = (t as any)[lang] || t.ro;
-
   const NAV_LINKS = [
-    { name: langData.home, href: '/' },
-    { name: langData.products, href: '/produse' },
-    { name: langData.about, href: '/despre' },
-    { name: langData.contact, href: '/contact' },
+    { name: t[lang].home, href: '/' },
+    { name: t[lang].products, href: '/produse' },
+    { name: t[lang].about, href: '/despre' },
+    { name: t[lang].contact, href: '/contact' },
   ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -129,10 +126,7 @@ export function Navbar() {
     }
   }, [isOpen]);
 
-  const isAboutPage = pathname === '/despre';
-  const isContactPage = pathname === '/contact';
-  
-  const isTransparentInitial = (isAboutPage || pathname === '/') && !scrolled && !isOpen && !isContactPage;
+  const isTransparentInitial = (pathname === '/' || pathname === '/despre') && !scrolled && !isOpen && pathname !== '/contact';
 
   return (
     <>
@@ -143,7 +137,6 @@ export function Navbar() {
         )}
       >
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-          {/* Logo Section - Balances space on the left */}
           <div className="flex-1 flex justify-start items-center">
             <Link href="/" className="flex items-center gap-2 group relative z-[70]">
               <div className="flex items-center gap-1">
@@ -155,7 +148,6 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Desktop Nav - Centered */}
           <div className="hidden lg:flex items-center gap-10">
             {NAV_LINKS.map((link) => (
               <Link 
@@ -171,13 +163,11 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* Actions Section - Balances space on the right */}
           <div className="hidden lg:flex flex-1 items-center justify-end gap-6">
             <LanguageSwitcher />
-
             <Link href="/contact">
               <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-6 pr-1 rounded-full flex items-center gap-4 transition-all text-sm group">
-                {langData.contactUs}
+                {t[lang].contactUs}
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
                   <ArrowUpRight size={18} className="text-black" strokeWidth={2.5} />
                 </div>
@@ -185,10 +175,8 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile Toggle Group */}
           <div className="flex items-center gap-4 lg:hidden">
              <LanguageSwitcher />
-
              <button 
               className="text-white relative z-[70] p-2 hover:bg-white/10 rounded-full transition-colors" 
               onClick={() => setIsOpen(!isOpen)}
@@ -200,7 +188,6 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -240,7 +227,7 @@ export function Navbar() {
             >
               <Link href="/contact" onClick={() => setIsOpen(false)}>
                 <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-14 pl-8 pr-1.5 rounded-full flex items-center justify-between transition-all text-sm group w-full shadow-2xl shadow-accent-lime/20">
-                  <span className="font-extrabold uppercase tracking-widest">{langData.contactUs}</span>
+                  <span className="font-extrabold uppercase tracking-widest">{t[lang].contactUs}</span>
                   <div className="w-11 h-11 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
                     <ArrowUpRight size={20} className="text-black" strokeWidth={3} />
                   </div>
