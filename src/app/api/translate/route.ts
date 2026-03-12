@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 
 const DEEPL_LANG_MAP: Record<string, string> = {
   en: 'EN-US',
@@ -8,21 +9,29 @@ const DEEPL_LANG_MAP: Record<string, string> = {
   es: 'ES',
 };
 
+// Schema de validare
+const TranslationRequestSchema = z.object({
+  text: z.union([z.string(), z.array(z.string())]),
+  target_lang: z.string().optional().default('en')
+});
+
 export async function POST(req: Request) {
   try {
-    const { text, target_lang = 'en' } = await req.json();
+    const body = await req.json();
+    const validation = TranslationRequestSchema.safeParse(body);
+
+    if (!validation.success) {
+      return NextResponse.json({ error: 'Payload invalid' }, { status: 400 });
+    }
+
+    const { text, target_lang } = validation.data;
     const apiKey = process.env.DEEPL_API_KEY;
 
     if (!apiKey) {
       return NextResponse.json({ error: 'DeepL API key not configured' }, { status: 500 });
     }
 
-    if (!text) {
-      return NextResponse.json({ error: 'No text provided' }, { status: 400 });
-    }
-
     const deeplTarget = DEEPL_LANG_MAP[target_lang.toLowerCase()] || 'EN-US';
-
     const textsToTranslate = Array.isArray(text) ? text : [text];
 
     const response = await fetch(
@@ -44,8 +53,7 @@ export async function POST(req: Request) {
     const data = await response.json();
 
     if (!response.ok || !data.translations) {
-      console.error('DeepL Translate Error:', data);
-      return NextResponse.json({ error: data.message || 'DeepL API error' }, { status: 500 });
+      return NextResponse.json({ error: 'Eroare la comunicarea cu serviciul de traducere' }, { status: 502 });
     }
 
     const translations = data.translations.map((t: any) => t.text);
@@ -54,7 +62,6 @@ export async function POST(req: Request) {
       translatedText: Array.isArray(text) ? translations : translations[0] 
     });
   } catch (err: any) {
-    console.error('Translation API route error:', err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ error: 'Eroare internă în motorul de traducere' }, { status: 500 });
   }
 }

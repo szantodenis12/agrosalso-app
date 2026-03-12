@@ -15,6 +15,7 @@ export interface ProductFilters {
 /**
  * Hook optimizat pentru gestionarea produselor.
  * Încarcă toate produsele o singură dată și aplică filtrarea/sortarea local pentru viteză maximă.
+ * Include gestionarea erorilor de conexiune.
  */
 export function useProducts() {
   const db = useFirestore();
@@ -22,7 +23,6 @@ export function useProducts() {
   const [sort, setSort] = useState<string>('newest');
 
   // Interogare stabilă: aducem toate produsele ordonate după dată
-  // Nu mai adăugăm 'where' aici pentru a evita re-subscrierile costisitoare și erorile de index lipsește
   const productsQuery = useMemoFirebase(() => {
     return query(collection(db, 'products'), orderBy('createdAt', 'desc'));
   }, [db]);
@@ -75,7 +75,7 @@ export function useProducts() {
           return pB - pA;
         case 'name_asc':
           return a.name.localeCompare(b.name, 'ro');
-        default: // 'newest' - rămâne ordinea din Firestore
+        default: // 'newest'
           return 0;
       }
     });
@@ -96,8 +96,8 @@ export function useProducts() {
 
   return {
     products: filteredAndSortedProducts,
-    isLoading, // Acesta va fi true doar la prima încărcare a catalogului
-    error,
+    isLoading, 
+    error, // Expunem eroarea pentru a fi gestionată în UI
     filters,
     sort,
     setSort,
