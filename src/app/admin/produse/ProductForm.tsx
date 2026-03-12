@@ -38,7 +38,6 @@ export default function ProductForm({ initialData, mode }: Props) {
   const [galleryImages, setGalleryImages] = useState<string[]>(initialData?.images?.filter(img => img !== initialData?.mainImage) ?? []);
   const [mainImage, setMainImage] = useState<string>(initialData?.mainImage ?? '');
 
-  // State pentru tabelul de specificații - permitem liste goale
   const [specHeaders, setSpecHeaders] = useState<string[]>(initialData?.specTable?.headers ?? ['Model', 'Putere (CP)', 'Lățime (m)']);
   const [specRows, setSpecRows] = useState<SpecTableRow[]>(initialData?.specTable?.rows ?? [
     { values: ['', '', ''], isPopular: false }
@@ -73,7 +72,6 @@ export default function ProductForm({ initialData, mode }: Props) {
 
   const set = (field: string, value: any) => setForm(prev => ({ ...prev, [field]: value }));
 
-  // --- Handlers Tabel Specificații ---
   const addSpecHeader = () => {
     setSpecHeaders([...specHeaders, 'Titlu Nou']);
     setSpecRows(specRows.map(row => ({ ...row, values: [...row.values, ''] })));
@@ -116,7 +114,6 @@ export default function ProductForm({ initialData, mode }: Props) {
     setSpecRows(newRows);
   };
 
-  // --- Traducere & AI ---
   const handleRetranslate = async () => {
     if (!initialData?.id) return;
     setTranslating(true);
@@ -209,7 +206,6 @@ export default function ProductForm({ initialData, mode }: Props) {
     e.preventDefault();
     setSaving(true);
     try {
-      // Dacă nu există coloane sau rânduri, nu salvăm tabelul
       const specTable: SpecTable | null = (specHeaders.length > 0 && specRows.length > 0) ? {
         headers: specHeaders,
         rows: specRows,
@@ -243,6 +239,7 @@ export default function ProductForm({ initialData, mode }: Props) {
       <input type="file" ref={mainImageInputRef} onChange={handleMainImageFile} accept="image/*" className="hidden" />
       <input type="file" ref={galleryInputRef} onChange={handleGalleryFiles} accept="image/*" multiple className="hidden" />
 
+      {/* HEADER SECTION */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <Button type="button" variant="ghost" size="icon" className="rounded-full bg-white shadow-sm" onClick={() => router.back()}>
@@ -279,9 +276,13 @@ export default function ProductForm({ initialData, mode }: Props) {
         </div>
       </div>
 
+      {/* MAIN GRID LAYOUT */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
+        
+        {/* LEFT COLUMN: Content & Media */}
         <div className="lg:col-span-2 space-y-6 lg:space-y-10">
-          {/* SECȚIUNEA 1: Detalii Principale */}
+          
+          {/* CARD 1: Detalii Principale */}
           <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
             <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Detalii Principale
@@ -318,7 +319,7 @@ export default function ProductForm({ initialData, mode }: Props) {
             </div>
           </div>
 
-          {/* SECȚIUNEA 2: Tabel Specificații Modele */}
+          {/* CARD 2: Tabel Specificații Modele */}
           <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
@@ -412,7 +413,7 @@ export default function ProductForm({ initialData, mode }: Props) {
             )}
           </div>
 
-          {/* SECȚIUNEA 3: Argumente Brand */}
+          {/* CARD 3: Argumente Brand */}
           <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
              <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2 text-accent-lime">
               <ShieldCheck size={22} /> Secțiunea Brand (Argumente cheie)
@@ -425,29 +426,7 @@ export default function ProductForm({ initialData, mode }: Props) {
             />
           </div>
 
-          {/* SECȚIUNEA 4: SEO */}
-          <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
-            <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
-              <Search className="text-blue-500" size={22} /> Optimizare SEO
-            </h3>
-            <div className="space-y-6">
-              <div>
-                <label className={labelClass}>Meta Title (Google)</label>
-                <Input value={form.metaTitle} onChange={e => set('metaTitle', e.target.value)} className={inputClass} placeholder="Titlul care apare în căutările Google" />
-                <p className="text-[9px] text-neutral-400 mt-1 flex items-center gap-1"><Info size={10} /> Recomandat: 50-60 caractere.</p>
-              </div>
-              <div>
-                <label className={labelClass}>Meta Description (Google)</label>
-                <Textarea value={form.metaDescription} onChange={e => set('metaDescription', e.target.value)} className="min-h-[80px] rounded-xl bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm" maxLength={160} placeholder="Scurtă descriere pentru rezultatele căutării" />
-                <div className="flex justify-between mt-1">
-                  <p className="text-[9px] text-neutral-400 flex items-center gap-1"><Info size={10} /> Recomandat: 120-160 caractere.</p>
-                  <p className={cn("text-[9px] font-bold", form.metaDescription.length > 160 ? "text-red-500" : "text-neutral-400")}>{form.metaDescription.length}/160</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* SECȚIUNEA 5: Galerie Media */}
+          {/* CARD 4: Galerie Media */}
           <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
              <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" /> Galerie Media
@@ -507,38 +486,63 @@ export default function ProductForm({ initialData, mode }: Props) {
               </div>
             </div>
           </div>
+
+          {/* CARD 5: SEO */}
+          <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-10 shadow-sm space-y-6 lg:space-y-8 border border-neutral-100">
+            <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight flex items-center gap-2">
+              <Search className="text-blue-500" size={22} /> Optimizare SEO
+            </h3>
+            <div className="space-y-6">
+              <div>
+                <label className={labelClass}>Meta Title (Google)</label>
+                <Input value={form.metaTitle} onChange={e => set('metaTitle', e.target.value)} className={inputClass} placeholder="Titlul care apare în căutările Google" />
+                <p className="text-[9px] text-neutral-400 mt-1 flex items-center gap-1"><Info size={10} /> Recomandat: 50-60 caractere.</p>
+              </div>
+              <div>
+                <label className={labelClass}>Meta Description (Google)</label>
+                <Textarea value={form.metaDescription} onChange={e => set('metaDescription', e.target.value)} className="min-h-[80px] rounded-xl bg-neutral-50 border-none focus-visible:ring-accent-lime shadow-sm" maxLength={160} placeholder="Scurtă descriere pentru rezultatele căutării" />
+                <div className="flex justify-between mt-1">
+                  <p className="text-[9px] text-neutral-400 flex items-center gap-1"><Info size={10} /> Recomandat: 120-160 caractere.</p>
+                  <p className={cn("text-[9px] font-bold", form.metaDescription.length > 160 ? "text-red-500" : "text-neutral-400")}>{form.metaDescription.length}/160</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
+        {/* RIGHT COLUMN: Price & Stock (STIKCY) */}
         <div className="space-y-6 lg:space-y-10">
-          <div className="bg-neutral-900 rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-8 text-white space-y-6 lg:space-y-8 shadow-xl">
-             <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight">Preț & Stoc</h3>
-             <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest ml-1">Preț (EUR)</label>
-                  <Input type="number" value={form.price} onChange={e => set('price', e.target.value)} disabled={form.priceOnRequest} className="bg-white/5 border-none h-12 rounded-xl text-white" />
-                </div>
-                <div className="space-y-4 pt-2">
-                  {['priceOnRequest', 'inStock', 'isNew', 'isFeatured', 'isOnSale'].map(field => (
-                    <label key={field} className="flex items-center justify-between cursor-pointer group">
-                      <span className="text-sm font-bold text-white/60 group-hover:text-white transition-colors">
-                        {field === 'priceOnRequest' ? 'La cerere' : 
-                         field === 'inStock' ? 'În stoc' : 
-                         field === 'isNew' ? 'Utilaj nou' : 
-                         field === 'isFeatured' ? 'Recomandat' : 'Promoție'}
-                      </span>
-                      <input type="checkbox" checked={form[field as keyof typeof form] as boolean} onChange={e => set(field, e.target.checked)} className="w-5 h-5 accent-accent-lime rounded-md" />
-                    </label>
-                  ))}
-                </div>
-             </div>
-          </div>
-
-          <Button type="submit" disabled={saving || uploadingMain || uploadingGallery} className="w-full bg-neutral-900 hover:bg-black text-white font-extrabold h-16 rounded-[1.5rem] lg:rounded-3xl flex items-center justify-between pl-6 lg:pl-10 pr-2 group shadow-2xl">
-            <span>{saving ? 'SE SALVEAZĂ...' : 'SALVEAZĂ PRODUSUL'}</span>
-            <div className="w-12 h-12 bg-accent-lime rounded-full flex items-center justify-center shrink-0">
-              <Save size={20} className="text-black" />
+          <div className="lg:sticky lg:top-10 space-y-6">
+            <div className="bg-neutral-900 rounded-[1.5rem] lg:rounded-[2.5rem] p-6 lg:p-8 text-white space-y-6 lg:space-y-8 shadow-xl">
+               <h3 className="font-headline font-extrabold text-lg lg:text-xl tracking-tight">Preț & Stoc</h3>
+               <div className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest ml-1">Preț (EUR)</label>
+                    <Input type="number" value={form.price} onChange={e => set('price', e.target.value)} disabled={form.priceOnRequest} className="bg-white/5 border-none h-12 rounded-xl text-white" />
+                  </div>
+                  <div className="space-y-4 pt-2">
+                    {['priceOnRequest', 'inStock', 'isNew', 'isFeatured', 'isOnSale'].map(field => (
+                      <label key={field} className="flex items-center justify-between cursor-pointer group">
+                        <span className="text-sm font-bold text-white/60 group-hover:text-white transition-colors">
+                          {field === 'priceOnRequest' ? 'La cerere' : 
+                           field === 'inStock' ? 'În stoc' : 
+                           field === 'isNew' ? 'Utilaj nou' : 
+                           field === 'isFeatured' ? 'Recomandat' : 'Promoție'}
+                        </span>
+                        <input type="checkbox" checked={form[field as keyof typeof form] as boolean} onChange={e => set(field, e.target.checked)} className="w-5 h-5 accent-accent-lime rounded-md" />
+                      </label>
+                    ))}
+                  </div>
+               </div>
             </div>
-          </Button>
+
+            <Button type="submit" disabled={saving || uploadingMain || uploadingGallery} className="w-full bg-neutral-900 hover:bg-black text-white font-extrabold h-16 rounded-[1.5rem] lg:rounded-3xl flex items-center justify-between pl-6 lg:pl-10 pr-2 group shadow-2xl">
+              <span>{saving ? 'SE SALVEAZĂ...' : 'SALVEAZĂ PRODUSUL'}</span>
+              <div className="w-12 h-12 bg-accent-lime rounded-full flex items-center justify-center shrink-0">
+                <Save size={20} className="text-black" />
+              </div>
+            </Button>
+          </div>
         </div>
       </div>
     </form>
