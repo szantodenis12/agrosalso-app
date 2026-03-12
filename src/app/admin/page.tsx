@@ -5,6 +5,8 @@ import { collection, doc } from 'firebase/firestore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Package, MessageSquare, TrendingUp, Clock, Loader2 } from 'lucide-react';
 import { Product, Inquiry } from '@/types';
+import { BarChart, Bar, XAxis, CartesianGrid, Cell, ResponsiveContainer } from 'recharts';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 
 export default function AdminDashboard() {
   const db = useFirestore();
@@ -51,6 +53,20 @@ export default function AdminDashboard() {
     };
   }, [products, inquiries, siteStats]);
 
+  // 5. Date pentru Grafic (Categorii Produse)
+  const categoryStats = useMemo(() => {
+    if (!products) return [];
+    const map = new Map<string, number>();
+    products.forEach(p => {
+      const cat = p.category || 'Altele';
+      map.set(cat, (map.get(cat) || 0) + 1);
+    });
+    return Array.from(map.entries())
+      .map(([name, total]) => ({ name: name.charAt(0).toUpperCase() + name.slice(1), total }))
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 6);
+  }, [products]);
+
   const isLoading = isProductsLoading || isInquiriesLoading || isStatsLoading;
 
   const cards = [
@@ -90,16 +106,55 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 bg-white rounded-[1.5rem] lg:rounded-[2rem] border-none shadow-sm min-h-[300px] flex flex-col justify-center">
-          <CardContent className="p-6 lg:p-8 h-full flex flex-col justify-center items-center text-center space-y-4">
-            <div className="w-16 h-16 lg:w-20 lg:h-20 bg-neutral-50 rounded-full flex items-center justify-center">
-              <TrendingUp className="text-accent-lime" size={28} />
+        <Card className="lg:col-span-2 bg-white rounded-[1.5rem] lg:rounded-[2rem] border-none shadow-sm min-h-[350px] flex flex-col">
+          <CardContent className="p-6 lg:p-8 flex-1 flex flex-col">
+            <div className="flex justify-between items-start mb-8">
+              <div className="space-y-1">
+                <h3 className="font-headline font-extrabold text-lg lg:text-xl">Distribuție Produse</h3>
+                <p className="text-neutral-400 text-xs font-medium">Număr de utilaje listate per categorie principală.</p>
+              </div>
+              <div className="w-10 h-10 bg-neutral-50 rounded-xl flex items-center justify-center">
+                <TrendingUp className="text-accent-lime" size={20} />
+              </div>
             </div>
-            <div className="max-w-xs">
-              <h3 className="font-headline font-extrabold text-lg lg:text-xl mb-2">Monitorizare în timp real</h3>
-              <p className="text-neutral-400 text-xs lg:text-sm font-medium">
-                Sistemul este acum conectat prin stream-uri live la baza de date. Orice produs adăugat sau cerere nouă va apărea instantaneu aici.
-              </p>
+            
+            <div className="flex-1 w-full min-h-[200px]">
+              {categoryStats.length > 0 ? (
+                <ChartContainer 
+                  config={{ 
+                    total: { label: "Produse", color: "hsl(var(--accent-lime))" } 
+                  }} 
+                  className="h-full w-full"
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={categoryStats} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                      <CartesianGrid vertical={false} strokeDasharray="3 3" strokeOpacity={0.1} />
+                      <XAxis 
+                        dataKey="name" 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fontSize: 10, fontWeight: 700, fill: '#94a3b8' }}
+                        tickFormatter={(val) => val.length > 12 ? val.substring(0, 10) + '...' : val}
+                      />
+                      <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                      <Bar dataKey="total" radius={[6, 6, 0, 0]} barSize={40}>
+                        {categoryStats.map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={index === 0 ? "hsl(var(--accent-lime))" : "#f1f5f9"} 
+                            className="transition-all hover:opacity-80"
+                          />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              ) : (
+                <div className="h-full flex flex-col items-center justify-center text-neutral-300 space-y-2">
+                  <Package size={40} className="opacity-20" />
+                  <p className="text-xs font-bold uppercase tracking-widest">Niciun produs în catalog</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
