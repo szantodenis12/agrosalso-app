@@ -121,6 +121,7 @@ export function HeroSection() {
                 alt="AgroSalso Background"
                 fill
                 priority
+                sizes="100vw"
                 className="object-cover"
               />
             )}
@@ -225,10 +226,10 @@ export function HeroSection() {
                 src={item.thumbnail} 
                 alt={`Background ${index + 1}`} 
                 fill 
+                sizes="100px"
                 className={`object-cover transition-opacity ${
                   index === currentIndex ? 'opacity-100' : 'opacity-40 group-hover:opacity-100'
                 }`} 
-                sizes="100px"
               />
             </motion.div>
           ))}

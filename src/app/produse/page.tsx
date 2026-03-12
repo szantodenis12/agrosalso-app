@@ -61,6 +61,7 @@ function ProductCard({ product, viewMode }: { product: any, viewMode: 'grid' | '
           src={product.mainImage || 'https://picsum.photos/seed/placeholder/800/600'} 
           alt={product.name} 
           fill 
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover group-hover:scale-110 transition-transform duration-1000"
         />
         <div className="absolute top-3 left-3 md:top-5 md:left-5 flex flex-wrap gap-1.5 md:gap-2">
