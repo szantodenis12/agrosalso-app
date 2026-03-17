@@ -1,42 +1,66 @@
+
 import { NextResponse } from 'next/server';
+import { Resend } from 'resend';
 import { z } from 'zod';
 
-export const dynamic = 'force-dynamic';
-
-/**
- * AGROSALSO API - BULLETPROOF V2
- * Această rută se ocupă acum EXCLUSIV de sarcini server-side (trimitere email, logare externă).
- * Actualizarea statusului în DB a fost mutată pe client pentru a asigura respectarea Security Rules.
- */
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const OfferRequestSchema = z.object({
-  inquiryId: z.string().min(1),
-  offerId: z.string().min(1),
-  price: z.number().positive(),
-  contact: z.string().optional()
+  inquiryId: z.string(),
+  offerId: z.string(),
+  customerName: z.string(),
+  customerEmail: z.string().email(),
+  productName: z.string(),
+  pdfBase64: z.string(), // Primim fișierul codificat base64 de pe client
 });
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    
-    // 1. Validare input
     const validation = OfferRequestSchema.safeParse(body);
+
     if (!validation.success) {
-      return NextResponse.json({ error: 'Payload invalid' }, { status: 400 });
+      return NextResponse.json({ error: 'Date invalide pentru trimitere email' }, { status: 400 });
     }
 
-    // 2. Aici s-ar integra serviciul de email (ex: Resend, SendGrid)
-    // Momentan ruta servește ca endpoint de confirmare procesare.
-    // NOTĂ: Nu mai scriem direct în Firestore de aici fără token de admin.
+    const { customerName, customerEmail, productName, offerId, pdfBase64 } = validation.data;
 
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Notificare server trimisă cu succes' 
+    // Extragem prenumele (primul cuvânt)
+    const firstName = customerName.split(' ')[0];
+
+    const { data, error } = await resend.emails.send({
+      from: 'AgroSalso <contact@agrosalso.ro>',
+      to: [customerEmail],
+      subject: `Ofertă personalizată: ${productName} - AgroSalso`,
+      html: `
+        <div style="font-family: sans-serif; line-height: 1.6; color: #1a1a1a; max-width: 600px;">
+          <h2 style="color: #000;">Bună ziua, ${firstName}!</h2>
+          <p>Vă mulțumim pentru interesul manifestat față de utilajele noastre.</p>
+          <p>Atașat acestui e-mail veți găsi oferta oficială pentru utilajul <strong>${productName}</strong>, generată astăzi.</p>
+          <p>Documentul conține specificațiile tehnice detaliate, prețul și condițiile de livrare discutate.</p>
+          <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+          <p style="font-size: 14px; color: #666;">
+            Pentru orice întrebări sau clarificări, ne puteți contacta direct la acest email sau la numărul de telefon din ofertă.
+          </p>
+          <p style="font-weight: bold;">Echipa AgroSalso</p>
+        </div>
+      `,
+      attachments: [
+        {
+          filename: `Oferta-AgroSalso-${offerId}.pdf`,
+          content: pdfBase64,
+        },
+      ],
     });
+
+    if (error) {
+      console.error('Resend Error:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true, data });
   } catch (err: any) {
-    return NextResponse.json({ 
-      error: 'Eroare procesare server' 
-    }, { status: 500 });
+    console.error('API Error:', err);
+    return NextResponse.json({ error: 'Eroare internă la trimiterea email-ului' }, { status: 500 });
   }
 }
