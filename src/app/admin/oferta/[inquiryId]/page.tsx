@@ -77,19 +77,40 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
       const { jsPDF } = await import('jspdf');
       const html2canvas = (await import('html2canvas')).default;
 
+      // Capturăm întregul element, indiferent de lungime
       const canvas = await html2canvas(offerRef.current, {
         scale: 2,
         useCORS: true,
         logging: false,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        windowWidth: offerRef.current.scrollWidth,
+        windowHeight: offerRef.current.scrollHeight
       });
 
-      const imgData = canvas.toDataURL('image/jpeg', 0.8);
+      const imgData = canvas.toDataURL('image/jpeg', 0.95);
       const pdf = new jsPDF('p', 'mm', 'a4');
+      
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      const imgWidth = pdfWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      let heightLeft = imgHeight;
+      let position = 0;
 
-      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      // Adăugăm prima pagină
+      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pdfHeight;
+
+      // Dacă mai avem conținut, adăugăm pagini noi și shiftăm imaginea
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+      }
+
       return pdf.output('datauristring').split(',')[1];
     } catch (err) {
       console.error('PDF Generation Error:', err);
@@ -105,7 +126,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
       const pdfBase64 = await generatePdfBase64();
       if (!pdfBase64) throw new Error("Generarea PDF a eșuat");
 
-      // 1. Update Firestore (Security check: isAdmin)
+      // 1. Update Firestore
       await updateDoc(doc(db, 'inquiries', inquiryId), {
         status: 'replied',
         repliedAt: serverTimestamp(),
@@ -132,7 +153,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
 
       if (!response.ok) throw new Error("Eroare la trimiterea email-ului");
 
-      toast({ title: "Ofertă trimisă!", description: "Email-ul cu PDF-ul a fost expediat către client." });
+      toast({ title: "Ofertă trimisă!", description: "Email-ul cu PDF-ul complet a fost expediat către client." });
       router.push('/admin/cereri');
     } catch (err: any) {
       toast({ variant: "destructive", title: "Eroare", description: err.message });
@@ -169,7 +190,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
         </div>
       </div>
 
-      <div ref={offerRef} className="max-w-[210mm] mx-auto my-10 bg-white shadow-2xl min-h-[297mm] p-[15mm] print:m-0 print:shadow-none print:p-[10mm] relative border border-neutral-200 print:border-none flex flex-col justify-between overflow-hidden">
+      <div ref={offerRef} className="max-w-[210mm] mx-auto my-10 bg-white shadow-2xl min-h-[297mm] p-[15mm] print:m-0 print:shadow-none print:p-[10mm] relative border border-neutral-200 print:border-none flex flex-col justify-between overflow-visible">
         <div>
           <div className="flex justify-between items-start mb-6">
             <div className="space-y-1">
