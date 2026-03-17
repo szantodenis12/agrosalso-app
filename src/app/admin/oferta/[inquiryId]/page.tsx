@@ -7,7 +7,7 @@ import { Inquiry, Product } from '@/types';
 import { format } from 'date-fns';
 import { ro } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
-import { Printer, Send, ChevronLeft, AlertTriangle, Loader2 } from 'lucide-react';
+import { Printer, Send, ChevronLeft, Loader2, FileText } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -77,38 +77,24 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
       const { jsPDF } = await import('jspdf');
       const html2canvas = (await import('html2canvas')).default;
 
-      // Capturăm întregul element, indiferent de lungime
-      const canvas = await html2canvas(offerRef.current, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff',
-        windowWidth: offerRef.current.scrollWidth,
-        windowHeight: offerRef.current.scrollHeight
-      });
-
-      const imgData = canvas.toDataURL('image/jpeg', 0.95);
       const pdf = new jsPDF('p', 'mm', 'a4');
-      
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      
-      const imgWidth = pdfWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      let heightLeft = imgHeight;
-      let position = 0;
+      const pages = offerRef.current.querySelectorAll('.offer-page');
 
-      // Adăugăm prima pagină
-      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pdfHeight;
+      for (let i = 0; i < pages.length; i++) {
+        const pageElement = pages[i] as HTMLElement;
+        const canvas = await html2canvas(pageElement, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff',
+        });
 
-      // Dacă mai avem conținut, adăugăm pagini noi și shiftăm imaginea
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pdfHeight;
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        if (i > 0) pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
       }
 
       return pdf.output('datauristring').split(',')[1];
@@ -126,7 +112,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
       const pdfBase64 = await generatePdfBase64();
       if (!pdfBase64) throw new Error("Generarea PDF a eșuat");
 
-      // 1. Update Firestore
       await updateDoc(doc(db, 'inquiries', inquiryId), {
         status: 'replied',
         repliedAt: serverTimestamp(),
@@ -137,7 +122,6 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
         updatedAt: serverTimestamp()
       });
 
-      // 2. Call API to send Email via Resend
       const response = await fetch('/api/send-offer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -153,7 +137,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
 
       if (!response.ok) throw new Error("Eroare la trimiterea email-ului");
 
-      toast({ title: "Ofertă trimisă!", description: "Email-ul cu PDF-ul complet a fost expediat către client." });
+      toast({ title: "Ofertă trimisă!", description: "Email-ul cu oferta a fost expediat către client." });
       router.push('/admin/cereri');
     } catch (err: any) {
       toast({ variant: "destructive", title: "Eroare", description: err.message });
@@ -170,11 +154,12 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
 
   return (
     <div className="min-h-screen bg-neutral-100 pb-20 print:bg-white print:pb-0">
+      {/* Toolbar */}
       <div className="bg-white border-b border-neutral-200 p-6 sticky top-0 z-[100] shadow-md print:hidden toolbar">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" className="rounded-full" onClick={() => router.back()}><ChevronLeft /></Button>
-            <h1 className="font-headline font-extrabold text-xl tracking-tight">Generator Ofertă</h1>
+            <h1 className="font-headline font-extrabold text-xl tracking-tight uppercase">Generator Ofertă</h1>
           </div>
           <div className="flex items-center gap-3">
             <div className="bg-neutral-50 p-1 rounded-xl flex gap-1 mr-4">
@@ -190,115 +175,147 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
         </div>
       </div>
 
-      <div ref={offerRef} className="max-w-[210mm] mx-auto my-10 bg-white shadow-2xl min-h-[297mm] p-[15mm] print:m-0 print:shadow-none print:p-[10mm] relative border border-neutral-200 print:border-none flex flex-col justify-between overflow-visible">
-        <div>
-          <div className="flex justify-between items-start mb-6">
+      <div ref={offerRef} className="space-y-10 print:space-y-0">
+        
+        {/* PAGINA 1: PREZENTARE */}
+        <div className="offer-page max-w-[210mm] mx-auto my-10 bg-white shadow-2xl min-h-[297mm] p-[15mm] print:m-0 print:shadow-none relative border border-neutral-200 print:border-none flex flex-col">
+          <div className="flex justify-between items-start mb-10">
             <div className="space-y-1">
                <div className="flex items-center gap-2">
-                  <div className="w-6 h-4 bg-accent-lime rounded-sm rotate-12" />
-                  <span className="font-headline font-extrabold text-2xl tracking-tighter uppercase text-neutral-900">Agro Salso</span>
+                  <div className="w-8 h-5 bg-accent-lime rounded-sm rotate-12" />
+                  <span className="font-headline font-extrabold text-3xl tracking-tighter uppercase text-neutral-900">Agro Salso</span>
                </div>
                <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">Dealer Utilaje Agricole din 2012 — Bihor, România</p>
             </div>
             <div className="text-right">
-               <div className="bg-neutral-900 text-accent-lime px-4 py-1 rounded text-[10px] font-extrabold uppercase tracking-widest mb-1">Ofertă de Preț</div>
-               <div className="text-[11px] font-bold text-neutral-900">Nr. <span className="font-extrabold">{offerNumber}</span></div>
-               <div className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">Data: {format(today, 'dd.MM.yyyy')}</div>
+               <div className="bg-neutral-900 text-accent-lime px-4 py-1.5 rounded text-[10px] font-extrabold uppercase tracking-widest mb-1 shadow-lg shadow-black/10">Ofertă Comercială</div>
+               <div className="text-[11px] font-bold text-neutral-900">Referință: <span className="font-extrabold">{offerNumber}</span></div>
+               <div className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">Emisă la: {format(today, 'dd.MM.yyyy')}</div>
             </div>
           </div>
 
-          <div className="w-full h-px bg-neutral-100 mb-8" />
-
-          <div className="grid grid-cols-2 gap-12 mb-12">
+          <div className="grid grid-cols-2 gap-12 mb-12 bg-neutral-50 p-8 rounded-[2rem] border border-neutral-100">
             <div>
               <h4 className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest mb-4">Furnizor</h4>
               <p className="font-headline font-extrabold text-sm text-neutral-900">AGRO SALSO SRL</p>
-              <div className="text-[11px] font-bold text-neutral-500 space-y-0.5">
-                <p>CUI: 30425879 | Reg. Com.: J05/1234/2012</p>
+              <div className="text-[11px] font-bold text-neutral-500 space-y-0.5 mt-2">
+                <p>CUI: 30425879 | Reg. Com.: J05/1081/2012</p>
                 <p>DN79, Mădăras 417330, Bihor</p>
-                <p className="text-neutral-900">contact@agrosalso.ro</p>
+                <p className="text-neutral-900 font-extrabold">contact@agrosalso.ro</p>
               </div>
             </div>
             <div>
               <h4 className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest mb-4">Beneficiar</h4>
               <p className="font-headline font-extrabold text-sm text-neutral-900 uppercase">{inquiry.name}</p>
-              <div className="text-[11px] font-bold text-neutral-500 space-y-1">
-                <p contentEditable suppressContentEditableWarning className="focus:outline-accent-lime min-w-[100px] hover:bg-neutral-50 px-1 rounded" onBlur={e => setBeneficiaryCui(e.currentTarget.innerText)}>{beneficiaryCui}</p>
-                <p contentEditable suppressContentEditableWarning className="focus:outline-accent-lime hover:bg-neutral-50 px-1 rounded" onBlur={e => setBeneficiaryAddress(e.currentTarget.innerText)}>{beneficiaryAddress}</p>
-                <p className="text-neutral-900">{inquiry.phone}</p>
+              <div className="text-[11px] font-bold text-neutral-500 space-y-2 mt-2">
+                <p contentEditable suppressContentEditableWarning className="focus:outline-accent-lime min-w-[100px] hover:bg-white border-b border-dashed border-neutral-200 px-1 rounded transition-colors" onBlur={e => setBeneficiaryCui(e.currentTarget.innerText)}>{beneficiaryCui}</p>
+                <p contentEditable suppressContentEditableWarning className="focus:outline-accent-lime hover:bg-white border-b border-dashed border-neutral-200 px-1 rounded transition-colors" onBlur={e => setBeneficiaryAddress(e.currentTarget.innerText)}>{beneficiaryAddress}</p>
+                <p className="text-neutral-900 font-extrabold">{inquiry.phone}</p>
               </div>
             </div>
           </div>
 
-          <div className="space-y-6 mb-12">
-            <div className="relative w-full aspect-[16/8] rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-100">
+          <div className="space-y-8 flex-1">
+            <div className="relative w-full aspect-[16/9] rounded-[2rem] overflow-hidden bg-neutral-100 border border-neutral-100 shadow-xl">
               <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
             </div>
-            <h3 className="font-headline font-extrabold text-3xl tracking-tight uppercase">
-              <span className="text-accent-lime mr-3">{product.brand}</span>
-              <span className="text-neutral-900">{product.name}</span>
-            </h3>
-            <p className="text-sm text-neutral-600 font-medium leading-relaxed">{product.detailedDescription || product.description}</p>
+            <div className="space-y-4">
+              <h3 className="font-headline font-extrabold text-4xl tracking-tight uppercase leading-tight">
+                <span className="text-accent-lime mr-4">{product.brand}</span>
+                <span className="text-neutral-900">{product.name}</span>
+              </h3>
+              <p className="text-sm text-neutral-600 font-medium leading-relaxed max-w-3xl border-l-4 border-accent-lime pl-6 italic">
+                {product.detailedDescription || product.description}
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-10 flex justify-between items-center text-[8px] font-bold text-neutral-300 uppercase tracking-widest border-t border-neutral-100">
+             <div>PAGINA 1 / 2 — AGRO SALSO</div>
+             <div className="flex items-center gap-2">
+               <FileText size={10} />
+               TEHNOLOGIE PENTRU AGRICULTURĂ
+             </div>
+          </div>
+        </div>
+
+        {/* PAGINA 2: SPECIFICAȚII ȘI PREȚ */}
+        <div className="offer-page max-w-[210mm] mx-auto my-10 bg-white shadow-2xl min-h-[297mm] p-[15mm] print:m-0 print:shadow-none relative border border-neutral-200 print:border-none flex flex-col justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-10 opacity-30">
+              <div className="w-6 h-4 bg-neutral-900 rounded-sm rotate-12" />
+              <span className="font-headline font-extrabold text-xl tracking-tighter uppercase text-neutral-900">Agro Salso</span>
+            </div>
 
             {product.specTable && displayRows.length > 0 && (
-              <div className="pt-4">
-                <h4 className="font-headline font-bold text-sm uppercase tracking-tight border-b pb-1.5 mb-3">Specificații Tehnice</h4>
-                <table className="w-full text-left text-[10px] border-collapse">
-                  <thead className="bg-neutral-50">
+              <div className="mb-12">
+                <h4 className="font-headline font-extrabold text-sm uppercase tracking-tight border-b-2 border-neutral-900 pb-2 mb-6 flex items-center gap-3">
+                  <div className="w-2 h-2 bg-accent-lime rounded-full" /> Specificații Tehnice
+                </h4>
+                <table className="w-full text-left text-[10px] border-collapse shadow-sm">
+                  <thead className="bg-neutral-900 text-white">
                     <tr>
                       {product.specTable.headers.map((h, i) => (
-                        <th key={i} className="p-2 font-extrabold border border-neutral-100 uppercase">{h}</th>
+                        <th key={i} className="p-3 font-extrabold border border-neutral-800 uppercase tracking-widest text-[9px]">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {displayRows.map((row, ri) => (
-                      <tr key={ri} className={row.isPopular ? "bg-accent-lime/5" : ""}>
+                      <tr key={ri} className={cn("transition-colors", row.isPopular ? "bg-accent-lime/10" : "even:bg-neutral-50")}>
                         {row.values.map((v, ci) => (
-                          <td key={ci} className="p-2 border border-neutral-100 font-bold">{v}</td>
+                          <td key={ci} className="p-3 border border-neutral-100 font-bold text-neutral-700">{v}</td>
                         ))}
                       </tr>
                     ))}
                   </tbody>
                 </table>
+                {product.specTable.footerNote && (
+                  <p className="mt-3 text-[9px] text-neutral-400 italic">*{product.specTable.footerNote}</p>
+                )}
               </div>
             )}
+
+            <div className="flex justify-end mb-16">
+              <div className="w-[350px] space-y-4 bg-neutral-50 p-8 rounded-[2rem] border border-neutral-100 shadow-sm">
+                <div className="flex justify-between items-center pb-3 border-b border-neutral-200">
+                  <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț Unitar (Net)</span>
+                  <span contentEditable suppressContentEditableWarning className="font-headline font-extrabold text-2xl text-neutral-900 focus:outline-accent-lime" onBlur={e => setEditPrice(parseFloat(e.currentTarget.innerText.replace(/[^0-9.]/g, '')) || 0)}>{editPrice.toLocaleString()} EUR</span>
+                </div>
+                <div className="flex justify-between items-center pb-3 border-b border-neutral-200">
+                  <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">TVA (19%)</span>
+                  <span className="font-bold text-neutral-600 text-lg">{tva.toLocaleString()} EUR</span>
+                </div>
+                <div className="flex justify-between items-center pt-2">
+                  <span className="text-[11px] font-extrabold text-neutral-900 uppercase tracking-[0.2em]">Total de plată</span>
+                  <span className="font-headline font-extrabold text-4xl text-neutral-900 tracking-tighter">{total.toLocaleString()} <span className="text-xl">EUR</span></span>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-12 pt-10 border-t-2 border-neutral-50">
+              <div className="space-y-4">
+                 <h4 className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest">Condiții comerciale:</h4>
+                 <div className="space-y-2">
+                   <p className="text-[11px] font-bold text-neutral-700">Livrare: <span contentEditable suppressContentEditableWarning className="text-neutral-900 border-b border-dashed border-neutral-300" onBlur={e => setDeliveryTerm(e.currentTarget.innerText)}>{deliveryTerm}</span></p>
+                   <p className="text-[11px] font-bold text-neutral-700">Plată: <span contentEditable suppressContentEditableWarning className="text-neutral-900 border-b border-dashed border-neutral-300" onBlur={e => setPaymentTerms(e.currentTarget.innerText)}>{paymentTerms}</span></p>
+                 </div>
+              </div>
+              <div className="space-y-4">
+                 <h4 className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest">Persoană de contact:</h4>
+                 <div className="space-y-1">
+                   <p contentEditable suppressContentEditableWarning className="font-headline font-extrabold text-lg text-neutral-900" onBlur={e => setContactPerson(e.currentTarget.innerText)}>{contactPerson}</p>
+                   <p className="text-[10px] font-bold text-accent-lime uppercase tracking-widest">{contactPosition}</p>
+                   <p className="text-[12px] font-extrabold text-neutral-900 mt-2">{contactPhone}</p>
+                 </div>
+              </div>
+            </div>
           </div>
 
-          <div className="flex justify-end mb-12">
-            <div className="w-[300px] space-y-3">
-              <div className="flex justify-between pb-2 border-b">
-                <span className="text-[9px] font-extrabold text-neutral-400 uppercase">Preț Unitar (Net)</span>
-                <span contentEditable suppressContentEditableWarning className="font-headline font-extrabold text-xl focus:outline-accent-lime" onBlur={e => setEditPrice(parseFloat(e.currentTarget.innerText.replace(/[^0-9.]/g, '')) || 0)}>{editPrice.toLocaleString()} EUR</span>
-              </div>
-              <div className="flex justify-between pb-2 border-b">
-                <span className="text-[9px] font-extrabold text-neutral-400 uppercase">TVA (19%)</span>
-                <span className="font-bold text-neutral-600">{tva.toLocaleString()} EUR</span>
-              </div>
-              <div className="flex justify-between pt-2">
-                <span className="text-[10px] font-extrabold text-neutral-900 uppercase tracking-widest">Total de plată</span>
-                <span className="font-headline font-extrabold text-2xl text-neutral-900">{total.toLocaleString()} EUR</span>
-              </div>
-            </div>
+          <div className="pt-10 flex justify-between items-center text-[8px] font-bold text-neutral-300 uppercase tracking-widest border-t border-neutral-100">
+             <div>PAGINA 2 / 2 — AGRO SALSO SRL</div>
+             <div>© {new Date().getFullYear()} WWW.AGROSALSO.RO</div>
           </div>
-
-          <div className="grid grid-cols-2 gap-12 pt-8 border-t">
-            <div className="space-y-3">
-               <h4 className="text-[8px] font-extrabold text-neutral-400 uppercase">Condiții comerciale:</h4>
-               <p className="text-[10px] font-bold">Livrare: <span contentEditable suppressContentEditableWarning onBlur={e => setDeliveryTerm(e.currentTarget.innerText)}>{deliveryTerm}</span></p>
-               <p className="text-[10px] font-bold">Plată: <span contentEditable suppressContentEditableWarning onBlur={e => setPaymentTerms(e.currentTarget.innerText)}>{paymentTerms}</span></p>
-            </div>
-            <div className="space-y-1">
-               <h4 className="text-[8px] font-extrabold text-neutral-400 uppercase">Contact:</h4>
-               <p contentEditable suppressContentEditableWarning className="font-headline font-extrabold text-sm" onBlur={e => setContactPerson(e.currentTarget.innerText)}>{contactPerson}</p>
-               <p className="text-[9px] font-bold text-neutral-400 uppercase">{contactPosition}</p>
-               <p className="text-[11px] font-bold text-neutral-700">{contactPhone}</p>
-            </div>
-          </div>
-        </div>
-        <div className="pt-6 flex justify-between text-[7px] font-bold text-neutral-300 uppercase tracking-widest">
-           <div>© {new Date().getFullYear()} AGRO SALSO SRL — WWW.AGROSALSO.RO</div>
-           <div>TEHNOLOGIE PENTRU AGRICULTURĂ</div>
         </div>
       </div>
     </div>
