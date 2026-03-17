@@ -7,7 +7,7 @@ import { Inquiry, Product } from '@/types';
 import { format } from 'date-fns';
 import { ro } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
-import { Printer, Send, ChevronLeft, Loader2, FileText } from 'lucide-react';
+import { Printer, Send, ChevronLeft, Loader2, FileText, Clock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -112,6 +112,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
       const pdfBase64 = await generatePdfBase64();
       if (!pdfBase64) throw new Error("Generarea PDF a eșuat");
 
+      // Actualizăm Firestore - FOLOSIM updateDoc pentru a declanșa Security Rules de Admin
       await updateDoc(doc(db, 'inquiries', inquiryId), {
         status: 'replied',
         repliedAt: serverTimestamp(),
@@ -190,7 +191,11 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             <div className="text-right">
                <div className="bg-neutral-900 text-accent-lime px-4 py-1.5 rounded text-[10px] font-extrabold uppercase tracking-widest mb-1 shadow-lg shadow-black/10">Ofertă Comercială</div>
                <div className="text-[11px] font-bold text-neutral-900">Referință: <span className="font-extrabold">{offerNumber}</span></div>
-               <div className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">Emisă la: {format(today, 'dd.MM.yyyy')}</div>
+               <div className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest flex items-center justify-end gap-1.5">
+                 Emisă la: {format(today, 'dd.MM.yyyy')}
+                 <div className="w-1 h-1 bg-accent-lime rounded-full" />
+                 <span className="text-neutral-900 font-extrabold">Valabilitate: 15 zile</span>
+               </div>
             </div>
           </div>
 
@@ -299,6 +304,10 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                  <div className="space-y-2">
                    <p className="text-[11px] font-bold text-neutral-700">Livrare: <span contentEditable suppressContentEditableWarning className="text-neutral-900 border-b border-dashed border-neutral-300" onBlur={e => setDeliveryTerm(e.currentTarget.innerText)}>{deliveryTerm}</span></p>
                    <p className="text-[11px] font-bold text-neutral-700">Plată: <span contentEditable suppressContentEditableWarning className="text-neutral-900 border-b border-dashed border-neutral-300" onBlur={e => setPaymentTerms(e.currentTarget.innerText)}>{paymentTerms}</span></p>
+                   <div className="flex items-center gap-2 pt-1 border-t border-neutral-100 mt-2">
+                     <Clock size={12} className="text-accent-lime" />
+                     <p className="text-[11px] font-bold text-neutral-900">Valabilitate ofertă: <span className="font-extrabold">15 zile calendaristice</span></p>
+                   </div>
                  </div>
               </div>
               <div className="space-y-4">
