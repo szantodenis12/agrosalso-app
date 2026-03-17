@@ -7,7 +7,7 @@ import { Inquiry, Product } from '@/types';
 import { format } from 'date-fns';
 import { ro } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
-import { Printer, Send, ChevronLeft, Loader2, FileText, Clock } from 'lucide-react';
+import { Printer, Send, ChevronLeft, Loader2, FileText, Clock, ShieldCheck, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -112,12 +112,12 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
       const pdfBase64 = await generatePdfBase64();
       if (!pdfBase64) throw new Error("Generarea PDF a eșuat");
 
-      // Actualizăm Firestore - FOLOSIM updateDoc pentru a declanșa Security Rules de Admin
       await updateDoc(doc(db, 'inquiries', inquiryId), {
         status: 'replied',
         repliedAt: serverTimestamp(),
         offerId: offerNumber,
         offeredPrice: editPrice,
+        offerType: offerType,
         beneficiaryCui: beneficiaryCui.includes('...') ? '' : beneficiaryCui,
         beneficiaryAddress: beneficiaryAddress.includes('...') ? '' : beneficiaryAddress,
         updatedAt: serverTimestamp()
@@ -166,7 +166,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             <div className="bg-neutral-50 p-1 rounded-xl flex gap-1 mr-4">
               <Button variant={offerType === 'standard' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('standard')}>Standard</Button>
               <Button variant={offerType === 'afir' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('afir')}>AFIR</Button>
-              <Button variant={offerType === 'urgent' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('urgent')} className="text-red-500">Urgență</Button>
+              <Button variant={offerType === 'urgent' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('urgent')} className={cn(offerType !== 'urgent' && "text-red-500")}>Urgență</Button>
             </div>
             <Button variant="outline" className="rounded-xl h-11 px-6 border-2" onClick={() => window.print()}><Printer size={18} className="mr-2" /> PDF LOCAL</Button>
             <Button className="bg-neutral-900 hover:bg-black text-white rounded-xl h-11 px-6" onClick={handleSendEmail} disabled={sending}>
@@ -189,7 +189,16 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">Dealer Utilaje Agricole din 2012 — Bihor, România</p>
             </div>
             <div className="text-right">
-               <div className="bg-neutral-900 text-accent-lime px-4 py-1.5 rounded text-[10px] font-extrabold uppercase tracking-widest mb-1 shadow-lg shadow-black/10">Ofertă Comercială</div>
+               <div className={cn(
+                 "px-4 py-1.5 rounded text-[10px] font-extrabold uppercase tracking-widest mb-1 shadow-lg",
+                 offerType === 'afir' ? "bg-blue-600 text-white" :
+                 offerType === 'urgent' ? "bg-red-600 text-white" :
+                 "bg-neutral-900 text-accent-lime"
+               )}>
+                 {offerType === 'afir' ? 'Ofertă Proiect Fonduri Europene' :
+                  offerType === 'urgent' ? 'Ofertă Specială - Prioritate' :
+                  'Ofertă Comercială'}
+               </div>
                <div className="text-[11px] font-bold text-neutral-900">Referință: <span className="font-extrabold">{offerNumber}</span></div>
                <div className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest flex items-center justify-end gap-1.5">
                  Emisă la: {format(today, 'dd.MM.yyyy')}
@@ -229,9 +238,9 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                 <span className="text-accent-lime mr-4">{product.brand}</span>
                 <span className="text-neutral-900">{product.name}</span>
               </h3>
-              <p className="text-sm text-neutral-600 font-medium leading-relaxed max-w-3xl border-l-4 border-accent-lime pl-6 italic">
+              <div className="text-sm text-neutral-600 font-medium leading-relaxed max-w-3xl border-l-4 border-accent-lime pl-6 italic whitespace-pre-wrap">
                 {product.detailedDescription || product.description}
-              </p>
+              </div>
             </div>
           </div>
 
@@ -251,6 +260,32 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
               <div className="w-6 h-4 bg-neutral-900 rounded-sm rotate-12" />
               <span className="font-headline font-extrabold text-xl tracking-tighter uppercase text-neutral-900">Agro Salso</span>
             </div>
+
+            {/* Secțiune specială AFIR */}
+            {offerType === 'afir' && (
+              <div className="mb-8 p-6 bg-blue-50 border border-blue-100 rounded-2xl flex items-start gap-4">
+                <ShieldCheck className="text-blue-600 shrink-0 mt-1" size={24} />
+                <div className="space-y-1">
+                  <p className="text-[10px] font-extrabold text-blue-800 uppercase tracking-widest">Conformitate Tehnică Finanțare</p>
+                  <p className="text-[11px] text-blue-600 leading-relaxed font-medium">
+                    Prezenta ofertă este întocmită în conformitate cu cerințele tehnice minimale specifice ghidurilor de finanțare nerambursabilă (AFIR). Utilajul ofertat respectă standardele de siguranță, eficiență energetică și protecția mediului impuse de legislația europeană în vigoare.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Secțiune specială Urgență */}
+            {offerType === 'urgent' && (
+              <div className="mb-8 p-6 bg-red-50 border border-red-100 rounded-2xl flex items-start gap-4">
+                <AlertCircle className="text-red-600 shrink-0 mt-1" size={24} />
+                <div className="space-y-1">
+                  <p className="text-[10px] font-extrabold text-red-800 uppercase tracking-widest">Atenție: Stoc Limitat</p>
+                  <p className="text-[11px] text-red-600 leading-relaxed font-bold">
+                    Această ofertă beneficiază de procesare prioritară în centrul nostru logistic. Rezervarea utilajului în stoc este garantată timp de 48 de ore de la emitere. Livrare estimată imediat după confirmarea plății.
+                  </p>
+                </div>
+              </div>
+            )}
 
             {product.specTable && displayRows.length > 0 && (
               <div className="mb-12">
