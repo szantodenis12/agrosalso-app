@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { z } from 'zod';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const OfferRequestSchema = z.object({
   inquiryId: z.string(),
   offerId: z.string(),
@@ -16,6 +14,14 @@ const OfferRequestSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    const apiKey = process.env.RESEND_API_KEY;
+    
+    if (!apiKey) {
+      console.error('RESEND_API_KEY is missing from environment variables');
+      return NextResponse.json({ error: 'Configurare server incompletă: Lipsește cheia API pentru email.' }, { status: 500 });
+    }
+
+    const resend = new Resend(apiKey);
     const body = await request.json();
     const validation = OfferRequestSchema.safeParse(body);
 
