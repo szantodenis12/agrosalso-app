@@ -76,7 +76,7 @@ export function Footer() {
                   alt="AgroSalso Logo" 
                   width={160} 
                   height={48} 
-                  className="h-10 w-auto object-contain brightness-0 invert" 
+                  className="h-10 w-auto object-contain" 
                 />
               </Link>
               <div className="space-y-4">
@@ -99,6 +99,7 @@ export function Footer() {
               </ul>
             </div>
 
+            {/* Links Columns */}
             <div>
               <h4 className="text-neutral-500 font-bold text-sm mb-8">{t[lang].footerCompany}</h4>
               <ul className="space-y-4">
@@ -108,6 +109,7 @@ export function Footer() {
               </ul>
             </div>
 
+            {/* Links Columns */}
             <div>
               <h4 className="text-neutral-500 font-bold text-sm mb-8">{t[lang].footerOthers}</h4>
               <ul className="space-y-4">
@@ -117,6 +119,7 @@ export function Footer() {
               </ul>
             </div>
 
+            {/* Social Columns */}
             <div>
               <h4 className="text-neutral-500 font-bold text-sm mb-8">{t[lang].footerSocial}</h4>
               <ul className="space-y-4">

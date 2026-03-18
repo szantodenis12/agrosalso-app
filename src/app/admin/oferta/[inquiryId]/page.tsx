@@ -35,7 +35,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const [beneficiaryAddress, setBeneficiaryAddress] = useState("Adresă completă beneficiar...");
 
   const today = useMemo(() => new Date(), []);
-  const offerNumber = useMemo(() => `AS-${format(today, 'yyyy')}-${format(today, 'MMdd')}`, [today]);
+  const offerNumber = useMemo(() => `AS-${today.getFullYear()}-${format(today, 'MMdd')}`, [today]);
 
   useEffect(() => {
     async function load() {
