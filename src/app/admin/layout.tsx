@@ -55,7 +55,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
             alt="AgroSalso Admin" 
             width={140} 
             height={40} 
-            className="h-8 w-auto object-contain brightness-0 invert" 
+            className="h-8 w-auto object-contain" 
           />
         </Link>
       </div>
@@ -100,7 +100,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
             alt="Admin" 
             width={120} 
             height={32} 
-            className="h-6 w-auto object-contain brightness-0 invert" 
+            className="h-6 w-auto object-contain" 
           />
         </Link>
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
