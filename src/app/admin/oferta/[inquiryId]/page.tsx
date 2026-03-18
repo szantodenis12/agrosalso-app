@@ -1,4 +1,3 @@
-
 'use client';
 import { use, useEffect, useState, useMemo, useRef } from 'react';
 import { useFirestore } from '@/firebase';
@@ -182,11 +181,8 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
         <div className="offer-page max-w-[210mm] mx-auto my-10 bg-white shadow-2xl min-h-[297mm] p-[15mm] print:m-0 print:shadow-none relative border border-neutral-200 print:border-none flex flex-col">
           <div className="flex justify-between items-start mb-10">
             <div className="space-y-1">
-               <div className="flex items-center gap-2">
-                  <div className="w-8 h-5 bg-accent-lime rounded-sm rotate-12" />
-                  <span className="font-headline font-extrabold text-3xl tracking-tighter uppercase text-neutral-900">Agro Salso</span>
-               </div>
-               <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">Dealer Utilaje Agricole din 2012 — Bihor, România</p>
+               <Image src="/logo.png" alt="AgroSalso" width={160} height={48} className="h-12 w-auto object-contain" />
+               <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest mt-2">Dealer Utilaje Agricole din 2012 — Bihor, România</p>
             </div>
             <div className="text-right">
                <div className={cn(
@@ -256,9 +252,8 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
         {/* PAGINA 2: SPECIFICAȚII ȘI PREȚ */}
         <div className="offer-page max-w-[210mm] mx-auto my-10 bg-white shadow-2xl min-h-[297mm] p-[15mm] print:m-0 print:shadow-none relative border border-neutral-200 print:border-none flex flex-col justify-between">
           <div>
-            <div className="flex items-center gap-2 mb-10 opacity-30">
-              <div className="w-6 h-4 bg-neutral-900 rounded-sm rotate-12" />
-              <span className="font-headline font-extrabold text-xl tracking-tighter uppercase text-neutral-900">Agro Salso</span>
+            <div className="mb-10 opacity-30">
+              <Image src="/logo.png" alt="AgroSalso" width={120} height={36} className="h-8 w-auto object-contain" />
             </div>
 
             {/* Secțiune specială AFIR */}

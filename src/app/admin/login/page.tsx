@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -8,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
+import Image from 'next/image';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -37,10 +37,16 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-neutral-950 p-6">
       <Card className="w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border-none">
         <CardHeader className="pt-10 pb-6 text-center border-b border-neutral-100">
-          <div className="flex justify-center mb-4">
-            <div className="w-8 h-5 bg-accent-lime rounded-sm rotate-12" />
+          <div className="flex justify-center mb-6">
+            <Image 
+              src="/logo.png" 
+              alt="AgroSalso Logo" 
+              width={200} 
+              height={60} 
+              className="h-12 w-auto object-contain" 
+            />
           </div>
-          <CardTitle className="font-headline font-extrabold text-2xl tracking-tighter">AgroSalso Admin</CardTitle>
+          <CardTitle className="font-headline font-extrabold text-2xl tracking-tighter">Portal Administrare</CardTitle>
           <p className="text-neutral-400 text-sm font-medium mt-1">Conectați-vă pentru a gestiona catalogul</p>
         </CardHeader>
         <CardContent className="p-10">

@@ -70,11 +70,14 @@ export function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16 mb-24">
             {/* Brand Column */}
             <div className="lg:col-span-1 space-y-8">
-              <Link href="/" className="flex items-center gap-2">
-                <div className="w-6 h-4 bg-accent-lime rounded-sm rotate-12" />
-                <span className="font-headline font-extrabold text-2xl tracking-tighter text-accent-lime">
-                  AgroSalso
-                </span>
+              <Link href="/" className="block">
+                <Image 
+                  src="/logo.png" 
+                  alt="AgroSalso Logo" 
+                  width={160} 
+                  height={48} 
+                  className="h-10 w-auto object-contain brightness-0 invert" 
+                />
               </Link>
               <div className="space-y-4">
                 <a href="mailto:contact@agrosalso.ro" className="flex items-center gap-3 text-white font-bold hover:text-accent-lime transition-colors">

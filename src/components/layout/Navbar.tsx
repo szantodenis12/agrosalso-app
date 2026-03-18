@@ -138,13 +138,15 @@ export function Navbar() {
       >
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">
           <div className="flex-1 flex justify-start items-center">
-            <Link href="/" className="flex items-center gap-2 group relative z-[70]">
-              <div className="flex items-center gap-1">
-                 <div className="w-6 h-4 bg-accent-lime rounded-sm rotate-12" />
-                 <span className="font-headline font-extrabold text-2xl tracking-tighter text-white">
-                   AgroSalso
-                 </span>
-              </div>
+            <Link href="/" className="group relative z-[70]">
+              <Image 
+                src="/logo.png" 
+                alt="AgroSalso Logo" 
+                width={160} 
+                height={48} 
+                className="h-8 md:h-12 w-auto object-contain"
+                priority
+              />
             </Link>
           </div>
 

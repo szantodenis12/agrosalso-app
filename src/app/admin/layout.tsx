@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useUser } from '@/firebase';
 import Link from 'next/link';
+import Image from 'next/image';
 import { LayoutDashboard, Package, PlusCircle, LogOut, MessageSquare, Languages, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -49,8 +50,13 @@ function AdminShell({ children }: { children: React.ReactNode }) {
     <div className="flex flex-col h-full">
       <div className="p-6 border-b border-white/10 flex items-center justify-between">
         <Link href="/admin" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
-          <div className="w-5 h-3 bg-accent-lime rounded-sm rotate-12" />
-          <span className="font-headline font-extrabold text-xl tracking-tighter">AgroSalso Admin</span>
+          <Image 
+            src="/logo.png" 
+            alt="AgroSalso Admin" 
+            width={140} 
+            height={40} 
+            className="h-8 w-auto object-contain brightness-0 invert" 
+          />
         </Link>
       </div>
       
@@ -88,9 +94,14 @@ function AdminShell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen bg-neutral-50">
       {/* Mobile Top Header - Ascuns la printare */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-neutral-900 text-white flex items-center justify-between px-6 z-50 border-b border-white/5 print:hidden">
-        <Link href="/admin" className="flex items-center gap-2">
-          <div className="w-4 h-2.5 bg-accent-lime rounded-sm rotate-12" />
-          <span className="font-headline font-extrabold text-lg tracking-tighter">Admin</span>
+        <Link href="/admin">
+          <Image 
+            src="/logo.png" 
+            alt="Admin" 
+            width={120} 
+            height={32} 
+            className="h-6 w-auto object-contain brightness-0 invert" 
+          />
         </Link>
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <SheetTrigger asChild>

@@ -20,20 +20,20 @@ const BACKGROUNDS = [
   {
     id: 'bg-image-1',
     type: 'image',
-    src: '/thumb-1.jpg',
-    thumbnail: '/thumb-1.jpg'
+    src: '/thumb-1-v2.jpg',
+    thumbnail: '/thumb-1-v2.jpg'
   },
   {
     id: 'bg-image-2',
     type: 'image',
-    src: '/thumb-2.jpg',
-    thumbnail: '/thumb-2.jpg'
+    src: '/thumb-2-v2.jpg',
+    thumbnail: '/thumb-2-v2.jpg'
   },
   {
     id: 'bg-image-3',
     type: 'image',
-    src: '/thumb-3.jpg',
-    thumbnail: '/thumb-3.jpg'
+    src: '/thumb-3-v2.jpg',
+    thumbnail: '/thumb-3-v2.jpg'
   }
 ];
 
