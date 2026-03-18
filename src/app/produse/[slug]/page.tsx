@@ -7,7 +7,7 @@ import { collection, query, where, getDocs, limit, addDoc, serverTimestamp } fro
 import { Product } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, Send, ShieldCheck, Truck, Cog, Sparkles, ImageIcon, CheckCircle2, Check } from 'lucide-react';
+import { ChevronLeft, Send, ShieldCheck, Truck, Cog, Sparkles, ImageIcon, CheckCircle2, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,10 +17,16 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
 import { useTranslation } from '@/hooks/useTranslation';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -28,6 +34,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [selectedGalleryImage, setSelectedGalleryImage] = useState<string | null>(null);
   const db = useFirestore();
   const { lang } = useLanguage();
 
@@ -402,9 +409,17 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                     <div className="embla__container flex">
                       {extraImages.map((img, index) => (
                         <div className="embla__slide flex-[0_0_85%] md:flex-[0_0_45%] min-w-0 pl-4" key={index}>
-                          <div className="relative aspect-[4/3] rounded-xl md:rounded-2xl overflow-hidden border border-neutral-100">
-                            <Image src={img} alt={`${product.name} - Gallery ${index}`} fill className="object-cover" />
-                          </div>
+                          <motion.div 
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => setSelectedGalleryImage(img)}
+                            className="relative aspect-[4/3] rounded-xl md:rounded-2xl overflow-hidden border border-neutral-100 cursor-pointer group"
+                          >
+                            <Image src={img} alt={`${product.name} - Gallery ${index}`} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                               <ImageIcon className="text-white opacity-0 group-hover:opacity-100 transition-opacity" size={24} />
+                            </div>
+                          </motion.div>
                         </div>
                       ))}
                     </div>
@@ -414,6 +429,42 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
             </div>
           </div>
         </div>
+
+        {/* Modal pentru Galerie (Lightbox) */}
+        <Dialog open={!!selectedGalleryImage} onOpenChange={() => setSelectedGalleryImage(null)}>
+          <DialogContent className="max-w-[95vw] md:max-w-[80vw] lg:max-w-[70vw] p-0 overflow-hidden bg-transparent border-none shadow-none focus:outline-none">
+            <DialogHeader className="sr-only">
+              <DialogTitle>Vizualizare Imagine</DialogTitle>
+            </DialogHeader>
+            <div className="relative w-full aspect-[4/3] md:aspect-video rounded-3xl overflow-hidden">
+              <AnimatePresence mode="wait">
+                {selectedGalleryImage && (
+                  <motion.div
+                    key={selectedGalleryImage}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="w-full h-full"
+                  >
+                    <Image 
+                      src={selectedGalleryImage} 
+                      alt="Gallery Full View" 
+                      fill 
+                      className="object-contain"
+                      quality={100}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <button 
+                onClick={() => setSelectedGalleryImage(null)}
+                className="absolute top-4 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 backdrop-blur-xl rounded-full flex items-center justify-center text-white transition-all border border-white/20 z-50"
+              >
+                <X size={20} />
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </main>
       <Footer />
     </>
