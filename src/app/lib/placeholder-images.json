@@ -3,27 +3,39 @@
   "placeholderImages": [
     {
       "id": "hero-tractor",
-      "description": "Imagine principală tractor pe câmp",
-      "imageUrl": "/hero-tractor.jpg",
+      "description": "Modern tractor working in a field at sunset",
+      "imageUrl": "https://picsum.photos/seed/tractor_field_99/1920/1080",
       "imageHint": "tractor field"
     },
     {
+      "id": "combine-harvester",
+      "description": "High performance combine harvester",
+      "imageUrl": "https://images.unsplash.com/photo-1635174815469-6efd052297d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjb21iaW5lJTIwaGFydmVzdGVyfGVufDB8fHx8MTc3MjU3MzYzNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "combine harvester"
+    },
+    {
       "id": "thumb-1",
-      "description": "Miniatura 1 carusel",
-      "imageUrl": "/thumb-1.jpg",
-      "imageHint": "agricultural machinery"
+      "description": "Thumbnail 1",
+      "imageUrl": "https://picsum.photos/seed/thumb1/400/300",
+      "imageHint": "tractor field"
     },
     {
       "id": "thumb-2",
-      "description": "Miniatura 2 carusel",
-      "imageUrl": "/thumb-2.jpg",
-      "imageHint": "modern farming"
+      "description": "Thumbnail 2",
+      "imageUrl": "https://picsum.photos/seed/thumb2/400/300",
+      "imageHint": "agricultural landscape"
     },
     {
       "id": "thumb-3",
-      "description": "Miniatura 3 carusel",
-      "imageUrl": "/thumb-3.jpg",
-      "imageHint": "harvesting season"
+      "description": "Thumbnail 3",
+      "imageUrl": "https://picsum.photos/seed/thumb3/400/300",
+      "imageHint": "farming drone"
+    },
+    {
+      "id": "about-team",
+      "description": "Echipa AgroSalso în secțiunea Despre Noi",
+      "imageUrl": "/despre-noi-photo.jpg",
+      "imageHint": "farming team"
     }
   ]
 }

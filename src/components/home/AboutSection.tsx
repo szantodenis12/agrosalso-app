@@ -1,3 +1,4 @@
+
 'use client';
 import { Check, ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
@@ -63,11 +64,10 @@ export function AboutSection() {
             className="relative aspect-[4/3] w-full rounded-[2.5rem] md:rounded-[4rem] overflow-hidden shadow-2xl"
           >
             <Image 
-              src="https://picsum.photos/seed/vision_farm/1200/900" 
+              src="/despre-noi-photo.jpg" 
               alt="Echipa AgroSalso" 
               fill 
               className="object-cover hover:scale-105 transition-transform duration-1000"
-              data-ai-hint="farming team"
             />
           </motion.div>
         </div>
