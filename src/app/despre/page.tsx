@@ -135,7 +135,7 @@ export default function AboutPage() {
                   {t[lang].aboutOverviewTitle}
                 </h2>
                 <div className="prose prose-neutral max-w-none">
-                  <p className="text-lg md:text-xl text-neutral-500 font-medium leading-relaxed">
+                  <p className="text-lg md:text-xl text-neutral-500 font-medium leading-relaxed whitespace-pre-line">
                     {t[lang].aboutOverviewText}
                   </p>
                 </div>
