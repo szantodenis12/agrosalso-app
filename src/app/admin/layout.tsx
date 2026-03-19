@@ -4,15 +4,16 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useUser } from '@/firebase';
 import Link from 'next/link';
 import Image from 'next/image';
-import { LayoutDashboard, Package, PlusCircle, LogOut, MessageSquare, Languages, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, PlusCircle, LogOut, MessageSquare, Languages, Menu, X, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
 const MENU_ITEMS = [
   { name: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={18} /> },
-  { name: 'Cereri Ofertă', href: '/admin/cereri', icon: <MessageSquare size={18} /> },
-  { name: 'Produse', href: '/admin/produse', icon: <Package size={18} /> },
+  { name: 'Cereri Utilaje', href: '/admin/cereri', icon: <Package size={18} /> },
+  { name: 'Mesaje Contact', href: '/admin/mesaje', icon: <Mail size={18} /> },
+  { name: 'Catalog Produse', href: '/admin/produse', icon: <Package size={18} /> },
   { name: 'Adaugă Produs', href: '/admin/produse/nou', icon: <PlusCircle size={18} /> },
   { name: 'Utilitare Traducere', href: '/admin/tools', icon: <Languages size={18} /> },
 ];
@@ -92,7 +93,6 @@ function AdminShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen bg-neutral-50">
-      {/* Mobile Top Header - Ascuns la printare */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-neutral-900 text-white flex items-center justify-between px-6 z-50 border-b border-white/5 print:hidden">
         <Link href="/admin">
           <Image 
@@ -118,12 +118,10 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         </Sheet>
       </div>
 
-      {/* Desktop Sidebar - Deja gestionat de globals.css dar adăugăm clasa pentru siguranță */}
       <aside className="hidden lg:flex w-64 bg-neutral-900 text-white shrink-0 fixed h-full flex-col z-40 print:hidden">
         <NavContent />
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 lg:ml-64 p-6 lg:p-10 pt-24 lg:pt-10 print:ml-0 print:p-0">
         {children}
       </main>
