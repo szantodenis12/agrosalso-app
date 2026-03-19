@@ -1,4 +1,3 @@
-
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -31,10 +30,6 @@ function ProductCard({ product }: { product: Product }) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover group-hover/card:scale-110 transition-transform duration-1000"
           />
-          <div className="absolute top-5 left-5 flex items-center gap-2 bg-neutral-900/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
-            <div className="w-2 h-2 bg-accent-lime rounded-full animate-pulse" />
-            <span className="text-white text-[10px] font-bold uppercase tracking-widest">{t[lang].innovation}</span>
-          </div>
         </div>
         
         <div className="px-4 pb-4 flex flex-col flex-1">
