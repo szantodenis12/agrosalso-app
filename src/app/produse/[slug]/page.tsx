@@ -181,7 +181,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                     
                     <div 
                       className={cn(
-                        "prose prose-neutral max-w-none text-neutral-600 font-body leading-relaxed text-sm md:text-lg transition-all",
+                        "prose prose-neutral max-w-none text-neutral-600 font-body leading-relaxed text-sm md:text-lg transition-all whitespace-pre-wrap break-words",
                         isTranslating && "animate-pulse opacity-50"
                       )}
                       dangerouslySetInnerHTML={{ __html: translatedData?.detailedDescription || translatedData?.description || '' }}
