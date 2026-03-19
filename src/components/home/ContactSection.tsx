@@ -77,7 +77,9 @@ export function ContactSection() {
           >
             <div className="flex items-center gap-2 px-3 py-1 bg-accent-lime/20 rounded-full w-fit">
               <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" />
-              <span className="text-accent-lime text-[10px] font-bold uppercase tracking-widest">{t[lang].contactUs}</span>
+              <span className="text-accent-lime text-[10px] font-bold uppercase tracking-widest">
+                {lang === 'ro' ? 'Cere ofertă' : t[lang].contactUs}
+              </span>
             </div>
             <h2 className="font-headline font-extrabold text-4xl md:text-5xl lg:text-6xl text-neutral-900 tracking-tighter leading-[1.1]">
               {t[lang].contactTitle}
