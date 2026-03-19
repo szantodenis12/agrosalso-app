@@ -132,7 +132,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
             className="object-cover opacity-60"
             priority
           />
-          {/* Modified gradient from white to black */}
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40 z-10" />
           
           <div className="absolute top-32 left-6 md:left-14 z-20">
@@ -148,12 +147,10 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               <div className="flex items-center gap-3">
                 <span className="text-accent-lime font-extrabold text-[11px] md:text-[12px] uppercase tracking-[0.3em]">{product.brand}</span>
                 <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" />
-                {/* Changed category text to white/70 for better contrast on black gradient */}
                 <span className="text-white/70 font-bold text-[11px] md:text-[12px] uppercase tracking-widest">
                   {t[lang][product.category as keyof typeof t.ro] || product.category}
                 </span>
               </div>
-              {/* Changed product name to text-white for better contrast on black gradient */}
               <h1 className={cn(
                 "font-headline font-extrabold text-4xl md:text-6xl text-white tracking-tighter leading-tight transition-all",
                 isTranslating && "animate-pulse blur-[2px]"
@@ -184,7 +181,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                     
                     <div 
                       className={cn(
-                        "prose prose-neutral max-w-none text-neutral-600 font-body leading-relaxed text-sm md:text-lg transition-all whitespace-pre-wrap",
+                        "prose prose-neutral max-w-none text-neutral-600 font-body leading-relaxed text-sm md:text-lg transition-all",
                         isTranslating && "animate-pulse opacity-50"
                       )}
                       dangerouslySetInnerHTML={{ __html: translatedData?.detailedDescription || translatedData?.description || '' }}
