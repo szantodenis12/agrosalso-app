@@ -141,11 +141,10 @@ export default function AboutPage() {
                 </div>
                 <div className="relative aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl">
                   <Image 
-                    src="https://picsum.photos/seed/about_1/1200/800" 
+                    src="/despre-noi-photo.jpg" 
                     alt="AgroSalso Operations" 
                     fill 
                     className="object-cover"
-                    data-ai-hint="farming logistics"
                   />
                 </div>
               </motion.section>
