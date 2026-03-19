@@ -13,8 +13,8 @@ const BACKGROUNDS = [
   {
     id: 'bg-video',
     type: 'video',
-    src: '/hero-video-tractor.mp4',
-    thumbnail: '/thumb-0.jpg'
+    src: '/hero-video-tractor-v2.mp4',
+    thumbnail: '/thumb-0-v2.jpg'
   },
   {
     id: 'bg-image-1',

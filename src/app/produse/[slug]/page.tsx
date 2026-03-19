@@ -1,4 +1,3 @@
-
 'use client';
 import { use, useEffect, useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -116,7 +115,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
   const extraImages = Array.from(new Set(product.images || []))
     .filter(img => img !== product.mainImage);
 
-  // Extract models from specTable
   const productModels = product.specTable?.rows?.map(row => ({
     name: row.values[0],
     isPopular: row.isPopular
@@ -134,7 +132,8 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
             className="object-cover opacity-60"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-50 via-transparent to-black/40 z-10" />
+          {/* Modified gradient from white to black */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40 z-10" />
           
           <div className="absolute top-32 left-6 md:left-14 z-20">
             <Link href="/produse">
@@ -149,18 +148,20 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               <div className="flex items-center gap-3">
                 <span className="text-accent-lime font-extrabold text-[11px] md:text-[12px] uppercase tracking-[0.3em]">{product.brand}</span>
                 <div className="w-1.5 h-1.5 bg-accent-lime rounded-full" />
-                <span className="text-neutral-500 font-bold text-[11px] md:text-[12px] uppercase tracking-widest">
+                {/* Changed category text to white/70 for better contrast on black gradient */}
+                <span className="text-white/70 font-bold text-[11px] md:text-[12px] uppercase tracking-widest">
                   {t[lang][product.category as keyof typeof t.ro] || product.category}
                 </span>
               </div>
+              {/* Changed product name to text-white for better contrast on black gradient */}
               <h1 className={cn(
-                "font-headline font-extrabold text-4xl md:text-6xl text-neutral-900 tracking-tighter leading-tight transition-all",
+                "font-headline font-extrabold text-4xl md:text-6xl text-white tracking-tighter leading-tight transition-all",
                 isTranslating && "animate-pulse blur-[2px]"
               )}>
                 {translatedData?.name}
               </h1>
               <div className="flex flex-wrap gap-2 pt-2">
-                 {product.isNew && <span className="bg-neutral-900 text-white text-[9px] font-extrabold px-4 py-1.5 rounded-full tracking-widest uppercase shadow-lg shadow-black/20">{lang === 'ro' ? 'Utilaj Nou' : 'New Equipment'}</span>}
+                 {product.isNew && <span className="bg-white/10 backdrop-blur-md text-white text-[9px] font-extrabold px-4 py-1.5 rounded-full tracking-widest uppercase shadow-lg border border-white/10">{lang === 'ro' ? 'Utilaj Nou' : 'New Equipment'}</span>}
                  {product.isOnSale && <span className="bg-yellow-400 text-black text-[9px] font-extrabold px-4 py-1.5 rounded-full tracking-widest uppercase">{lang === 'ro' ? 'Ofertă' : 'Sale'}</span>}
               </div>
             </div>
@@ -219,7 +220,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
 
                       <div className="flex items-center gap-3 p-3 md:p-4 bg-neutral-50 rounded-xl md:rounded-2xl border border-neutral-100">
                         <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-accent-lime rounded-full animate-pulse shadow-[0_0_10px_rgba(122,194,74,0.5)]" />
-                        <span className="text-[10px] md:text-[11px] font-extrabold text-neutral-500 uppercase tracking-widest">{t[lang].readyToDeliver}</span>
+                        <span className="text-neutral-500 font-extrabold text-[10px] md:text-[11px] uppercase tracking-widest">{t[lang].readyToDeliver}</span>
                       </div>
                     </div>
                   </div>
@@ -431,7 +432,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
           </div>
         </div>
 
-        {/* Modal pentru Galerie (Lightbox) */}
         <Dialog open={!!selectedGalleryImage} onOpenChange={() => setSelectedGalleryImage(null)}>
           <DialogContent className="max-w-[95vw] md:max-w-[80vw] lg:max-w-[70vw] p-0 overflow-hidden bg-transparent border-none shadow-none focus:outline-none">
             <DialogHeader className="sr-only">
