@@ -1,3 +1,4 @@
+
 'use client';
 import { use, useEffect, useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
@@ -217,7 +218,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                       </div>
 
                       <div className="flex items-center gap-3 p-3 md:p-4 bg-neutral-50 rounded-xl md:rounded-2xl border border-neutral-100">
-                        <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-accent-lime rounded-full animate-pulse shadow-[0_0_10px_rgba(163,230,53,0.5)]" />
+                        <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-accent-lime rounded-full animate-pulse shadow-[0_0_10px_rgba(122,194,74,0.5)]" />
                         <span className="text-[10px] md:text-[11px] font-extrabold text-neutral-500 uppercase tracking-widest">{t[lang].readyToDeliver}</span>
                       </div>
                     </div>

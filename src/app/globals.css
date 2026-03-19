@@ -18,7 +18,7 @@
     --muted: 210 20% 96%;
     --muted-foreground: 215 16% 47%;
     --accent: 38 90% 55%;
-    --accent-lime: 84 100% 59%; /* Lime color from image */
+    --accent-lime: 96 50% 53%; /* Brand Green #7ac24a */
     --accent-foreground: 0 0% 4%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
@@ -100,7 +100,7 @@
 
   /* Force display of background colors in print */
   .bg-accent-lime {
-    background-color: #A3E635 !important;
+    background-color: #7ac24a !important;
     -webkit-print-color-adjust: exact !important;
   }
 
