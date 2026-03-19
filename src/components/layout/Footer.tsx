@@ -125,7 +125,7 @@ export function Footer() {
               <ul className="space-y-4">
                 <li><Link href="#" className="text-white/60 hover:text-white transition-colors text-sm">Instagram</Link></li>
                 <li><Link href="#" className="text-white/60 hover:text-white transition-colors text-sm">Facebook</Link></li>
-                <li><Link href="#" className="text-white/60 hover:text-white transition-colors text-sm">TikTok</Link></li>
+                <li><Link href="https://www.tiktok.com/@agro.salso" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white transition-colors text-sm">TikTok</Link></li>
               </ul>
             </div>
           </div>
