@@ -18,57 +18,55 @@ function ProductCard({ product }: { product: Product }) {
   const { translatedData, isTranslating } = useTranslation(product, product.id, ['name', 'shortDescription']);
 
   return (
-    <motion.div
-      whileHover={{ y: -10 }}
-      className="group flex flex-col h-full bg-white rounded-[2.5rem] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.03)] border border-neutral-100 hover:shadow-[0_30px_70px_rgba(0,0,0,0.08)] transition-all duration-500"
-    >
-      <div className="relative aspect-[4/3] w-full rounded-[2rem] overflow-hidden mb-8">
-        <Image 
-          src={product.mainImage || 'https://picsum.photos/seed/placeholder/800/600'} 
-          alt={product.name} 
-          fill 
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover group-hover:scale-110 transition-transform duration-1000"
-        />
-        <div className="absolute top-5 left-5 flex items-center gap-2 bg-neutral-900/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
-          <div className="w-2 h-2 bg-accent-lime rounded-full animate-pulse" />
-          <span className="text-white text-[10px] font-bold uppercase tracking-widest">{t[lang].innovation}</span>
+    <Link href={`/produse/${product.slug}`} className="block h-full group/card">
+      <motion.div
+        whileHover={{ y: -10 }}
+        className="flex flex-col h-full bg-white rounded-[2.5rem] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.03)] border border-neutral-100 hover:shadow-[0_30px_70px_rgba(0,0,0,0.08)] transition-all duration-500"
+      >
+        <div className="relative aspect-[4/3] w-full rounded-[2rem] overflow-hidden mb-8">
+          <Image 
+            src={product.mainImage || 'https://picsum.photos/seed/placeholder/800/600'} 
+            alt={product.name} 
+            fill 
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover group-hover/card:scale-110 transition-transform duration-1000"
+          />
+          <div className="absolute top-5 left-5 flex items-center gap-2 bg-neutral-900/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+            <div className="w-2 h-2 bg-accent-lime rounded-full animate-pulse" />
+            <span className="text-white text-[10px] font-bold uppercase tracking-widest">{t[lang].innovation}</span>
+          </div>
         </div>
-      </div>
-      
-      <div className="px-4 pb-4 flex flex-col flex-1">
-        <h3 className={cn(
-          "font-headline font-extrabold text-2xl md:text-3xl text-neutral-900 mb-4 group-hover:text-accent-lime transition-all leading-tight",
-          isTranslating && "animate-pulse blur-[2px]"
-        )}>
-          {translatedData?.name}
-        </h3>
         
-        <p className={cn(
-          "text-neutral-500 text-sm mb-10 font-body leading-relaxed line-clamp-3 transition-all",
-          isTranslating && "animate-pulse opacity-50"
-        )}>
-          {translatedData?.shortDescription}
-        </p>
-        
-        <div className="mt-auto">
-          <Link href={`/produse/${product.slug}`}>
-            <motion.div 
-              whileHover={{ x: 5 }}
-              className="bg-neutral-900 hover:bg-black text-white rounded-full p-1.5 flex items-center justify-between transition-all duration-300 group/btn shadow-xl shadow-black/10"
+        <div className="px-4 pb-4 flex flex-col flex-1">
+          <h3 className={cn(
+            "font-headline font-extrabold text-2xl md:text-3xl text-neutral-900 mb-4 group-hover/card:text-accent-lime transition-all leading-tight",
+            isTranslating && "animate-pulse blur-[2px]"
+          )}>
+            {translatedData?.name}
+          </h3>
+          
+          <p className={cn(
+            "text-neutral-500 text-sm mb-10 font-body leading-relaxed line-clamp-3 transition-all",
+            isTranslating && "animate-pulse opacity-50"
+          )}>
+            {translatedData?.shortDescription}
+          </p>
+          
+          <div className="mt-auto">
+            <div 
+              className="bg-neutral-900 group-hover/card:bg-black text-white rounded-full p-1.5 flex items-center justify-between transition-all duration-300 shadow-xl shadow-black/10"
             >
               <span className="pl-6 text-[12px] font-bold uppercase tracking-wider">{t[lang].viewDetails}</span>
-              <motion.div 
-                whileHover={{ rotate: 45 }}
-                className="w-11 h-11 bg-white rounded-full flex items-center justify-center transition-transform"
+              <div 
+                className="w-11 h-11 bg-white rounded-full flex items-center justify-center transition-transform group-hover/card:rotate-45"
               >
                 <ArrowUpRight size={20} className="text-black" strokeWidth={3} />
-              </motion.div>
-            </motion.div>
-          </Link>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </Link>
   );
 }
 
