@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -144,12 +143,11 @@ export function HeroSection() {
             variants={itemVariants}
             className="font-headline font-bold text-[26px] sm:text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8 break-words"
           >
-            {t[lang].heroTitle.split('.').map((part, i, arr) => {
+            {t[lang].heroTitle.split('|').map((part, i, arr) => {
               const isLast = i === arr.length - 1;
               return (
-                <span key={i}>
-                  {isLast ? <span className="text-accent-lime">{part.trim()}</span> : part.trim()}
-                  {i < arr.length - 1 && '.'}
+                <span key={i} className={isLast ? "text-accent-lime" : ""}>
+                  {part}
                   {i < arr.length - 1 && <br />}
                 </span>
               );
