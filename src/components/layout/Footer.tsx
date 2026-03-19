@@ -15,7 +15,7 @@ export function Footer() {
       <section className="relative h-[600px] w-full flex items-center px-6 md:px-14 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
-            src="/thumb-0.jpg" 
+            src="/footer-image-v2.png" 
             alt="Ready to Transform" 
             fill 
             className="object-cover"
