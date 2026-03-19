@@ -1,4 +1,3 @@
-
 'use client';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -56,7 +55,7 @@ export default function AboutPage() {
         {/* Hero Section */}
         <section className="relative h-[60vh] md:h-[80vh] w-full flex flex-col justify-end overflow-hidden bg-neutral-900">
           <Image 
-            src="https://picsum.photos/seed/tractor_field_99/1920/1080" 
+            src="/despre-noi-hero.jpg" 
             alt="AgroSalso Field" 
             fill 
             priority 
