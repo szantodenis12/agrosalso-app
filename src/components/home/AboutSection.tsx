@@ -41,7 +41,7 @@ export function AboutSection() {
               {t[lang].aboutText}
             </p>
             <div className="pt-4">
-              <Link href="/contact">
+              <Link href="/despre">
                 <motion.div 
                   whileHover={{ scale: 1.02, x: 5 }}
                   whileTap={{ scale: 0.98 }}
