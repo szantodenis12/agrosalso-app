@@ -123,7 +123,6 @@ export function Footer() {
             <div>
               <h4 className="text-neutral-500 font-bold text-sm mb-8">{t[lang].footerSocial}</h4>
               <ul className="space-y-4">
-                <li><Link href="#" className="text-white/60 hover:text-white transition-colors text-sm">Instagram</Link></li>
                 <li><Link href="https://www.facebook.com/agrosalso" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white transition-colors text-sm">Facebook</Link></li>
                 <li><Link href="https://www.tiktok.com/@agro.salso" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white transition-colors text-sm">TikTok</Link></li>
               </ul>
