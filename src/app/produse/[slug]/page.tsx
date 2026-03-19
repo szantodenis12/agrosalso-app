@@ -222,91 +222,94 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 text-neutral-900 space-y-6 md:space-y-8 shadow-xl border border-neutral-100">
-                    <div className="space-y-2 md:space-y-3">
-                      <h3 className="font-headline font-extrabold text-xl md:text-2xl tracking-tight">{t[lang].requestOffer}</h3>
-                      <p className="text-neutral-500 text-xs md:text-sm font-medium">{lang === 'ro' ? 'Lăsați-ne datele voastre și vă vom contacta cu o ofertă personalizată.' : 'Leave us your details and we will contact you with a personalized offer.'}</p>
-                    </div>
-
-                    <form onSubmit={handleInquirySubmit} className="space-y-4">
-                      <Input 
-                        placeholder={t[lang].fullName} 
-                        value={inquiry.name}
-                        onChange={(e) => setInquiry({...inquiry, name: e.target.value})}
-                        required
-                        className="h-12 md:h-14 bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
-                      />
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <Input 
-                          type="email" 
-                          placeholder={t[lang].email} 
-                          value={inquiry.email}
-                          onChange={(e) => setInquiry({...inquiry, email: e.target.value})}
-                          required
-                          className="h-12 md:h-14 bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
-                        />
-                        <Input 
-                          type="tel" 
-                          placeholder={t[lang].phone} 
-                          value={inquiry.phone}
-                          onChange={(e) => setInquiry({...inquiry, phone: e.target.value})}
-                          required
-                          className="h-12 md:h-14 bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
-                        />
+                  {/* Sidebar Inquiry Form (Desktop Only) */}
+                  <div className="hidden lg:block">
+                    <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 text-neutral-900 space-y-6 md:space-y-8 shadow-xl border border-neutral-100">
+                      <div className="space-y-2 md:space-y-3">
+                        <h3 className="font-headline font-extrabold text-xl md:text-2xl tracking-tight">{t[lang].requestOffer}</h3>
+                        <p className="text-neutral-500 text-xs md:text-sm font-medium">{lang === 'ro' ? 'Lăsați-ne datele voastre și vă vom contacta cu o ofertă personalizată.' : 'Leave us your details and we will contact you with a personalized offer.'}</p>
                       </div>
 
-                      {productModels.length > 0 && (
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest ml-1">{lang === 'ro' ? 'Selectează Modelul' : 'Select Model'}</label>
-                          <select 
-                            value={inquiry.selectedModel}
-                            onChange={(e) => setInquiry({...inquiry, selectedModel: e.target.value})}
-                            className="w-full h-12 md:h-14 bg-neutral-50 border border-neutral-100 rounded-xl md:rounded-2xl px-4 text-sm font-bold focus:ring-2 focus:ring-accent-lime outline-none transition-all cursor-pointer"
+                      <form onSubmit={handleInquirySubmit} className="space-y-4">
+                        <Input 
+                          placeholder={t[lang].fullName} 
+                          value={inquiry.name}
+                          onChange={(e) => setInquiry({...inquiry, name: e.target.value})}
+                          required
+                          className="h-12 md:h-14 bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
+                        />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <Input 
+                            type="email" 
+                            placeholder={t[lang].email} 
+                            value={inquiry.email}
+                            onChange={(e) => setInquiry({...inquiry, email: e.target.value})}
+                            required
+                            className="h-12 md:h-14 bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
+                          />
+                          <Input 
+                            type="tel" 
+                            placeholder={t[lang].phone} 
+                            value={inquiry.phone}
+                            onChange={(e) => setInquiry({...inquiry, phone: e.target.value})}
+                            required
+                            className="h-12 md:h-14 bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
+                          />
+                        </div>
+
+                        {productModels.length > 0 && (
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest ml-1">{lang === 'ro' ? 'Selectează Modelul' : 'Select Model'}</label>
+                            <select 
+                              value={inquiry.selectedModel}
+                              onChange={(e) => setInquiry({...inquiry, selectedModel: e.target.value})}
+                              className="w-full h-12 md:h-14 bg-neutral-50 border border-neutral-100 rounded-xl md:rounded-2xl px-4 text-sm font-bold focus:ring-2 focus:ring-accent-lime outline-none transition-all cursor-pointer"
+                            >
+                              <option value="" disabled>{lang === 'ro' ? 'Selectează modelul dorit...' : 'Choose model...'}</option>
+                              {productModels.map((m, i) => (
+                                <option key={i} value={m.name}>
+                                  {m.isPopular ? `⭐ ${m.name}` : m.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        )}
+
+                        <Textarea 
+                          placeholder={t[lang].message} 
+                          value={inquiry.message}
+                          onChange={(e) => setInquiry({...inquiry, message: e.target.value})}
+                          required
+                          className="min-h-[100px] md:min-h-[120px] bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
+                        />
+
+                        <div className="flex items-start gap-3 py-2">
+                          <Checkbox 
+                            id="terms" 
+                            checked={termsAccepted} 
+                            onCheckedChange={(checked) => setTermsAccepted(checked === true)}
+                            className="mt-1 border-neutral-300 data-[state=checked]:bg-accent-lime data-[state=checked]:border-accent-lime data-[state=checked]:text-black"
+                          />
+                          <label
+                            htmlFor="terms"
+                            className="text-[11px] font-medium leading-tight text-neutral-500 cursor-pointer select-none"
                           >
-                            <option value="" disabled>{lang === 'ro' ? 'Selectează modelul dorit...' : 'Choose model...'}</option>
-                            {productModels.map((m, i) => (
-                              <option key={i} value={m.name}>
-                                {m.isPopular ? `⭐ ${m.name}` : m.name}
-                              </option>
-                            ))}
-                          </select>
+                            {t[lang].termsAgreement}
+                          </label>
                         </div>
-                      )}
 
-                      <Textarea 
-                        placeholder={t[lang].message} 
-                        value={inquiry.message}
-                        onChange={(e) => setInquiry({...inquiry, message: e.target.value})}
-                        required
-                        className="min-h-[100px] md:min-h-[120px] bg-neutral-50 border-neutral-100 rounded-xl md:rounded-2xl focus:ring-accent-lime text-sm"
-                      />
-
-                      <div className="flex items-start gap-3 py-2">
-                        <Checkbox 
-                          id="terms" 
-                          checked={termsAccepted} 
-                          onCheckedChange={(checked) => setTermsAccepted(checked === true)}
-                          className="mt-1 border-neutral-300 data-[state=checked]:bg-accent-lime data-[state=checked]:border-accent-lime data-[state=checked]:text-black"
-                        />
-                        <label
-                          htmlFor="terms"
-                          className="text-[11px] font-medium leading-tight text-neutral-500 cursor-pointer select-none"
+                        <Button 
+                          type="submit" 
+                          disabled={submitting || !termsAccepted}
+                          className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold h-14 md:h-16 rounded-full flex items-center justify-between pl-6 md:pl-8 pr-1.5 group transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
                         >
-                          {t[lang].termsAgreement}
-                        </label>
-                      </div>
-
-                      <Button 
-                        type="submit" 
-                        disabled={submitting || !termsAccepted}
-                        className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold h-14 md:h-16 rounded-full flex items-center justify-between pl-6 md:pl-8 pr-1.5 group transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
-                      >
-                        <span className="text-sm md:text-base">{submitting ? t[lang].sending : t[lang].requestOffer}</span>
-                        <div className="w-11 h-11 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
-                          <Send size={18} className="text-black md:w-5 md:h-5" />
-                        </div>
-                      </Button>
-                    </form>
+                          <span className="text-sm md:text-base">{submitting ? t[lang].sending : t[lang].requestOffer}</span>
+                          <div className="w-11 h-11 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
+                            <Send size={18} className="text-black md:w-5 md:h-5" />
+                          </div>
+                        </Button>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -425,6 +428,96 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                   </div>
                 </div>
               )}
+
+              {/* Mobile-Only Inquiry Form (at the bottom) */}
+              <div className="lg:hidden mt-12">
+                <div className="bg-white rounded-[1.5rem] p-6 text-neutral-900 space-y-6 shadow-xl border border-neutral-100">
+                  <div className="space-y-2">
+                    <h3 className="font-headline font-extrabold text-xl tracking-tight">{t[lang].requestOffer}</h3>
+                    <p className="text-neutral-500 text-xs font-medium">{lang === 'ro' ? 'Lăsați-ne datele voastre și vă vom contacta cu o ofertă personalizată.' : 'Leave us your details and we will contact you with a personalized offer.'}</p>
+                  </div>
+
+                  <form onSubmit={handleInquirySubmit} className="space-y-4">
+                    <Input 
+                      placeholder={t[lang].fullName} 
+                      value={inquiry.name}
+                      onChange={(e) => setInquiry({...inquiry, name: e.target.value})}
+                      required
+                      className="h-12 bg-neutral-50 border-neutral-100 rounded-xl focus:ring-accent-lime text-sm"
+                    />
+                    <div className="grid grid-cols-1 gap-4">
+                      <Input 
+                        type="email" 
+                        placeholder={t[lang].email} 
+                        value={inquiry.email}
+                        onChange={(e) => setInquiry({...inquiry, email: e.target.value})}
+                        required
+                        className="h-12 bg-neutral-50 border-neutral-100 rounded-xl focus:ring-accent-lime text-sm"
+                      />
+                      <Input 
+                        type="tel" 
+                        placeholder={t[lang].phone} 
+                        value={inquiry.phone}
+                        onChange={(e) => setInquiry({...inquiry, phone: e.target.value})}
+                        required
+                        className="h-12 bg-neutral-50 border-neutral-100 rounded-xl focus:ring-accent-lime text-sm"
+                      />
+                    </div>
+
+                    {productModels.length > 0 && (
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest ml-1">{lang === 'ro' ? 'Selectează Modelul' : 'Select Model'}</label>
+                        <select 
+                          value={inquiry.selectedModel}
+                          onChange={(e) => setInquiry({...inquiry, selectedModel: e.target.value})}
+                          className="w-full h-12 bg-neutral-50 border border-neutral-100 rounded-xl px-4 text-sm font-bold focus:ring-2 focus:ring-accent-lime outline-none transition-all cursor-pointer"
+                        >
+                          <option value="" disabled>{lang === 'ro' ? 'Selectează modelul dorit...' : 'Choose model...'}</option>
+                          {productModels.map((m, i) => (
+                            <option key={i} value={m.name}>
+                              {m.isPopular ? `⭐ ${m.name}` : m.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+
+                    <Textarea 
+                      placeholder={t[lang].message} 
+                      value={inquiry.message}
+                      onChange={(e) => setInquiry({...inquiry, message: e.target.value})}
+                      required
+                      className="min-h-[100px] bg-neutral-50 border-neutral-100 rounded-xl focus:ring-accent-lime text-sm"
+                    />
+
+                    <div className="flex items-start gap-3 py-2">
+                      <Checkbox 
+                        id="terms-mobile" 
+                        checked={termsAccepted} 
+                        onCheckedChange={(checked) => setTermsAccepted(checked === true)}
+                        className="mt-1 border-neutral-300 data-[state=checked]:bg-accent-lime data-[state=checked]:border-accent-lime data-[state=checked]:text-black"
+                      />
+                      <label
+                        htmlFor="terms-mobile"
+                        className="text-[11px] font-medium leading-tight text-neutral-500 cursor-pointer select-none"
+                      >
+                        {t[lang].termsAgreement}
+                      </label>
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      disabled={submitting || !termsAccepted}
+                      className="w-full bg-accent-lime hover:bg-accent-lime/90 text-black font-extrabold h-14 rounded-full flex items-center justify-between pl-6 pr-1.5 group transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
+                    >
+                      <span className="text-sm">{submitting ? t[lang].sending : t[lang].requestOffer}</span>
+                      <div className="w-11 h-11 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
+                        <Send size={18} className="text-black" />
+                      </div>
+                    </Button>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
         </div>
