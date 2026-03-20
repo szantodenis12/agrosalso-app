@@ -19,8 +19,8 @@ const BACKGROUNDS = [
   {
     id: 'bg-image-1',
     type: 'image',
-    src: '/thumb-1-v2.jpg',
-    thumbnail: '/thumb-1-v2.jpg'
+    src: '/thumb-2-v3.jpg',
+    thumbnail: '/thumb-2-v3.jpg'
   },
   {
     id: 'bg-image-2',
