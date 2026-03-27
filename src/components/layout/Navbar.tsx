@@ -126,7 +126,7 @@ export function Navbar() {
     }
   }, [isOpen]);
 
-  const isTransparentInitial = (pathname === '/' || pathname === '/despre') && !scrolled && !isOpen && pathname !== '/contact';
+  const isTransparentInitial = !!pathname && (pathname === '/' || pathname === '/despre') && !scrolled && !isOpen;
 
   return (
     <>

@@ -54,15 +54,15 @@ export default function AboutPage() {
       <main className="bg-white min-h-screen">
         {/* Hero Section */}
         <section className="relative h-[60vh] md:h-[80vh] w-full flex flex-col justify-end overflow-hidden bg-neutral-900">
-          <Image 
-            src="/despre-noi-hero.jpg" 
-            alt="AgroSalso Field" 
-            fill 
-            priority 
+          <Image
+            src="/despre-noi-hero.jpg"
+            alt="AgroSalso Field"
+            fill
+            priority
             className="object-cover opacity-70"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
-          
+
           <div className="relative z-20 max-w-[1440px] mx-auto w-full px-6 md:px-14 pb-16 md:pb-24">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -87,7 +87,7 @@ export default function AboutPage() {
         {/* Content Section with Sidebar */}
         <section className="max-w-[1440px] mx-auto px-6 md:px-14 py-20 md:py-32">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24">
-            
+
             {/* Sidebar Navigation */}
             <aside className="lg:col-span-3 space-y-8">
               <div className="sticky top-32 space-y-2">
@@ -97,8 +97,8 @@ export default function AboutPage() {
                     onClick={() => scrollToSection(section.id, idx)}
                     className={cn(
                       "w-full text-left px-8 py-4 rounded-full text-sm font-extrabold uppercase tracking-widest transition-all flex items-center justify-between group",
-                      activeSection === idx 
-                        ? "bg-accent-lime text-black shadow-lg shadow-accent-lime/20" 
+                      activeSection === idx
+                        ? "bg-accent-lime text-black shadow-lg shadow-accent-lime/20"
                         : "text-neutral-400 hover:bg-neutral-50 hover:text-neutral-900"
                     )}
                   >
@@ -112,7 +112,7 @@ export default function AboutPage() {
                     )}
                   </button>
                 ))}
-                
+
                 <div className="pt-12 hidden lg:block">
                   <p className="text-[10px] font-bold text-neutral-300 uppercase tracking-[0.2em] mb-4">Contact rapid</p>
                   <a href="mailto:contact@agrosalso.ro" className="text-sm font-bold text-neutral-900 hover:text-accent-lime transition-colors">contact@agrosalso.ro</a>
@@ -122,9 +122,9 @@ export default function AboutPage() {
 
             {/* Main Article Content */}
             <div className="lg:col-span-9 space-y-24">
-              
+
               {/* Overview Section */}
-              <motion.section 
+              <motion.section
                 id="overview"
                 className="space-y-8 scroll-mt-32"
                 initial={{ opacity: 0, y: 20 }}
@@ -140,17 +140,17 @@ export default function AboutPage() {
                   </p>
                 </div>
                 <div className="relative aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl">
-                  <Image 
-                    src="/despre-noi-photo.jpg" 
-                    alt="AgroSalso Operations" 
-                    fill 
+                  <Image
+                    src="/despre-noi-photo.jpg"
+                    alt="AgroSalso Operations"
+                    fill
                     className="object-cover"
                   />
                 </div>
               </motion.section>
 
               {/* Mission Section */}
-              <motion.section 
+              <motion.section
                 id="mission"
                 className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center scroll-mt-32"
                 initial={{ opacity: 0, y: 20 }}
@@ -176,10 +176,10 @@ export default function AboutPage() {
                   </ul>
                 </div>
                 <div className="relative aspect-square rounded-[3rem] overflow-hidden bg-neutral-100">
-                  <Image 
-                    src="https://picsum.photos/seed/mission/800/800" 
-                    alt="Our Mission" 
-                    fill 
+                  <Image
+                    src="/desprenoi2.png"
+                    alt="Our Mission"
+                    fill
                     className="object-cover"
                     data-ai-hint="modern farming"
                   />
@@ -187,7 +187,7 @@ export default function AboutPage() {
               </motion.section>
 
               {/* History Section */}
-              <motion.section 
+              <motion.section
                 id="history"
                 className="space-y-12 bg-neutral-50 p-8 md:p-16 rounded-[3rem] border border-neutral-100 scroll-mt-32"
                 initial={{ opacity: 0, y: 20 }}
@@ -202,7 +202,7 @@ export default function AboutPage() {
                     {t[lang].aboutHistoryText}
                   </p>
                 </div>
-                
+
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                   {[
                     { label: 'Ani Experiență', val: '12+' },
@@ -219,7 +219,7 @@ export default function AboutPage() {
               </motion.section>
 
               {/* Partners Section */}
-              <motion.section 
+              <motion.section
                 id="partners"
                 className="space-y-12 scroll-mt-32"
                 initial={{ opacity: 0, y: 20 }}

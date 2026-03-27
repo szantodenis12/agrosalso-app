@@ -50,7 +50,7 @@ export default function AdminContactMessagesPage() {
     
     setIsSendingReply(true);
     try {
-      const response = await fetch('/api/send-reply', {
+      const response = await fetch('/api/trimite-raspuns', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

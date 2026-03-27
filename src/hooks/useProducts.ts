@@ -20,11 +20,11 @@ export interface ProductFilters {
 export function useProducts() {
   const db = useFirestore();
   const [filters, setFilters] = useState<ProductFilters>({});
-  const [sort, setSort] = useState<string>('newest');
+  const [sort, setSort] = useState<string>('oldest');
 
   // Interogare stabilă: aducem toate produsele ordonate după dată
   const productsQuery = useMemoFirebase(() => {
-    return query(collection(db, 'products'), orderBy('createdAt', 'desc'));
+    return query(collection(db, 'products'), orderBy('createdAt', 'asc'));
   }, [db]);
 
   const { data: rawProducts, isLoading, error } = useCollection<Product>(productsQuery);
@@ -75,7 +75,10 @@ export function useProducts() {
           return pB - pA;
         case 'name_asc':
           return a.name.localeCompare(b.name, 'ro');
-        default: // 'newest'
+        case 'newest':
+          // Sortare manuală descrescătoare dacă e selectat 'newest' (interogarea e 'asc')
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        default: // 'oldest' - ordinea naturală a interogării
           return 0;
       }
     });
@@ -89,7 +92,7 @@ export function useProducts() {
 
   const resetFilters = () => {
     setFilters({});
-    setSort('newest');
+    setSort('oldest');
   };
 
   const activeFilterCount = Object.values(filters).filter(v => v !== undefined && v !== '' && v !== false).length;

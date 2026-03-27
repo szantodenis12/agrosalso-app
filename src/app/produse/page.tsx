@@ -38,7 +38,7 @@ import {
 
 function ProductCard({ product, viewMode }: { product: any, viewMode: 'grid' | 'list' }) {
   const { lang } = useLanguage();
-  const { translatedData, isTranslating } = useTranslation(product, product.id, ['name', 'shortDescription']);
+  const { translatedData, isTranslating } = useTranslation(product);
 
   return (
     <Link href={`/produse/${product.slug}`} className="block h-full group/card">
@@ -148,6 +148,7 @@ export default function CatalogPage() {
     : t[lang].allProducts;
 
   const SORT_OPTIONS = [
+    { value: 'oldest', label: t[lang].sortOldest },
     { value: 'newest', label: t[lang].sortNewest },
     { value: 'price_asc', label: t[lang].sortPriceAsc },
     { value: 'price_desc', label: t[lang].sortPriceDesc },

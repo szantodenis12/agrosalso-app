@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 
 function ProductCard({ product }: { product: Product }) {
   const { lang } = useLanguage();
-  const { translatedData, isTranslating } = useTranslation(product, product.id, ['name', 'shortDescription']);
+  const { translatedData, isTranslating } = useTranslation(product);
 
   return (
     <Link href={`/produse/${product.slug}`} className="block h-full group/card">
@@ -101,7 +101,7 @@ export function FeaturedProducts() {
   }, [products]);
 
   return (
-    <section className="py-24 px-6 md:px-14 bg-white overflow-hidden">
+    <section className="pt-24 pb-0 px-6 md:px-14 bg-white overflow-hidden">
       <div className="max-w-[1440px] mx-auto">
         <div className="text-center mb-16">
           <motion.div 
@@ -133,17 +133,40 @@ export function FeaturedProducts() {
              <p className="text-neutral-400 font-bold uppercase tracking-widest text-sm">No products found.</p>
           </div>
         ) : (
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
-          >
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </motion.div>
+          <>
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+            >
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+              className="mt-20 flex justify-center"
+            >
+              <Link href="/produse">
+                <motion.button 
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-accent-lime hover:bg-neutral-900 hover:text-white text-neutral-900 font-headline font-extrabold h-16 pl-10 pr-2 rounded-full flex items-center gap-10 transition-all text-lg shadow-[0_20px_50px_rgba(163,230,53,0.3)] hover:shadow-neutral-900/20 group"
+                >
+                  {t[lang].viewAllProducts}
+                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
+                    <ArrowUpRight size={24} className="text-black" strokeWidth={3} />
+                  </div>
+                </motion.button>
+              </Link>
+            </motion.div>
+          </>
         )}
       </div>
     </section>

@@ -24,10 +24,11 @@ export const MOCK_PRODUCTS: Product[] = [
     brandSlug: 'john-deere',
     category: 'terradisc',
     description: 'Un tractor versatil și puternic, perfect pentru ferme medii și mari.',
+    detailedDescription: 'Un tractor versatil și puternic, perfect pentru ferme medii și mari.',
     shortDescription: 'Tractor John Deere 6R 150 cu transmisie AutoPower și tehnologie de ultimă oră.',
     price: 145000,
     priceOnRequest: false,
-    currency: 'RON',
+    currency: 'EUR',
     images: ['https://picsum.photos/seed/10/800/600', 'https://picsum.photos/seed/11/800/600'],
     mainImage: 'https://picsum.photos/seed/10/800/600',
     specifications: {

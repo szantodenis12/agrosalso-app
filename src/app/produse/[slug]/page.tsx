@@ -363,7 +363,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 </div>
               )}
 
-              {Array.isArray(translatedData?.whyBrand) && translatedData.whyBrand.length > 0 && (
+              {Array.isArray(translatedData?.whyBrand) && translatedData?.whyBrand.length > 0 && (
                 <section className="pt-10 md:pt-20 pb-10">
                   <div className="max-w-4xl mx-auto space-y-8 md:space-y-12">
                      <div className="text-center space-y-3 md:space-y-4">
@@ -376,7 +376,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                        "grid grid-cols-1 gap-6 md:gap-8 px-4 transition-all",
                        isTranslating && "animate-pulse blur-[2px]"
                      )}>
-                        {translatedData.whyBrand.map((text, i) => (
+                        {translatedData?.whyBrand.map((text: string, i: number) => (
                           <motion.div 
                             key={i} 
                             initial={{ opacity: 0, x: 20 }}

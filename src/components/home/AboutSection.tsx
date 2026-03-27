@@ -20,7 +20,7 @@ export function AboutSection() {
   };
 
   return (
-    <section className="py-24 md:py-32 px-6 md:px-14 bg-white overflow-hidden">
+    <section className="pt-20 pb-24 md:pb-32 px-6 md:px-14 bg-white overflow-hidden">
       <div className="max-w-[1440px] mx-auto space-y-24 md:space-y-40">
         
         {/* Vision Block */}

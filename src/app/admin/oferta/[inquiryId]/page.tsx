@@ -122,7 +122,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
         updatedAt: serverTimestamp()
       });
 
-      const response = await fetch('/api/send-offer', {
+      const response = await fetch('/api/trimite-oferta', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -149,7 +149,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-white"><Loader2 className="animate-spin text-accent-lime size-10" /></div>;
   if (!inquiry || !product) return <div className="p-10 text-center font-bold text-neutral-400">Datele nu au fost găsite.</div>;
 
-  const tva = editPrice * 0.19;
+  const tva = editPrice * 0.21;
   const total = editPrice + tva;
 
   return (
@@ -175,7 +175,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
         </div>
       </div>
 
-      <div ref={offerRef} className="space-y-10 print:space-y-0">
+      <div ref={offerRef} className="space-y-10 print:space-y-0 print:block print:p-0">
         
         {/* PAGINA 1: PREZENTARE */}
         <div className="offer-page max-w-[210mm] mx-auto my-10 bg-white shadow-2xl min-h-[297mm] p-[15mm] print:m-0 print:shadow-none relative border border-neutral-200 print:border-none flex flex-col">
@@ -318,7 +318,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                   <span contentEditable suppressContentEditableWarning className="font-headline font-extrabold text-2xl text-neutral-900 focus:outline-accent-lime" onBlur={e => setEditPrice(parseFloat(e.currentTarget.innerText.replace(/[^0-9.]/g, '')) || 0)}>{editPrice.toLocaleString()} EUR</span>
                 </div>
                 <div className="flex justify-between items-center pb-3 border-b border-neutral-200">
-                  <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">TVA (19%)</span>
+                  <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">TVA (21%)</span>
                   <span className="font-bold text-neutral-600 text-lg">{tva.toLocaleString()} EUR</span>
                 </div>
                 <div className="flex justify-between items-center pt-2">

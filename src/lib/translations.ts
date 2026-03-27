@@ -26,6 +26,7 @@ export const t = {
     filterNew: 'Produse noi',
     filterSale: 'Promoții',
     sortNewest: 'Cele mai noi',
+    sortOldest: 'Cele mai vechi',
     sortPriceAsc: 'Preț crescător',
     sortPriceDesc: 'Preț descrescător',
     sortNameAsc: 'Nume A-Z',
@@ -123,6 +124,7 @@ export const t = {
     cookieText: 'Folosim cookie-uri pentru a îmbunătăți experiența ta de navigare, pentru a analiza traficul site-ului (Google Analytics) și pentru a personaliza reclamele (Google Ads, Meta Ads). Prin apăsarea butonului "Acceptă tot", ești de acord cu utilizarea acestora conform politicilor noastre.',
     cookieAccept: 'ACCEPTĂ TOT',
     cookiePolicy: 'Politica de Confidențialitate',
+    viewAllProducts: 'Vezi toate produsele',
   },
   en: {
     home: 'Home',
@@ -151,6 +153,7 @@ export const t = {
     filterNew: 'New products',
     filterSale: 'Promotions',
     sortNewest: 'Newest first',
+    sortOldest: 'Oldest first',
     sortPriceAsc: 'Price: low to high',
     sortPriceDesc: 'Price: high to low',
     sortNameAsc: 'Name A-Z',
@@ -248,6 +251,7 @@ export const t = {
     cookieText: 'We use cookies to improve your browsing experience, analyze site traffic (Google Analytics), and personalize ads (Google Ads, Meta Ads). By clicking "Accept all", you agree to their use according to our policies.',
     cookieAccept: 'ACCEPT ALL',
     cookiePolicy: 'Privacy Policy',
+    viewAllProducts: 'View all products',
   },
   hu: {
     home: 'Kezdőlap',
@@ -276,6 +280,7 @@ export const t = {
     filterNew: 'Új termékek',
     filterSale: 'Akciók',
     sortNewest: 'Legújabbak elöl',
+    sortOldest: 'Legrégebbi elöl',
     sortPriceAsc: 'Ár: alacsonytól a magasig',
     sortPriceDesc: 'Ár: magastól az alacsonyig',
     sortNameAsc: 'Név A-Z',
@@ -373,6 +378,7 @@ export const t = {
     cookieText: 'Sütiket használunk a böngészési élmény javítása, a webhelyforgalom elemzése (Google Analytics) és a hirdetések személyre szabása (Google Ads, Meta Ads) érdekében. Az "Acceptá tot" gombra kattintva elfogadja azok használatát.',
     cookieAccept: 'ELFOGADOM',
     cookiePolicy: 'Adatvédelmi Szabályzat',
+    viewAllProducts: 'Összes termék megtekintése',
   },
   it: {
     home: 'Home',
@@ -401,6 +407,7 @@ export const t = {
     filterNew: 'Nuovi prodotti',
     filterSale: 'Promozioni',
     sortNewest: 'Più recenti',
+    sortOldest: 'Più vecchi',
     sortPriceAsc: 'Prezzo: dal più basso',
     sortPriceDesc: 'Prezzo: dal più alto',
     sortNameAsc: 'Nome A-Z',
@@ -498,6 +505,7 @@ export const t = {
     cookieText: 'Utilizziamo i cookie per migliorare la tua esperienza di navigazione, analizzare il traffico del sito (Google Analytics) e personalizzare gli annunci (Google Ads, Meta Ads). Facendo clic su "Acceptă tutto", ne accetti l\'utilizzo.',
     cookieAccept: 'ACCETTA TUTTO',
     cookiePolicy: 'Politica sulla Privacy',
+    viewAllProducts: 'Vedi tutti i prodotti',
   },
   de: {
     home: 'Startseite',
@@ -526,6 +534,7 @@ export const t = {
     filterNew: 'Neue Produkte',
     filterSale: 'Angebote',
     sortNewest: 'Neueste zuerst',
+    sortOldest: 'Älteste zuerst',
     sortPriceAsc: 'Preis: aufsteigend',
     sortPriceDesc: 'Preis: absteigend',
     sortNameAsc: 'Name A-Z',
@@ -623,6 +632,7 @@ export const t = {
     cookieText: 'Wir verwenden Cookies, um Ihr Erlebnis zu verbessern, den Website-Verkehr zu analysieren (Google Analytics) und Anzeigen zu personalisieren (Google Ads, Meta Ads). Durch Klicken auf "Alle akzeptieren" stimmen Sie deren Verwendung zu.',
     cookieAccept: 'ALLE AKZEPTIEREN',
     cookiePolicy: 'Datenschutzerklärung',
+    viewAllProducts: 'Alle Produkte anzeigen',
   },
   es: {
     home: 'Inicio',
@@ -651,6 +661,7 @@ export const t = {
     filterNew: 'Nuevos productos',
     filterSale: 'Promociones',
     sortNewest: 'Más recientes',
+    sortOldest: 'Más antiguos',
     sortPriceAsc: 'Precio: de menor a mayor',
     sortPriceDesc: 'Precio: de mayor a menor',
     sortNameAsc: 'Nombre A-Z',
@@ -748,5 +759,6 @@ export const t = {
     cookieText: 'Utilizamos cookies para mejorar su experiencia de navegación, analizar el tráfico del sitio (Google Analytics) y personalizar anuncios (Google Ads, Meta Ads). Al hacer clic en "Aceptar todo", acepta su uso según nuestras políticas.',
     cookieAccept: 'ACEPTAR TODO',
     cookiePolicy: 'Política de Privacidad',
+    viewAllProducts: 'Ver todos los productos',
   }
 } as const;
