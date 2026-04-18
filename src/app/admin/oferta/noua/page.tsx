@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import { ro } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Printer, Send, ChevronLeft, Loader2, FileText, Clock, ShieldCheck, AlertCircle, CheckCircle2, Circle, Package } from 'lucide-react';
+import { Printer, Send, ChevronLeft, Loader2, FileText, Clock, ShieldCheck, AlertCircle, CheckCircle2, Circle, Package, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -39,14 +39,15 @@ export default function NewStandaloneOfferPage() {
   
   const [offerType, setOfferType] = useState<'standard' | 'afir' | 'urgent'>('standard');
   const [editPrice, setEditPrice] = useState<number>(0);
-  const [contactPerson, setContactPerson] = useState("Doru Salso");
+  const [contactPerson, setContactPerson] = useState("Dorina Ile");
   const [contactPosition, setContactPosition] = useState("Manager Vânzări");
-  const [contactPhone, setContactPhone] = useState("+40 742 936 959");
+  const [contactPhone, setContactPhone] = useState("+40 761 927 076");
   const [deliveryTerm, setDeliveryTerm] = useState("2-5 zile lucrătoare");
   const [paymentTerms, setPaymentTerms] = useState("Transfer Bancar / Ordin de plată la livrare");
 
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
   const [sending, setSending] = useState(false);
+  const [extraItems, setExtraItems] = useState<{id: string, name: string, price: number}[]>([]);
 
   const product = useMemo(() => products?.find(p => p.id === selectedProductId), [products, selectedProductId]);
 
@@ -156,8 +157,10 @@ export default function NewStandaloneOfferPage() {
     }
   };
 
-  const tva = editPrice * 0.21;
-  const total = editPrice + tva;
+  const subtotalExtras = extraItems.reduce((acc, item) => acc + item.price, 0);
+  const totalNet = editPrice + subtotalExtras;
+  const tva = totalNet * 0.21;
+  const total = totalNet + tva;
 
   return (
     <div className="min-h-screen bg-neutral-100 pb-20 print:bg-white print:pb-0">
@@ -320,11 +323,71 @@ export default function NewStandaloneOfferPage() {
                     </div>
                   )}
 
+                  {extraItems.length > 0 && (
+                    <div className="mb-12">
+                      <h4 className="font-headline font-extrabold text-sm uppercase tracking-tight border-b-2 border-neutral-900 pb-2 mb-6 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-2 h-2 bg-accent-lime rounded-full" /> Echipamente opționale
+                        </div>
+                      </h4>
+                      <table className="w-full text-left text-[10px] border-collapse shadow-sm mb-4">
+                        <thead className="bg-neutral-900 text-white">
+                          <tr>
+                            <th className="p-3 font-extrabold border border-neutral-800 uppercase tracking-widest text-[9px]">Denumire Echipament / Accesoriu</th>
+                            <th className="p-3 font-extrabold border border-neutral-800 uppercase tracking-widest text-[9px] w-[150px] text-right">Preț Net (EUR)</th>
+                            <th className="p-3 font-extrabold border border-neutral-800 uppercase tracking-widest text-[9px] w-[50px] print:hidden"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {extraItems.map((item, index) => (
+                            <tr key={item.id} className="even:bg-neutral-50 group">
+                              <td className="p-3 border border-neutral-100 font-bold text-neutral-700">
+                                <span contentEditable suppressContentEditableWarning className="focus:outline-accent-lime px-1 min-w-[200px] inline-block" onBlur={(e) => {
+                                   const newExtras = [...extraItems];
+                                   newExtras[index].name = e.currentTarget.innerText;
+                                   setExtraItems(newExtras);
+                                }}>{item.name}</span>
+                              </td>
+                              <td className="p-3 border border-neutral-100 font-bold text-neutral-900 text-right">
+                                <span contentEditable suppressContentEditableWarning className="focus:outline-accent-lime px-1 min-w-[50px] inline-block" onBlur={(e) => {
+                                   const newExtras = [...extraItems];
+                                   newExtras[index].price = parseFloat(e.currentTarget.innerText.replace(/[^0-9.]/g, '')) || 0;
+                                   setExtraItems(newExtras);
+                                }}>{item.price.toLocaleString()}</span>
+                              </td>
+                              <td className="p-3 border border-neutral-100 text-center print:hidden">
+                                <button onClick={() => setExtraItems(extraItems.filter(i => i.id !== item.id))} className="text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                                  <Trash2 size={14} />
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
+                  <div className="print:hidden mb-12 border-t border-dashed border-neutral-200 mt-[-20px] pt-4 flex justify-end">
+                     <Button variant="outline" size="sm" onClick={() => setExtraItems([...extraItems, { id: Math.random().toString(), name: 'Echipament opțional nou', price: 0 }])}>
+                       <Plus size={14} className="mr-1" /> Adaugă opțional / serviciu extra
+                     </Button>
+                  </div>
+
                   <div className="flex justify-end mb-16">
-                    <div className="w-[350px] space-y-4 bg-neutral-50 p-8 rounded-[2rem] border border-neutral-100 shadow-sm">
+                    <div className="w-[380px] space-y-4 bg-neutral-50 p-8 rounded-[2rem] border border-neutral-100 shadow-sm">
                       <div className="flex justify-between items-center pb-3 border-b border-neutral-200">
-                        <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț Unitar (Net)</span>
-                        <span className="font-headline font-extrabold text-2xl text-neutral-900">{editPrice.toLocaleString()} EUR</span>
+                        <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț Utilaj (Net)</span>
+                        <span contentEditable suppressContentEditableWarning className="font-headline font-extrabold text-2xl text-neutral-900 focus:outline-accent-lime" onBlur={e => setEditPrice(parseFloat(e.currentTarget.innerText.replace(/[^0-9.]/g, '')) || 0)}>{editPrice.toLocaleString()} EUR</span>
+                      </div>
+                      {extraItems.length > 0 && (
+                        <div className="flex justify-between items-center pb-3 border-b border-neutral-200">
+                          <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Opționale (Net)</span>
+                          <span className="font-bold text-neutral-600 text-lg">{subtotalExtras.toLocaleString()} EUR</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between items-center pb-3 border-b border-neutral-200">
+                        <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Total Net</span>
+                        <span className="font-bold text-neutral-800 text-lg">{totalNet.toLocaleString()} EUR</span>
                       </div>
                       <div className="flex justify-between items-center pb-3 border-b border-neutral-200">
                         <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">TVA (21%)</span>

@@ -103,6 +103,7 @@ export interface Inquiry {
   productId: string;
   productName: string;
   selectedModel?: string;
+  tavalug?: string;
   status: 'new' | 'read' | 'replied';
   createdAt: any;
   repliedAt?: any;

@@ -50,6 +50,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
     phone: '',
     message: '',
     selectedModel: '',
+    tavalug: '',
   });
 
   useEffect(() => {
@@ -80,7 +81,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
         title: lang === 'ro' ? "Cerere trimisă!" : "Request sent!",
         description: lang === 'ro' ? "Vă vom contacta în cel mai scurt timp posibil." : "We will contact you as soon as possible.",
       });
-      setInquiry({ name: '', email: '', phone: '', message: '', selectedModel: '' });
+      setInquiry({ name: '', email: '', phone: '', message: '', selectedModel: '', tavalug: '' });
       setTermsAccepted(false);
     } catch (error) {
       toast({ variant: "destructive", title: "Error", description: "Could not send request." });
@@ -274,6 +275,21 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                             </select>
                           </div>
                         )}
+
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest ml-1">{lang === 'ro' ? 'Tăvălug necesar (Opțional)' : 'Required Roller (Optional)'}</label>
+                          <select 
+                            value={inquiry.tavalug}
+                            onChange={(e) => setInquiry({...inquiry, tavalug: e.target.value})}
+                            className="w-full h-12 md:h-14 bg-neutral-50 border border-neutral-100 rounded-xl md:rounded-2xl px-4 text-sm font-bold focus:ring-2 focus:ring-accent-lime outline-none transition-all cursor-pointer text-neutral-700"
+                          >
+                            <option value="">{lang === 'ro' ? 'Fără tăvălug' : 'No roller'}</option>
+                            <option value="Coarda (frontal/spate)">Coarda (frontal/spate)</option>
+                            <option value="Packer cu autocuratare">Packer cu autocuratare</option>
+                            <option value="Vinclu / Vinclu elicoidal / vinclu croskil">Vinclu / Vinclu elicoidal / vinclu croskil</option>
+                            <option value="Tubular">Tubular</option>
+                          </select>
+                        </div>
 
                         <Textarea 
                           placeholder={t[lang].message} 
@@ -481,6 +497,21 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                         </select>
                       </div>
                     )}
+
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest ml-1">{lang === 'ro' ? 'Tăvălug necesar (Opțional)' : 'Required Roller (Optional)'}</label>
+                      <select 
+                        value={inquiry.tavalug}
+                        onChange={(e) => setInquiry({...inquiry, tavalug: e.target.value})}
+                        className="w-full h-12 bg-neutral-50 border border-neutral-100 rounded-xl px-4 text-sm font-bold focus:ring-2 focus:ring-accent-lime outline-none transition-all cursor-pointer text-neutral-700"
+                      >
+                        <option value="">{lang === 'ro' ? 'Fără tăvălug' : 'No roller'}</option>
+                        <option value="Coarda (frontal/spate)">Coarda (frontal/spate)</option>
+                        <option value="Packer cu autocuratare">Packer cu autocuratare</option>
+                        <option value="Vinclu / Vinclu elicoidal / vinclu croskil">Vinclu / Vinclu elicoidal / vinclu croskil</option>
+                        <option value="Tubular">Tubular</option>
+                      </select>
+                    </div>
 
                     <Textarea 
                       placeholder={t[lang].message} 
