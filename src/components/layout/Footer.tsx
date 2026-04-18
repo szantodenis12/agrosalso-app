@@ -130,9 +130,12 @@ export function Footer() {
           </div>
 
           {/* Copyright */}
-          <div className="pt-12 border-t border-white/10 text-center">
+          <div className="pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
             <p className="text-white/40 text-xs tracking-widest font-body">
               © {new Date().getFullYear()} AgroSalso. {t[lang].footerRights}
+            </p>
+            <p className="text-white/40 text-[10px] uppercase tracking-widest font-body">
+              Site creat de <a href="https://epicdigitalhub.ro/" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-accent-lime transition-colors font-bold">Epic Digital Hub</a>
             </p>
           </div>
         </div>
