@@ -425,6 +425,16 @@ export default function NewStandaloneOfferPage() {
                     <Input placeholder="Condiții Plată" value={paymentTerms} onChange={e => setPaymentTerms(e.target.value)} className="text-[11px] font-bold rounded-lg border-neutral-100" />
                   </div>
                 </section>
+
+                <section className="space-y-4 pt-4 border-t border-neutral-50">
+                  <h3 className="font-headline font-extrabold text-xs uppercase tracking-widest flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-neutral-900 rounded-full" /> Date Vânzător (Contact)
+                  </h3>
+                  <div className="space-y-2">
+                    <Input placeholder="Nume reprezentant" value={contactPerson} onChange={e => setContactPerson(e.target.value)} className="text-[11px] font-bold rounded-lg border-neutral-100" />
+                    <Input placeholder="Telefon reprezentant" value={contactPhone} onChange={e => setContactPhone(e.target.value)} className="text-[11px] font-bold rounded-lg border-neutral-100" />
+                  </div>
+                </section>
               </>
             )}
             

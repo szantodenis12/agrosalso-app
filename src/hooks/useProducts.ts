@@ -75,9 +75,15 @@ export function useProducts() {
           return pB - pA;
         case 'name_asc':
           return a.name.localeCompare(b.name, 'ro');
-        case 'newest':
-          // Sortare manuală descrescătoare dacă e selectat 'newest' (interogarea e 'asc')
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        case 'newest': {
+          const getTime = (val: any) => {
+            if (!val) return 0;
+            if (val.toMillis) return val.toMillis();
+            if (val.seconds) return val.seconds * 1000;
+            return new Date(val).getTime();
+          };
+          return getTime(b.createdAt) - getTime(a.createdAt);
+        }
         default: // 'oldest' - ordinea naturală a interogării
           return 0;
       }

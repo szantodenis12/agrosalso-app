@@ -155,7 +155,7 @@ export default function CatalogPage() {
     { value: 'name_asc', label: t[lang].sortNameAsc },
   ];
 
-  const FilterContent = () => (
+  const filterContentNode = (
     <div className="space-y-8">
       <div className="space-y-4">
         <h3 className="font-headline font-extrabold text-[11px] uppercase tracking-widest text-neutral-400">{t[lang].search}</h3>
@@ -296,7 +296,7 @@ export default function CatalogPage() {
                       <SheetTitle className="font-headline font-extrabold text-lg uppercase tracking-tight text-left">Filtre Catalog</SheetTitle>
                     </SheetHeader>
                     <div className="p-6 h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar">
-                      <FilterContent />
+                      {filterContentNode}
                     </div>
                   </SheetContent>
                 </Sheet>
@@ -321,7 +321,7 @@ export default function CatalogPage() {
 
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
             <aside className="hidden lg:block lg:w-80 shrink-0 space-y-10 sticky top-[120px] h-fit">
-              <FilterContent />
+              {filterContentNode}
             </aside>
 
             <div className="flex-1">

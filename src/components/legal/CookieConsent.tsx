@@ -24,7 +24,19 @@ export function CookieConsent() {
         const { timestamp } = JSON.parse(savedConsent);
         const now = Date.now();
         const diffDays = (now - timestamp) / (1000 * 60 * 60 * 24);
-        if (diffDays > EXPIRY_DAYS) setIsVisible(true);
+        if (diffDays > EXPIRY_DAYS) {
+          setIsVisible(true);
+        } else {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('consent', 'update', {
+            'ad_storage': 'granted',
+            'analytics_storage': 'granted',
+            'ad_user_data': 'granted',
+            'ad_personalization': 'granted'
+          });
+          window.dataLayer.push({ event: 'cookie_consent_update' });
+        }
       } catch (e) {
         setIsVisible(true);
       }
@@ -36,6 +48,17 @@ export function CookieConsent() {
   const handleAccept = () => {
     const consentData = { accepted: true, timestamp: Date.now() };
     localStorage.setItem(CONSENT_KEY, JSON.stringify(consentData));
+    
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){window.dataLayer.push(arguments);}
+    gtag('consent', 'update', {
+      'ad_storage': 'granted',
+      'analytics_storage': 'granted',
+      'ad_user_data': 'granted',
+      'ad_personalization': 'granted'
+    });
+    window.dataLayer.push({ event: 'cookie_consent_update' });
+    
     setIsVisible(false);
   };
 

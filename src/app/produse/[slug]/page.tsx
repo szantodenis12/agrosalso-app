@@ -230,7 +230,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                         <p className="text-neutral-500 text-xs md:text-sm font-medium">{lang === 'ro' ? 'Lăsați-ne datele voastre și vă vom contacta cu o ofertă personalizată.' : 'Leave us your details and we will contact you with a personalized offer.'}</p>
                       </div>
 
-                      <form onSubmit={handleInquirySubmit} className="space-y-4">
+                      <form onSubmit={handleInquirySubmit} className="space-y-4 product-form" data-product={product.name}>
                         <Input 
                           placeholder={t[lang].fullName} 
                           value={inquiry.name}
@@ -437,7 +437,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                     <p className="text-neutral-500 text-xs font-medium">{lang === 'ro' ? 'Lăsați-ne datele voastre și vă vom contacta cu o ofertă personalizată.' : 'Leave us your details and we will contact you with a personalized offer.'}</p>
                   </div>
 
-                  <form onSubmit={handleInquirySubmit} className="space-y-4">
+                  <form onSubmit={handleInquirySubmit} className="space-y-4 product-form" data-product={product.name}>
                     <Input 
                       placeholder={t[lang].fullName} 
                       value={inquiry.name}
