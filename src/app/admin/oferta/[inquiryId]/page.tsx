@@ -6,7 +6,7 @@ import { Inquiry, Product } from '@/types';
 import { format } from 'date-fns';
 import { ro } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
-import { Printer, Send, ChevronLeft, Loader2, FileText, Clock, ShieldCheck, AlertCircle, Plus, Trash2 } from 'lucide-react';
+import { Printer, Send, ChevronLeft, Loader2, FileText, Clock, ShieldCheck, AlertCircle, Plus, Trash2, Type } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -36,6 +36,18 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
 
   const [extraItems, setExtraItems] = useState<{id: string, name: string, price: number}[]>([]);
 
+  // Inline editing state
+  const [editDescription, setEditDescription] = useState('');
+  const [editedCells, setEditedCells] = useState<Record<string, string>>({});
+  const [customSections, setCustomSections] = useState<{id: string, title: string, content: string}[]>([]);
+  const [editSpecsTitle, setEditSpecsTitle] = useState('Specificații Tehnice');
+  const [editExtrasTitle, setEditExtrasTitle] = useState('Echipamente opționale');
+  const [editAfirText, setEditAfirText] = useState('Prezenta ofertă este întocmită în conformitate cu cerințele tehnice minimale specifice ghidurilor de finanțare nerambursabilă (AFIR). Utilajul ofertat respectă standardele de siguranță, eficiență energetică și protecția mediului impuse de legislația europeană în vigoare.');
+  const [editUrgentText, setEditUrgentText] = useState('Această ofertă beneficiază de procesare prioritară în centrul nostru logistic. Rezervarea utilajului în stoc este garantată timp de 48 de ore de la emitere. Livrare estimată imediat după confirmarea plății.');
+
+  // Subtle inline-edit styling
+  const EDITABLE = "hover:bg-accent-lime/5 focus:outline-none focus:ring-1 focus:ring-accent-lime/30 rounded-sm cursor-text transition-colors print:bg-transparent print:ring-0";
+
   const today = useMemo(() => new Date(), []);
   const offerNumber = useMemo(() => `AS-${today.getFullYear()}-${format(today, 'MMdd')}`, [today]);
 
@@ -56,6 +68,8 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             const prod = { id: pSnap.id, ...pSnap.data() } as Product;
             setProduct(prod);
             setEditPrice(prod.price);
+            setEditDescription(prod.detailedDescription || prod.description || '');
+            setEditedCells({});
           }
         }
       } catch (err) {
@@ -226,8 +240,8 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
               <h4 className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest mb-4">Beneficiar</h4>
               <p className="font-headline font-extrabold text-sm text-neutral-900 uppercase">{inquiry.name}</p>
               <div className="text-[11px] font-bold text-neutral-500 space-y-2 mt-2">
-                <p contentEditable suppressContentEditableWarning className="focus:outline-accent-lime min-w-[100px] hover:bg-white border-b border-dashed border-neutral-200 px-1 rounded transition-colors" onBlur={e => setBeneficiaryCui(e.currentTarget.innerText)}>{beneficiaryCui}</p>
-                <p contentEditable suppressContentEditableWarning className="focus:outline-accent-lime hover:bg-white border-b border-dashed border-neutral-200 px-1 rounded transition-colors" onBlur={e => setBeneficiaryAddress(e.currentTarget.innerText)}>{beneficiaryAddress}</p>
+                <p contentEditable suppressContentEditableWarning className="focus:outline-accent-lime min-w-[100px] hover:bg-white border-b border-dashed border-neutral-200 px-1 rounded transition-colors" onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setBeneficiaryCui(v); }}>{beneficiaryCui}</p>
+                <p contentEditable suppressContentEditableWarning className="focus:outline-accent-lime hover:bg-white border-b border-dashed border-neutral-200 px-1 rounded transition-colors" onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setBeneficiaryAddress(v); }}>{beneficiaryAddress}</p>
                 <p className="text-neutral-900 font-extrabold">{inquiry.phone}</p>
               </div>
             </div>
@@ -242,8 +256,11 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                 <span className="text-accent-lime mr-4">{product.brand}</span>
                 <span className="text-neutral-900">{product.name}</span>
               </h3>
-              <div className="text-sm text-neutral-600 font-medium leading-relaxed max-w-3xl border-l-4 border-accent-lime pl-6 italic whitespace-pre-wrap">
-                {product.detailedDescription || product.description}
+              <div contentEditable suppressContentEditableWarning
+                className={cn("text-sm text-neutral-600 font-medium leading-relaxed max-w-3xl border-l-4 border-accent-lime pl-6 italic whitespace-pre-wrap", EDITABLE)}
+                onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setEditDescription(v); }}
+              >
+                {editDescription}
               </div>
             </div>
           </div>
@@ -270,9 +287,10 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                 <ShieldCheck className="text-blue-600 shrink-0 mt-1" size={24} />
                 <div className="space-y-1">
                   <p className="text-[10px] font-extrabold text-blue-800 uppercase tracking-widest">Conformitate Tehnică Finanțare</p>
-                  <p className="text-[11px] text-blue-600 leading-relaxed font-medium">
-                    Prezenta ofertă este întocmită în conformitate cu cerințele tehnice minimale specifice ghidurilor de finanțare nerambursabilă (AFIR). Utilajul ofertat respectă standardele de siguranță, eficiență energetică și protecția mediului impuse de legislația europeană în vigoare.
-                  </p>
+                  <p contentEditable suppressContentEditableWarning
+                    className={cn("text-[11px] text-blue-600 leading-relaxed font-medium", EDITABLE)}
+                    onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setEditAfirText(v); }}
+                  >{editAfirText}</p>
                 </div>
               </div>
             )}
@@ -283,9 +301,10 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                 <AlertCircle className="text-red-600 shrink-0 mt-1" size={24} />
                 <div className="space-y-1">
                   <p className="text-[10px] font-extrabold text-red-800 uppercase tracking-widest">Atenție: Stoc Limitat</p>
-                  <p className="text-[11px] text-red-600 leading-relaxed font-bold">
-                    Această ofertă beneficiază de procesare prioritară în centrul nostru logistic. Rezervarea utilajului în stoc este garantată timp de 48 de ore de la emitere. Livrare estimată imediat după confirmarea plății.
-                  </p>
+                  <p contentEditable suppressContentEditableWarning
+                    className={cn("text-[11px] text-red-600 leading-relaxed font-bold", EDITABLE)}
+                    onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setEditUrgentText(v); }}
+                  >{editUrgentText}</p>
                 </div>
               </div>
             )}
@@ -293,7 +312,8 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
             {product.specTable && displayRows.length > 0 && (
               <div className="mb-12">
                 <h4 className="font-headline font-extrabold text-sm uppercase tracking-tight border-b-2 border-neutral-900 pb-2 mb-6 flex items-center gap-3">
-                  <div className="w-2 h-2 bg-accent-lime rounded-full" /> Specificații Tehnice
+                  <div className="w-2 h-2 bg-accent-lime rounded-full shrink-0" />
+                  <span contentEditable suppressContentEditableWarning className={EDITABLE} onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setEditSpecsTitle(v); }}>{editSpecsTitle}</span>
                 </h4>
                 <table className="w-full text-left text-[10px] border-collapse shadow-sm">
                   <thead className="bg-neutral-900 text-white">
@@ -307,7 +327,11 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
                     {displayRows.map((row, ri) => (
                       <tr key={ri} className={cn("transition-colors", row.isPopular ? "bg-accent-lime/10" : "even:bg-neutral-50")}>
                         {row.values.map((v, ci) => (
-                          <td key={ci} className="p-3 border border-neutral-100 font-bold text-neutral-700">{v}</td>
+                          <td key={ci}
+                            contentEditable suppressContentEditableWarning
+                            className={cn("p-3 border border-neutral-100 font-bold text-neutral-700", EDITABLE)}
+                            onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setEditedCells(prev => ({...prev, [`${ri}-${ci}`]: v})); }}
+                          >{editedCells[`${ri}-${ci}`] ?? v}</td>
                         ))}
                       </tr>
                     ))}
@@ -323,7 +347,8 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
               <div className="mb-12">
                 <h4 className="font-headline font-extrabold text-sm uppercase tracking-tight border-b-2 border-neutral-900 pb-2 mb-6 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-accent-lime rounded-full" /> Echipamente opționale
+                    <div className="w-2 h-2 bg-accent-lime rounded-full shrink-0" />
+                    <span contentEditable suppressContentEditableWarning className={EDITABLE} onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setEditExtrasTitle(v); }}>{editExtrasTitle}</span>
                   </div>
                 </h4>
                 <table className="w-full text-left text-[10px] border-collapse shadow-sm mb-4">
@@ -363,7 +388,29 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
               </div>
             )}
 
-            <div className="print:hidden mb-12 border-t border-dashed border-neutral-200 mt-[-20px] pt-4 flex justify-end">
+            {/* Custom text sections */}
+            {customSections.map(section => (
+              <div key={section.id} className="mb-8">
+                <h4 className="font-headline font-extrabold text-sm uppercase tracking-tight border-b-2 border-neutral-900 pb-2 mb-4 flex items-center gap-3">
+                  <div className="w-2 h-2 bg-accent-lime rounded-full shrink-0" />
+                  <span contentEditable suppressContentEditableWarning className={EDITABLE}
+                    onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setCustomSections(prev => prev.map(s => s.id === section.id ? {...s, title: v} : s)); }}
+                  >{section.title}</span>
+                </h4>
+                <p contentEditable suppressContentEditableWarning
+                  className={cn("text-[11px] font-medium text-neutral-600 leading-relaxed whitespace-pre-wrap min-h-[2em]", EDITABLE)}
+                  onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setCustomSections(prev => prev.map(s => s.id === section.id ? {...s, content: v} : s)); }}
+                >{section.content}</p>
+                <button className="mt-2 print:hidden text-red-400 hover:text-red-600 text-[10px] font-bold flex items-center gap-1"
+                  onClick={() => setCustomSections(prev => prev.filter(s => s.id !== section.id))}
+                ><Trash2 size={12} /> Șterge secțiunea</button>
+              </div>
+            ))}
+
+            <div className="print:hidden mb-12 border-t border-dashed border-neutral-200 mt-[-20px] pt-4 flex justify-end gap-2">
+               <Button variant="outline" size="sm" onClick={() => setCustomSections([...customSections, { id: Math.random().toString(), title: 'Secțiune nouă', content: 'Introduceți textul aici...' }])}>
+                 <Type size={14} className="mr-1" /> Adaugă secțiune text
+               </Button>
                <Button variant="outline" size="sm" onClick={() => setExtraItems([...extraItems, { id: Math.random().toString(), name: 'Echipament opțional nou', price: 0 }])}>
                  <Plus size={14} className="mr-1" /> Adaugă opțional / serviciu extra
                </Button>
@@ -373,7 +420,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
               <div className="w-[380px] space-y-4 bg-neutral-50 p-8 rounded-[2rem] border border-neutral-100 shadow-sm">
                 <div className="flex justify-between items-center pb-3 border-b border-neutral-200">
                   <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">Preț Utilaj (Net)</span>
-                  <span contentEditable suppressContentEditableWarning className="font-headline font-extrabold text-2xl text-neutral-900 focus:outline-accent-lime" onBlur={e => setEditPrice(parseFloat(e.currentTarget.innerText.replace(/[^0-9.]/g, '')) || 0)}>{editPrice.toLocaleString()} EUR</span>
+                  <span contentEditable suppressContentEditableWarning className="font-headline font-extrabold text-2xl text-neutral-900 focus:outline-accent-lime" onBlur={e => { const v = e.currentTarget?.innerText?.replace(/[^0-9.]/g, ''); if (v != null) setEditPrice(parseFloat(v) || 0); }}>{editPrice.toLocaleString()} EUR</span>
                 </div>
                 {extraItems.length > 0 && (
                   <div className="flex justify-between items-center pb-3 border-b border-neutral-200">
@@ -400,8 +447,8 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
               <div className="space-y-4">
                  <h4 className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest">Condiții comerciale:</h4>
                  <div className="space-y-2">
-                   <p className="text-[11px] font-bold text-neutral-700">Livrare: <span contentEditable suppressContentEditableWarning className="text-neutral-900 border-b border-dashed border-neutral-300" onBlur={e => setDeliveryTerm(e.currentTarget.innerText)}>{deliveryTerm}</span></p>
-                   <p className="text-[11px] font-bold text-neutral-700">Plată: <span contentEditable suppressContentEditableWarning className="text-neutral-900 border-b border-dashed border-neutral-300" onBlur={e => setPaymentTerms(e.currentTarget.innerText)}>{paymentTerms}</span></p>
+                   <p className="text-[11px] font-bold text-neutral-700">Livrare: <span contentEditable suppressContentEditableWarning className="text-neutral-900 border-b border-dashed border-neutral-300" onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setDeliveryTerm(v); }}>{deliveryTerm}</span></p>
+                   <p className="text-[11px] font-bold text-neutral-700">Plată: <span contentEditable suppressContentEditableWarning className="text-neutral-900 border-b border-dashed border-neutral-300" onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setPaymentTerms(v); }}>{paymentTerms}</span></p>
                    <div className="flex items-center gap-2 pt-1 border-t border-neutral-100 mt-2">
                      <Clock size={12} className="text-accent-lime" />
                      <p className="text-[11px] font-bold text-neutral-900">Valabilitate ofertă: <span className="font-extrabold">15 zile calendaristice</span></p>
@@ -411,7 +458,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
               <div className="space-y-4">
                  <h4 className="text-[9px] font-extrabold text-neutral-400 uppercase tracking-widest">Persoană de contact:</h4>
                  <div className="space-y-1">
-                   <p contentEditable suppressContentEditableWarning className="font-headline font-extrabold text-lg text-neutral-900" onBlur={e => setContactPerson(e.currentTarget.innerText)}>{contactPerson}</p>
+                   <p contentEditable suppressContentEditableWarning className="font-headline font-extrabold text-lg text-neutral-900" onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setContactPerson(v); }}>{contactPerson}</p>
                    <p className="text-[10px] font-bold text-accent-lime uppercase tracking-widest">{contactPosition}</p>
                    <p className="text-[12px] font-extrabold text-neutral-900 mt-2">{contactPhone}</p>
                  </div>

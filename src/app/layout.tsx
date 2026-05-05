@@ -4,6 +4,7 @@ import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { VisitorTracker } from '@/components/analytics/VisitorTracker';
 import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/context/LanguageContext';
+import { WhatsAppButton } from '@/components/layout/WhatsAppButton';
 import { CookieConsent } from '@/components/legal/CookieConsent';
 import { GTMListener } from '@/components/analytics/GTMListener';
 import Script from 'next/script';
@@ -72,6 +73,7 @@ export default function RootLayout({
             {children}
             <Toaster />
             <CookieConsent />
+            <WhatsAppButton />
           </FirebaseClientProvider>
         </LanguageProvider>
       </body>
