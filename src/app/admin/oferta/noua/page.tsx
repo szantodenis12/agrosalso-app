@@ -38,6 +38,8 @@ export default function NewStandaloneOfferPage() {
   const [beneficiaryAddress, setBeneficiaryAddress] = useState("");
   
   const [offerType, setOfferType] = useState<'standard' | 'afir' | 'urgent'>('standard');
+  const [imageSize, setImageSize] = useState<'large' | 'small' | 'none'>('large');
+  const [textSize, setTextSize] = useState<'sm' | 'base' | 'lg'>('base');
   const [editPrice, setEditPrice] = useState<number>(0);
   const [contactPerson, setContactPerson] = useState("Dorina Ile");
   const [contactPosition, setContactPosition] = useState("Manager Vânzări");
@@ -176,7 +178,7 @@ export default function NewStandaloneOfferPage() {
   const total = totalNet + tva;
 
   return (
-    <div className="min-h-screen bg-neutral-100 pb-20 print:bg-white print:pb-0">
+    <div className="min-h-screen bg-neutral-100 pb-20 print:bg-white print:pb-0 print:min-h-0">
       {/* Toolbar */}
       <div className="bg-white border-b border-neutral-200 p-6 sticky top-0 z-[100] shadow-md print:hidden">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
@@ -210,10 +212,10 @@ export default function NewStandaloneOfferPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto mt-10 grid grid-cols-1 xl:grid-cols-[1fr_350px] gap-10 px-6">
+      <div className="max-w-7xl mx-auto mt-10 grid grid-cols-1 xl:grid-cols-[1fr_350px] gap-10 px-6 print:block print:mt-0 print:px-0">
         
         {/* PDF Preview Area */}
-        <div ref={offerRef} className="space-y-10 print:space-y-0 print:block print:p-0">
+        <div ref={offerRef} className="space-y-10 print:space-y-0 print:block print:p-0 print:m-0 print:w-full">
           {!product ? (
             <div className="bg-white border-4 border-dashed border-neutral-200 rounded-[3rem] p-40 text-center flex flex-col items-center justify-center space-y-4">
               <Package size={80} className="text-neutral-100" />
@@ -270,16 +272,25 @@ export default function NewStandaloneOfferPage() {
                 </div>
 
                 <div className="space-y-8 flex-1">
-                  <div className="relative w-full aspect-[16/9] rounded-[2rem] overflow-hidden bg-neutral-100 border border-neutral-100 shadow-xl">
-                    <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
-                  </div>
+                  {imageSize !== 'none' && (
+                    <div className={cn(
+                      "relative w-full rounded-[2rem] overflow-hidden bg-neutral-100 border border-neutral-100 shadow-xl transition-all duration-300",
+                      imageSize === 'large' ? "aspect-[16/9]" : "aspect-[21/9] max-h-[160px]"
+                    )}>
+                      <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
+                    </div>
+                  )}
                   <div className="space-y-4">
                     <h3 className="font-headline font-extrabold text-4xl tracking-tight uppercase leading-tight">
                       <span className="text-accent-lime mr-4">{product.brand}</span>
                       <span className="text-neutral-900">{product.name}</span>
                     </h3>
                     <div contentEditable suppressContentEditableWarning
-                      className={cn("text-sm text-neutral-600 font-medium leading-relaxed max-w-3xl border-l-4 border-accent-lime pl-6 italic whitespace-pre-wrap", EDITABLE)}
+                      className={cn(
+                        "text-neutral-600 font-medium leading-relaxed max-w-3xl border-l-4 border-accent-lime pl-6 italic whitespace-pre-wrap",
+                        textSize === 'sm' ? "text-xs" : textSize === 'lg' ? "text-base" : "text-sm",
+                        EDITABLE
+                      )}
                       onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setEditDescription(v); }}
                     >
                       {editDescription}
@@ -504,6 +515,31 @@ export default function NewStandaloneOfferPage() {
                   <div className="relative">
                     <Input type="number" value={editPrice} onChange={e => setEditPrice(parseFloat(e.target.value) || 0)} className="rounded-xl border-neutral-100 bg-neutral-50 pl-14 font-bold text-lg h-14" />
                     <span className="absolute left-5 top-1/2 -translate-y-1/2 font-bold text-neutral-400">EUR</span>
+                  </div>
+                </section>
+
+                <section className="space-y-4 pt-4 border-t border-neutral-50">
+                  <h3 className="font-headline font-extrabold text-xs uppercase tracking-widest flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-neutral-900 rounded-full" /> Design Pagina 1
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] uppercase font-bold text-neutral-400">Dimensiune Imagine</label>
+                      <div className="bg-neutral-50 p-1 rounded-xl flex gap-1">
+                        <Button type="button" variant={imageSize === 'large' ? 'default' : 'ghost'} size="sm" className="text-[10px] flex-1 py-1 h-7 rounded-lg" onClick={() => setImageSize('large')}>Mare</Button>
+                        <Button type="button" variant={imageSize === 'small' ? 'default' : 'ghost'} size="sm" className="text-[10px] flex-1 py-1 h-7 rounded-lg" onClick={() => setImageSize('small')}>Mică</Button>
+                        <Button type="button" variant={imageSize === 'none' ? 'default' : 'ghost'} size="sm" className="text-[10px] flex-1 py-1 h-7 rounded-lg" onClick={() => setImageSize('none')}>Fără</Button>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] uppercase font-bold text-neutral-400">Mărime Text Descriere</label>
+                      <div className="bg-neutral-50 p-1 rounded-xl flex gap-1">
+                        <Button type="button" variant={textSize === 'sm' ? 'default' : 'ghost'} size="sm" className="text-[10px] flex-1 py-1 h-7 rounded-lg" onClick={() => setTextSize('sm')}>Mic</Button>
+                        <Button type="button" variant={textSize === 'base' ? 'default' : 'ghost'} size="sm" className="text-[10px] flex-1 py-1 h-7 rounded-lg" onClick={() => setTextSize('base')}>Normal</Button>
+                        <Button type="button" variant={textSize === 'lg' ? 'default' : 'ghost'} size="sm" className="text-[10px] flex-1 py-1 h-7 rounded-lg" onClick={() => setTextSize('lg')}>Mare</Button>
+                      </div>
+                    </div>
                   </div>
                 </section>
 

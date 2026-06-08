@@ -23,6 +23,8 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [offerType, setOfferType] = useState<'standard' | 'afir' | 'urgent'>('standard');
+  const [imageSize, setImageSize] = useState<'large' | 'small' | 'none'>('large');
+  const [textSize, setTextSize] = useState<'sm' | 'base' | 'lg'>('base');
 
   const [editPrice, setEditPrice] = useState<number>(0);
   const [contactPerson, setContactPerson] = useState("Dorina Ile");
@@ -175,7 +177,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
   const total = totalNet + tva;
 
   return (
-    <div className="min-h-screen bg-neutral-100 pb-20 print:bg-white print:pb-0">
+    <div className="min-h-screen bg-neutral-100 pb-20 print:bg-white print:pb-0 print:min-h-0">
       {/* Toolbar */}
       <div className="bg-white border-b border-neutral-200 p-6 sticky top-0 z-[100] shadow-md print:hidden toolbar">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
@@ -189,6 +191,33 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
               <Button variant={offerType === 'afir' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('afir')}>AFIR</Button>
               <Button variant={offerType === 'urgent' ? 'default' : 'ghost'} size="sm" onClick={() => setOfferType('urgent')} className={cn(offerType !== 'urgent' && "text-red-500")}>Urgență</Button>
             </div>
+            
+            {/* Design Controls */}
+            <div className="flex items-center gap-2 mr-2">
+              <span className="text-[10px] uppercase font-bold text-neutral-400">Imagine:</span>
+              <select 
+                value={imageSize} 
+                onChange={e => setImageSize(e.target.value as any)} 
+                className="bg-neutral-50 text-xs font-bold rounded-lg border border-neutral-200 p-1.5 focus:outline-none"
+              >
+                <option value="large">Mare</option>
+                <option value="small">Mică</option>
+                <option value="none">Fără</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-2 mr-4">
+              <span className="text-[10px] uppercase font-bold text-neutral-400">Text:</span>
+              <select 
+                value={textSize} 
+                onChange={e => setTextSize(e.target.value as any)} 
+                className="bg-neutral-50 text-xs font-bold rounded-lg border border-neutral-200 p-1.5 focus:outline-none"
+              >
+                <option value="sm">Mic</option>
+                <option value="base">Normal</option>
+                <option value="lg">Mare</option>
+              </select>
+            </div>
+
             <Button variant="outline" className="rounded-xl h-11 px-6 border-2" onClick={() => window.print()}><Printer size={18} className="mr-2" /> PDF LOCAL</Button>
             <Button className="bg-neutral-900 hover:bg-black text-white rounded-xl h-11 px-6" onClick={handleSendEmail} disabled={sending}>
               {sending ? <Loader2 className="animate-spin size-4 mr-2" /> : <Send size={18} className="mr-2" />} SALVEAZĂ & TRIMITE
@@ -197,7 +226,7 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
         </div>
       </div>
 
-      <div ref={offerRef} className="space-y-10 print:space-y-0 print:block print:p-0">
+      <div ref={offerRef} className="space-y-10 print:space-y-0 print:block print:p-0 print:m-0 print:w-full">
         
         {/* PAGINA 1: PREZENTARE */}
         <div className="offer-page max-w-[210mm] mx-auto my-10 bg-white shadow-2xl min-h-[297mm] p-[15mm] print:m-0 print:shadow-none relative border border-neutral-200 print:border-none flex flex-col">
@@ -248,16 +277,25 @@ export default function GenerateOfferPage({ params }: { params: Promise<{ inquir
           </div>
 
           <div className="space-y-8 flex-1">
-            <div className="relative w-full aspect-[16/9] rounded-[2rem] overflow-hidden bg-neutral-100 border border-neutral-100 shadow-xl">
-              <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
-            </div>
+            {imageSize !== 'none' && (
+              <div className={cn(
+                "relative w-full rounded-[2rem] overflow-hidden bg-neutral-100 border border-neutral-100 shadow-xl transition-all duration-300",
+                imageSize === 'large' ? "aspect-[16/9]" : "aspect-[21/9] max-h-[160px]"
+              )}>
+                <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
+              </div>
+            )}
             <div className="space-y-4">
               <h3 className="font-headline font-extrabold text-4xl tracking-tight uppercase leading-tight">
                 <span className="text-accent-lime mr-4">{product.brand}</span>
                 <span className="text-neutral-900">{product.name}</span>
               </h3>
               <div contentEditable suppressContentEditableWarning
-                className={cn("text-sm text-neutral-600 font-medium leading-relaxed max-w-3xl border-l-4 border-accent-lime pl-6 italic whitespace-pre-wrap", EDITABLE)}
+                className={cn(
+                  "text-neutral-600 font-medium leading-relaxed max-w-3xl border-l-4 border-accent-lime pl-6 italic whitespace-pre-wrap",
+                  textSize === 'sm' ? "text-xs" : textSize === 'lg' ? "text-base" : "text-sm",
+                  EDITABLE
+                )}
                 onBlur={e => { const v = e.currentTarget?.innerText; if (v != null) setEditDescription(v); }}
               >
                 {editDescription}

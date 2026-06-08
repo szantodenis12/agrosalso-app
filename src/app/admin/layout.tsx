@@ -92,7 +92,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="flex min-h-screen bg-neutral-50">
+    <div className="admin-layout-root flex min-h-screen bg-neutral-50">
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-neutral-900 text-white flex items-center justify-between px-6 z-50 border-b border-white/5 print:hidden">
         <Link href="/admin">
           <Image 
