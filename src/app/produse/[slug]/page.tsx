@@ -21,6 +21,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
 import { useTranslation } from '@/hooks/useTranslation';
+import { TBIInstallmentsBanner } from '@/components/common/TBIInstallmentsBanner';
 import {
   Dialog,
   DialogContent,
@@ -222,6 +223,8 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                       </div>
                     </div>
                   </div>
+
+                  <TBIInstallmentsBanner variant="compact" />
 
                   {/* Sidebar Inquiry Form (Desktop Only) */}
                   <div className="hidden lg:block">

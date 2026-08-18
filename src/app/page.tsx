@@ -5,6 +5,7 @@ import { AboutSection } from '@/components/home/AboutSection';
 import { TestimonialsSection } from '@/components/home/TestimonialsSection';
 import { ContactSection } from '@/components/home/ContactSection';
 import { Footer } from '@/components/layout/Footer';
+import { TBIInstallmentsBanner } from '@/components/common/TBIInstallmentsBanner';
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
         <AboutSection />
         <TestimonialsSection />
         <ContactSection />
+        <TBIInstallmentsBanner />
       </main>
       <Footer />
     </>
