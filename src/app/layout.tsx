@@ -11,15 +11,16 @@ import Script from 'next/script';
 export const metadata: Metadata = {
   metadataBase: new URL('https://agrosalso.ro'),
   title: {
-    default: 'AgroSalso — Utilaje și Echipamente Agricole',
-    template: '%s | AgroSalso'
+    default: 'Agro Salso — utilaje agricole în Bihor',
+    template: '%s | Agro Salso'
   },
-  description: 'Distribuitor autorizat utilaje agricole în România din 2005. Tractoare, combine, sisteme irigații. Livrare rapidă, service autorizat, finanțare.',
-  keywords: ['utilaje agricole', 'tractoare Romania', 'combine agricole', 'echipamente agricole', 'John Deere Romania', 'CLAAS Romania', 'irigații agricole'],
+  description: 'Dealer de utilaje agricole în Bihor, din 2012. Grape cu discuri, grubere, combinatoare, semănători și piese de schimb. Prețuri afișate pe site.',
+  keywords: ['utilaje agricole Bihor', 'grape cu discuri', 'grubere', 'combinatoare', 'semănători', 'piese de schimb utilaje agricole', 'Dexwal', 'Strumyk', 'Tolmet'],
+  alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     locale: 'ro_RO',
-    siteName: 'AgroSalso',
+    siteName: 'Agro Salso',
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
 };

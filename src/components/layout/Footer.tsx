@@ -129,8 +129,34 @@ export function Footer() {
             </div>
           </div>
 
+          {/* ANPC Consumer Protection */}
+          <div className="pt-12 border-t border-white/10 flex flex-wrap justify-center md:justify-start items-center gap-4">
+            <a
+              href="https://anpc.ro/sal"
+              target="_blank"
+              rel="nofollow noopener noreferrer"
+              className="inline-block shrink-0 opacity-90 hover:opacity-100 transition-opacity"
+            >
+              <Image
+                src="/anpc/anpc-sal.png"
+                alt="Soluționarea Alternativă a Litigiilor (SAL) - ANPC"
+                width={201}
+                height={50}
+                className="h-9 w-auto"
+              />
+            </a>
+            <a
+              href="https://anpc.ro"
+              target="_blank"
+              rel="nofollow noopener noreferrer"
+              className="text-white/50 hover:text-accent-lime transition-colors text-[10px] uppercase tracking-widest font-body font-bold"
+            >
+              ANPC
+            </a>
+          </div>
+
           {/* Copyright */}
-          <div className="pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+          <div className="pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
             <p className="text-white/40 text-xs tracking-widest font-body">
               © {new Date().getFullYear()} AgroSalso. {t[lang].footerRights}
             </p>
