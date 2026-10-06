@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getAllProductSlugs } from '@/lib/seo/product-data';
+import { NOUTATI } from '@/content/noutati';
 
 // Generează https://agrosalso.ro/sitemap.xml
 //
@@ -14,8 +15,9 @@ import { getAllProductSlugs } from '@/lib/seo/product-data';
 // producție să nu înghețe sitemap-ul cu lista de produse de la momentul
 // build-ului.
 //
-// Notă: /noutati, /servicii și /dealer-autorizat-dexwal NU sunt incluse pentru că
-// nu există ca rute în acest site — includerea lor ar trimite Google către 404.
+// /servicii, /dealer-autorizat-dexwal și /noutati sunt rute statice din site;
+// intrările /noutati/{slug} se generează din content/noutati.ts (NOUTATI),
+// ca o noutate nouă să intre automat în sitemap.
 
 export const revalidate = 3600;
 
@@ -82,7 +84,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/produse`, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${BASE}/despre`, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE}/contact`, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE}/servicii`, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE}/dealer-autorizat-dexwal`, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE}/noutati`, changeFrequency: 'weekly', priority: 0.7 },
   ];
+
+  const noutati: MetadataRoute.Sitemap = NOUTATI.map(({ slug, date }) => ({
+    url: `${BASE}/noutati/${slug}`,
+    lastModified: date,
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }));
 
   const fetched = await getAllProductSlugs();
 
@@ -100,5 +112,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           priority: 0.8,
         }));
 
-  return [...pagini, ...produse];
+  return [...pagini, ...noutati, ...produse];
 }

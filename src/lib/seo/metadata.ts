@@ -37,6 +37,18 @@ export const META = {
       'Telefon 0742 936 959, WhatsApp 0761 927 076, program Luni–Vineri 08:00–17:00. Adresă: DN79, Mădăras, Bihor.',
     alternates: { canonical: '/contact' },
   },
+  termeniSiConditii: {
+    title: { absolute: 'Termeni și condiții — Agro Salso' },
+    description:
+      'Termenii și condițiile de utilizare a site-ului agrosalso.ro: comenzi, prețuri, livrare și garanție pentru utilajele agricole.',
+    alternates: { canonical: '/termeni-si-conditii' },
+  },
+  politicaDeConfidentialitate: {
+    title: { absolute: 'Politica de confidențialitate — Agro Salso' },
+    description:
+      'Politica de confidențialitate Agro Salso: ce date colectăm pe agrosalso.ro, cum le folosim și cum vă puteți exercita drepturile GDPR.',
+    alternates: { canonical: '/politica-de-confidentialitate' },
+  },
 } satisfies Record<string, Metadata>;
 
 export interface ProdusMeta {

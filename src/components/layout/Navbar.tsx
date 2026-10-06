@@ -109,6 +109,7 @@ export function Navbar() {
     { name: t[lang].home, href: '/' },
     { name: t[lang].products, href: '/produse' },
     { name: t[lang].about, href: '/despre' },
+    { name: t[lang].news, href: '/noutati' },
     { name: t[lang].contact, href: '/contact' },
   ];
 
@@ -132,7 +133,7 @@ export function Navbar() {
     <>
       <nav 
         className={cn(
-          "fixed top-0 left-0 right-0 z-[60] transition-all duration-500 px-6 py-6 md:px-14",
+          "fixed top-0 left-0 right-0 z-[60] transition-all duration-500 px-6 py-6 md:px-8 xl:px-14",
           !isTransparentInitial ? "bg-neutral-950/95 backdrop-blur-md py-4 shadow-lg" : "bg-transparent"
         )}
       >
@@ -150,13 +151,13 @@ export function Navbar() {
             </Link>
           </div>
 
-          <div className="hidden lg:flex items-center gap-10">
+          <div className="hidden lg:flex items-center gap-5 xl:gap-10">
             {NAV_LINKS.map((link) => (
-              <Link 
-                key={link.name} 
+              <Link
+                key={link.name}
                 href={link.href}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-accent-lime",
+                  "text-sm font-medium transition-colors hover:text-accent-lime whitespace-nowrap",
                   pathname === link.href ? "text-accent-lime" : "text-white/80"
                 )}
               >
@@ -165,12 +166,12 @@ export function Navbar() {
             ))}
           </div>
 
-          <div className="hidden lg:flex flex-1 items-center justify-end gap-6">
+          <div className="hidden lg:flex flex-1 items-center justify-end gap-3 xl:gap-6">
             <LanguageSwitcher />
             <Link href="/contact">
-              <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-6 pr-1 rounded-full flex items-center gap-4 transition-all text-sm group">
+              <button className="bg-accent-lime hover:bg-accent-lime/95 text-black font-bold h-12 pl-5 xl:pl-6 pr-1 rounded-full flex items-center gap-2 xl:gap-4 transition-all text-sm group whitespace-nowrap">
                 {t[lang].contactUs}
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center transition-transform group-hover:rotate-45">
+                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shrink-0 transition-transform group-hover:rotate-45">
                   <ArrowUpRight size={18} className="text-black" strokeWidth={2.5} />
                 </div>
               </button>

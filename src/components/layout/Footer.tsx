@@ -104,8 +104,8 @@ export function Footer() {
               <h4 className="text-neutral-500 font-bold text-sm mb-8">{t[lang].footerCompany}</h4>
               <ul className="space-y-4">
                 <li><Link href="/despre" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].about}</Link></li>
-                <li><Link href="/echipa" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].team}</Link></li>
-                <li><Link href="/recenzii" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].reviews}</Link></li>
+                <li><Link href="/noutati" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].news}</Link></li>
+                <li><Link href="/dealer-autorizat-dexwal" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].dexwalDealer}</Link></li>
               </ul>
             </div>
 
