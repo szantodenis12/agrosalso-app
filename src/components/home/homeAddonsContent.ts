@@ -236,6 +236,11 @@ export const FAQ_TITLE_I18N: Record<Language, string> = {
   es: 'Preguntas frecuentes',
 };
 
+export interface OfferStat {
+  value: string;
+  label: string;
+}
+
 export interface OfferContent {
   overline: string;
   title: string;
@@ -244,6 +249,7 @@ export interface OfferContent {
   cta1: string;
   cta2: string;
   footnote: string;
+  stats: OfferStat[];
 }
 
 export const OFFER_I18N: Record<Language, OfferContent> = {
@@ -256,6 +262,11 @@ export const OFFER_I18N: Record<Language, OfferContent> = {
     cta1: 'Cere ofertă conformă AFIR',
     cta2: 'Detalii despre sesiune',
     footnote: 'Pregătim oferta pentru utilaje în maximum 24 de ore.',
+    stats: [
+      { value: 'până la 50.000 €', label: 'sprijin nerambursabil pe proiect' },
+      { value: 'max. 85%', label: 'din cheltuielile eligibile' },
+      { value: '31 oct. 2026', label: 'termen depunere, ora 16:00' },
+    ],
   },
   en: {
     overline: 'Active funding',
@@ -266,6 +277,11 @@ export const OFFER_I18N: Record<Language, OfferContent> = {
     cta1: 'Request an AFIR-compliant offer',
     cta2: 'Details about this funding session',
     footnote: 'We prepare the equipment offer within a maximum of 24 hours.',
+    stats: [
+      { value: 'up to €50,000', label: 'non-refundable support per project' },
+      { value: 'max. 85%', label: 'of eligible expenses' },
+      { value: 'Oct 31, 2026', label: 'deadline, 16:00' },
+    ],
   },
   hu: {
     overline: 'Aktív finanszírozás',
@@ -276,6 +292,11 @@ export const OFFER_I18N: Record<Language, OfferContent> = {
     cta1: 'Kérjen AFIR-kompatibilis ajánlatot',
     cta2: 'Részletek a pályázati időszakról',
     footnote: 'A gépekre vonatkozó ajánlatot legfeljebb 24 órán belül elkészítjük.',
+    stats: [
+      { value: 'akár 50 000 €', label: 'vissza nem térítendő támogatás projektenként' },
+      { value: 'max. 85%', label: 'az elszámolható költségekből' },
+      { value: '2026.10.31.', label: 'beadási határidő, 16:00' },
+    ],
   },
   it: {
     overline: 'Finanziamento attivo',
@@ -286,6 +307,11 @@ export const OFFER_I18N: Record<Language, OfferContent> = {
     cta1: "Richiedi un'offerta conforme AFIR",
     cta2: 'Dettagli sulla sessione',
     footnote: "Prepariamo l'offerta per le attrezzature entro un massimo di 24 ore.",
+    stats: [
+      { value: 'fino a 50.000 €', label: 'sostegno a fondo perduto per progetto' },
+      { value: 'max. 85%', label: 'delle spese ammissibili' },
+      { value: '31 ott. 2026', label: 'scadenza, ore 16:00' },
+    ],
   },
   de: {
     overline: 'Aktive Förderung',
@@ -296,6 +322,11 @@ export const OFFER_I18N: Record<Language, OfferContent> = {
     cta1: 'AFIR-konformes Angebot anfordern',
     cta2: 'Details zur Förderrunde',
     footnote: 'Wir erstellen das Angebot für die Geräte innerhalb von maximal 24 Stunden.',
+    stats: [
+      { value: 'bis zu 50.000 €', label: 'nicht rückzahlbare Förderung pro Projekt' },
+      { value: 'max. 85 %', label: 'der förderfähigen Ausgaben' },
+      { value: '31.10.2026', label: 'Frist, 16:00 Uhr' },
+    ],
   },
   es: {
     overline: 'Financiación activa',
@@ -306,5 +337,10 @@ export const OFFER_I18N: Record<Language, OfferContent> = {
     cta1: 'Solicitar oferta conforme a AFIR',
     cta2: 'Detalles sobre la convocatoria',
     footnote: 'Preparamos la oferta de maquinaria en un máximo de 24 horas.',
+    stats: [
+      { value: 'hasta 50.000 €', label: 'apoyo no reembolsable por proyecto' },
+      { value: 'máx. 85%', label: 'de los gastos elegibles' },
+      { value: '31 oct. 2026', label: 'plazo, 16:00' },
+    ],
   },
 };

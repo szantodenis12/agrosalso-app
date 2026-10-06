@@ -31,6 +31,17 @@ const TESTIMONIALS = [
   }
 ];
 
+// Shortens a displayed reviewer name to "Prenume I." (first name + family-name
+// initial). Applied at render time so the source data above stays untouched
+// and any future name added here (or fetched dynamically) is shortened too.
+function formatReviewerName(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length < 2) return fullName;
+  const [firstName, ...rest] = parts;
+  const familyInitial = rest[rest.length - 1].charAt(0).toUpperCase();
+  return `${firstName} ${familyInitial}.`;
+}
+
 export function TestimonialsSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const isMobile = useIsMobile();
@@ -115,7 +126,7 @@ export function TestimonialsSection() {
                   </p>
                 </div>
                 <div className="pt-6 md:pt-8">
-                  <div className="font-headline font-bold text-base md:text-lg text-neutral-900">{item.author}</div>
+                  <div className="font-headline font-bold text-base md:text-lg text-neutral-900">{formatReviewerName(item.author)}</div>
                   <div className="text-neutral-400 text-xs md:text-sm font-body">{item.location}</div>
                 </div>
               </motion.div>
