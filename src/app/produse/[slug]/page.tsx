@@ -21,6 +21,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useBlackFridayActive } from '@/hooks/useBlackFriday';
+import { getBfProductBySlug, formatEuro, formatBfEndDate } from '@/lib/promo/blackFriday';
+import { BF_I18N } from '@/components/home/blackFridayContent';
 import { TBIInstallmentsBanner } from '@/components/common/TBIInstallmentsBanner';
 import {
   Dialog,
@@ -38,6 +41,9 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
   const [selectedGalleryImage, setSelectedGalleryImage] = useState<string | null>(null);
   const db = useFirestore();
   const { lang } = useLanguage();
+  const bfActive = useBlackFridayActive();
+  const bf = bfActive ? getBfProductBySlug(slug) : undefined;
+  const bfText = BF_I18N[lang];
 
   const { translatedData, isTranslating } = useTranslation(product);
 
@@ -210,12 +216,47 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 <div className="lg:col-span-5 space-y-6 md:space-y-8">
                   <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-8 md:p-10 text-neutral-900 border border-neutral-100 shadow-xl overflow-hidden relative">
                     <div className="space-y-4 md:space-y-6 relative z-10">
-                      <div className="space-y-1">
-                        <span className="text-[9px] md:text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">{t[lang].catalogPrice}</span>
-                        <div className="font-headline font-extrabold text-3xl md:text-5xl text-neutral-900 tracking-tighter">
-                          {product.priceOnRequest ? t[lang].priceOnRequest : `${product.price.toLocaleString()} EUR`}
+                      {bf?.priceMode === 'replace' ? (
+                        <div className="space-y-2">
+                          <span className="inline-flex items-center gap-2 px-3 py-1 bg-neutral-900 text-white rounded-full text-[9px] md:text-[10px] font-extrabold uppercase tracking-widest">
+                            <span className="w-1.5 h-1.5 bg-accent-lime rounded-full" />
+                            {bfText.pageLabel}
+                          </span>
+                          <div className="flex items-baseline gap-3 flex-wrap">
+                            <span className="font-headline font-extrabold text-3xl md:text-5xl text-neutral-900 tracking-tighter">{formatEuro(bf.newPrice)}</span>
+                            <span className="font-headline font-bold text-lg md:text-xl text-neutral-400 line-through">{formatEuro(bf.oldPrice)}</span>
+                            <span className="text-neutral-500 font-body text-sm">{bfText.vat}</span>
+                          </div>
+                          <p className="text-neutral-500 text-[11px] md:text-xs font-medium">{bfText.pageValidUntil.replace('{date}', formatBfEndDate(lang))}</p>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="space-y-1">
+                          <span className="text-[9px] md:text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">{t[lang].catalogPrice}</span>
+                          <div className="font-headline font-extrabold text-3xl md:text-5xl text-neutral-900 tracking-tighter">
+                            {product.priceOnRequest ? t[lang].priceOnRequest : `${product.price.toLocaleString()} EUR`}
+                          </div>
+                        </div>
+                      )}
+
+                      {bf?.priceMode === 'variant' && (
+                        <div className="rounded-xl md:rounded-2xl border border-neutral-200 bg-neutral-50 p-4 md:p-5 space-y-2">
+                          <div className="flex items-center justify-between gap-3 flex-wrap">
+                            <span className="text-[9px] md:text-[10px] font-extrabold text-neutral-500 uppercase tracking-widest">{bfText.variantTitle}</span>
+                            <span className="inline-flex items-center gap-2 px-3 py-1 bg-neutral-900 text-white rounded-full text-[9px] md:text-[10px] font-extrabold uppercase tracking-widest">
+                              <span className="w-1.5 h-1.5 bg-accent-lime rounded-full" />
+                              {bfText.pageLabel}
+                            </span>
+                          </div>
+                          <div className="font-headline font-bold text-sm md:text-base text-neutral-900">{bfText.variantName}</div>
+                          <div className="flex items-baseline gap-3 flex-wrap">
+                            <span className="font-headline font-extrabold text-2xl md:text-4xl text-neutral-900 tracking-tighter">{formatEuro(bf.newPrice)}</span>
+                            <span className="font-headline font-bold text-base md:text-lg text-neutral-400 line-through">{formatEuro(bf.oldPrice)}</span>
+                            <span className="text-neutral-500 font-body text-sm">{bfText.vat}</span>
+                          </div>
+                          <p className="text-neutral-500 text-[11px] md:text-xs font-medium leading-relaxed">{bfText.variantNote}</p>
+                          <p className="text-neutral-500 text-[11px] md:text-xs font-medium">{bfText.pageValidUntil.replace('{date}', formatBfEndDate(lang))}</p>
+                        </div>
+                      )}
 
                       <div className="flex items-center gap-3 p-3 md:p-4 bg-neutral-50 rounded-xl md:rounded-2xl border border-neutral-100">
                         <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-accent-lime rounded-full animate-pulse shadow-[0_0_10px_rgba(122,194,74,0.5)]" />

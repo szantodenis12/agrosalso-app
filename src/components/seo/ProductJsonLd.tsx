@@ -14,6 +14,10 @@ export interface ProductJsonLdProps {
   pret?: number | string;
   moneda?: string;
   inStoc?: boolean;
+  /** Valabilitate (YYYY-MM-DD) pentru oferta de bază, când prețul e unul promoțional. */
+  valabilPanaLa?: string;
+  /** Variante promoționale separate (ex. GRUNT cu tăvălug), emise ca Offer suplimentar. */
+  variante?: { nume: string; pret: number; valabilPanaLa: string }[];
 }
 
 export default function ProductJsonLd({
@@ -25,7 +29,36 @@ export default function ProductJsonLd({
   pret,
   moneda = 'EUR',
   inStoc = true,
+  valabilPanaLa,
+  variante,
 }: ProductJsonLdProps) {
+  const availability = inStoc
+    ? 'https://schema.org/InStock'
+    : 'https://schema.org/OutOfStock';
+  const seller = { '@type': 'Organization', name: 'Agro Salso' };
+  const offers: Record<string, unknown>[] = [];
+  if (pret) {
+    offers.push({
+      '@type': 'Offer',
+      price: String(pret),
+      priceCurrency: moneda,
+      ...(valabilPanaLa ? { priceValidUntil: valabilPanaLa } : {}),
+      availability,
+      seller,
+    });
+  }
+  for (const v of variante ?? []) {
+    offers.push({
+      '@type': 'Offer',
+      name: v.nume,
+      price: String(v.pret),
+      priceCurrency: moneda,
+      priceValidUntil: v.valabilPanaLa,
+      availability,
+      seller,
+    });
+  }
+
   const data = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -34,19 +67,7 @@ export default function ProductJsonLd({
     category: categorie,
     ...(imagine ? { image: imagine } : {}),
     url: `https://agrosalso.ro/produse/${slug}`,
-    ...(pret
-      ? {
-          offers: {
-            '@type': 'Offer',
-            price: String(pret),
-            priceCurrency: moneda,
-            availability: inStoc
-              ? 'https://schema.org/InStock'
-              : 'https://schema.org/OutOfStock',
-            seller: { '@type': 'Organization', name: 'Agro Salso' },
-          },
-        }
-      : {}),
+    ...(offers.length ? { offers: offers.length === 1 ? offers[0] : offers } : {}),
   };
 
   return (

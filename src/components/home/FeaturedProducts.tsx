@@ -101,7 +101,7 @@ export function FeaturedProducts() {
   }, [products]);
 
   return (
-    <section className="pt-24 pb-0 px-6 md:px-14 bg-white overflow-hidden">
+    <section className="relative z-10 pt-24 pb-0 px-6 md:px-14 bg-white overflow-x-clip">
       <div className="max-w-[1440px] mx-auto">
         <div className="text-center mb-16">
           <motion.div 
