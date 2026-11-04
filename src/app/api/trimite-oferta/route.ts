@@ -12,6 +12,10 @@ const OfferRequestSchema = z.object({
   pdfBase64: z.string(), // Primim fiÈ™ierul codificat base64 de pe client
 });
 
+const escapeHtml = (v: string) =>
+  v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+const stripCrLf = (v: string) => v.replace(/[\r\n]+/g, ' ').trim();
+
 export async function POST(request: Request) {
   try {
     const apiKey = process.env.RESEND_API_KEY;
@@ -37,12 +41,12 @@ export async function POST(request: Request) {
     const { data, error } = await resend.emails.send({
       from: 'AgroSalso <contact@agrosalso.ro>',
       to: [customerEmail],
-      subject: `Ofertă personalizată: ${productName} - AgroSalso`,
+      subject: `Ofertă personalizată: ${stripCrLf(productName)} - AgroSalso`,
       html: `
         <div style="font-family: sans-serif; line-height: 1.6; color: #1a1a1a; max-width: 600px;">
-          <h2 style="color: #000;">Bună ziua, ${firstName}!</h2>
+          <h2 style="color: #000;">Bună ziua, ${escapeHtml(firstName)}!</h2>
           <p>Vă mulțumim pentru interesul manifestat față de utilajele noastre.</p>
-          <p>Atașat acestui e-mail veți găsi oferta oficială pentru utilajul <strong>${productName}</strong>, generată astăzi.</p>
+          <p>Atașat acestui e-mail veți găsi oferta oficială pentru utilajul <strong>${escapeHtml(productName)}</strong>, generată astăzi.</p>
           <p>Documentul conține specificațiile tehnice detaliate, prețul și condițiile de livrare discutate.</p>
           <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
           <p style="font-size: 14px; color: #666;">
@@ -53,7 +57,7 @@ export async function POST(request: Request) {
       `,
       attachments: [
         {
-          filename: `Oferta-AgroSalso-${offerId}.pdf`,
+          filename: `Oferta-AgroSalso-${offerId.replace(/[^\w.-]+/g, '_')}.pdf`,
           content: pdfBase64,
         },
       ],

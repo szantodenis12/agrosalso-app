@@ -20,6 +20,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+// Title editing helpers (offer-only override, never written to the product catalog)
+const cleanTitle = (s: string | null | undefined) => (s ?? '').replace(/\s+/g, ' ').trim();
+const titleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+  if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); }
+};
+const titlePaste = (e: React.ClipboardEvent<HTMLElement>) => {
+  e.preventDefault();
+  document.execCommand('insertText', false, cleanTitle(e.clipboardData.getData('text/plain')));
+};
+
 export default function NewStandaloneOfferPage() {
   const router = useRouter();
   const db = useFirestore();
@@ -53,6 +63,8 @@ export default function NewStandaloneOfferPage() {
 
   // Inline editing state
   const [editDescription, setEditDescription] = useState('');
+  const [editBrand, setEditBrand] = useState('');
+  const [editName, setEditName] = useState('');
   const [editedCells, setEditedCells] = useState<Record<string, string>>({});
   const [customSections, setCustomSections] = useState<{id: string, title: string, content: string}[]>([]);
   const [editSpecsTitle, setEditSpecsTitle] = useState('Specificații Tehnice');
@@ -68,6 +80,8 @@ export default function NewStandaloneOfferPage() {
     if (product) {
       setEditPrice(product.price);
       setEditDescription(product.detailedDescription || product.description || '');
+      setEditBrand('');
+      setEditName('');
       setEditedCells({});
       // Select all rows by default
       if (product.specTable?.rows) {
@@ -75,6 +89,9 @@ export default function NewStandaloneOfferPage() {
       }
     }
   }, [product]);
+
+  const brandText = editBrand || product?.brand || '';
+  const nameText = editName || product?.name || '';
 
   const today = useMemo(() => new Date(), []);
   const offerNumber = useMemo(() => `AS-${today.getFullYear()}-${format(today, 'MMdd')}-NEW`, [today]);
@@ -136,7 +153,7 @@ export default function NewStandaloneOfferPage() {
         email: customerEmail,
         phone: customerPhone,
         productId: product.id,
-        productName: product.name,
+        productName: nameText,
         message: "Ofertă generată manual de administrator.",
         status: 'replied',
         repliedAt: serverTimestamp(),
@@ -156,7 +173,7 @@ export default function NewStandaloneOfferPage() {
           offerId: offerNumber,
           customerName: customerName,
           customerEmail: customerEmail,
-          productName: product.name,
+          productName: nameText,
           pdfBase64
         }),
       });
@@ -274,16 +291,24 @@ export default function NewStandaloneOfferPage() {
                 <div className="space-y-8 flex-1">
                   {imageSize !== 'none' && (
                     <div className={cn(
-                      "relative w-full rounded-[2rem] overflow-hidden bg-neutral-100 border border-neutral-100 shadow-xl transition-all duration-300",
-                      imageSize === 'large' ? "aspect-[16/9]" : "aspect-[21/9] max-h-[160px]"
+                      "relative w-full rounded-[2rem] overflow-hidden bg-white border border-neutral-100 shadow-xl transition-all duration-300 flex items-center justify-center",
+                      imageSize === 'large' ? "h-[100mm] p-5" : "h-[42mm] p-3"
                     )}>
-                      <Image src={product.mainImage} alt={product.name} fill className="object-cover" />
+                      <Image src={product.mainImage} alt={product.name} width={1600} height={1200} className="max-h-full max-w-full w-auto h-auto object-contain" />
                     </div>
                   )}
                   <div className="space-y-4">
                     <h3 className="font-headline font-extrabold text-4xl tracking-tight uppercase leading-tight">
-                      <span className="text-accent-lime mr-4">{product.brand}</span>
-                      <span className="text-neutral-900">{product.name}</span>
+                      <span contentEditable suppressContentEditableWarning title="Click pentru a edita (doar în această ofertă)"
+                  className={cn("text-accent-lime mr-4", EDITABLE)}
+                  onKeyDown={titleKeyDown} onPaste={titlePaste}
+                  onBlur={e => { const v = cleanTitle(e.currentTarget.textContent); setEditBrand(v); e.currentTarget.textContent = v || product.brand; }}
+                >{brandText}</span>
+                <span contentEditable suppressContentEditableWarning title="Click pentru a edita (doar în această ofertă)"
+                  className={cn("text-neutral-900", EDITABLE)}
+                  onKeyDown={titleKeyDown} onPaste={titlePaste}
+                  onBlur={e => { const v = cleanTitle(e.currentTarget.textContent); setEditName(v); e.currentTarget.textContent = v || product.name; }}
+                >{nameText}</span>
                     </h3>
                     <div contentEditable suppressContentEditableWarning
                       className={cn(
