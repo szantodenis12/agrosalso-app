@@ -56,7 +56,7 @@ export default async function ProductLayout({ params, children }: ProductLayoutP
   const pretBf = bf?.priceMode === 'replace' ? bf.newPrice : undefined;
   const variante =
     bf?.priceMode === 'variant'
-      ? [{ nume: `${product.name} cu tăvălug`, pret: bf.newPrice, valabilPanaLa: BLACK_FRIDAY_END_DATE }]
+      ? [{ nume: bf.variantName ?? `${product.name} (Black Friday)`, pret: bf.newPrice, valabilPanaLa: BLACK_FRIDAY_END_DATE }]
       : undefined;
 
   const categorie = categoryLabel(product.category) ?? product.category;

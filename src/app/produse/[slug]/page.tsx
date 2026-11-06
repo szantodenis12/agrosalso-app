@@ -44,6 +44,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
   const bfActive = useBlackFridayActive();
   const bf = bfActive ? getBfProductBySlug(slug) : undefined;
   const bfText = BF_I18N[lang];
+  const bfVariant = bf ? bfText.products[bf.id].variant : undefined;
 
   const { translatedData, isTranslating } = useTranslation(product);
 
@@ -120,7 +121,10 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
     );
   }
 
-  const extraImages = Array.from(new Set(product.images || []))
+  // Black Friday (doar cât ține oferta): coperta cu oferta + pozele reale din pachet, în fața
+  // galeriei din Firestore. Hero-ul rămâne pe mainImage; după ofertă dispar automat.
+  const bfGallery = bf?.gallery ?? [];
+  const extraImages = Array.from(new Set([...bfGallery, ...(product.images || [])]))
     .filter(img => img !== product.mainImage);
 
   const productModels = product.specTable?.rows?.map(row => ({
@@ -238,22 +242,22 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                         </div>
                       )}
 
-                      {bf?.priceMode === 'variant' && (
+                      {bf?.priceMode === 'variant' && bfVariant && (
                         <div className="rounded-xl md:rounded-2xl border border-neutral-200 bg-neutral-50 p-4 md:p-5 space-y-2">
                           <div className="flex items-center justify-between gap-3 flex-wrap">
-                            <span className="text-[9px] md:text-[10px] font-extrabold text-neutral-500 uppercase tracking-widest">{bfText.variantTitle}</span>
+                            <span className="text-[9px] md:text-[10px] font-extrabold text-neutral-500 uppercase tracking-widest">{bfVariant?.title}</span>
                             <span className="inline-flex items-center gap-2 px-3 py-1 bg-neutral-900 text-white rounded-full text-[9px] md:text-[10px] font-extrabold uppercase tracking-widest">
                               <span className="w-1.5 h-1.5 bg-accent-lime rounded-full" />
                               {bfText.pageLabel}
                             </span>
                           </div>
-                          <div className="font-headline font-bold text-sm md:text-base text-neutral-900">{bfText.variantName}</div>
+                          <div className="font-headline font-bold text-sm md:text-base text-neutral-900">{bfVariant?.name}</div>
                           <div className="flex items-baseline gap-3 flex-wrap">
                             <span className="font-headline font-extrabold text-2xl md:text-4xl text-neutral-900 tracking-tighter">{formatEuro(bf.newPrice)}</span>
                             <span className="font-headline font-bold text-base md:text-lg text-neutral-400 line-through">{formatEuro(bf.oldPrice)}</span>
                             <span className="text-neutral-500 font-body text-sm">{bfText.vat}</span>
                           </div>
-                          <p className="text-neutral-500 text-[11px] md:text-xs font-medium leading-relaxed">{bfText.variantNote}</p>
+                          <p className="text-neutral-500 text-[11px] md:text-xs font-medium leading-relaxed">{bfVariant?.note}</p>
                           <p className="text-neutral-500 text-[11px] md:text-xs font-medium">{bfText.pageValidUntil.replace('{date}', formatBfEndDate(lang))}</p>
                         </div>
                       )}
@@ -477,7 +481,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                             onClick={() => setSelectedGalleryImage(img)}
                             className="relative aspect-[4/3] rounded-xl md:rounded-2xl overflow-hidden border border-neutral-100 cursor-pointer group"
                           >
-                            <Image src={img} alt={`${product.name} - Gallery ${index}`} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                            <Image src={img} alt={`${product.name} - Gallery ${index}`} fill className={cn('transition-transform duration-500 group-hover:scale-110', img === bf?.listCover ? 'object-cover object-bottom' : 'object-cover')} sizes="(max-width: 768px) 85vw, 45vw" />
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                                <ImageIcon className="text-white opacity-0 group-hover:opacity-100 transition-opacity" size={24} />
                             </div>

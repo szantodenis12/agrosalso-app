@@ -10,11 +10,13 @@ import { Product } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useBfListImage } from '@/hooks/useBlackFriday';
 import { cn } from '@/lib/utils';
 
 function ProductCard({ product }: { product: Product }) {
   const { lang } = useLanguage();
   const { translatedData, isTranslating } = useTranslation(product);
+  const img = useBfListImage(product.slug, product.mainImage || 'https://picsum.photos/seed/placeholder/800/600');
 
   return (
     <Link href={`/produse/${product.slug}`} className="block h-full group/card">
@@ -22,9 +24,9 @@ function ProductCard({ product }: { product: Product }) {
         whileHover={{ y: -10 }}
         className="flex flex-col h-full bg-white rounded-[2.5rem] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.03)] border border-neutral-100 hover:shadow-[0_30px_70px_rgba(0,0,0,0.08)] transition-all duration-500"
       >
-        <div className="relative aspect-[4/3] w-full rounded-[2rem] overflow-hidden mb-8">
+        <div className={cn("relative w-full rounded-[2rem] overflow-hidden mb-8", img.isCover ? "aspect-square" : "aspect-[4/3]")}>
           <Image 
-            src={product.mainImage || 'https://picsum.photos/seed/placeholder/800/600'} 
+            src={img.src} 
             alt={product.name} 
             fill 
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

@@ -15,6 +15,7 @@ import { PRODUCT_CATEGORIES } from '@/lib/constants';
 import { useLanguage } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useBfListImage } from '@/hooks/useBlackFriday';
 import {
   Select,
   SelectContent,
@@ -39,6 +40,7 @@ import {
 function ProductCard({ product, viewMode }: { product: any, viewMode: 'grid' | 'list' }) {
   const { lang } = useLanguage();
   const { translatedData, isTranslating } = useTranslation(product);
+  const img = useBfListImage(product.slug, product.mainImage || 'https://picsum.photos/seed/placeholder/800/600');
 
   return (
     <Link href={`/produse/${product.slug}`} className="block h-full group/card">
@@ -55,11 +57,15 @@ function ProductCard({ product, viewMode }: { product: any, viewMode: 'grid' | '
       >
         {/* Imagine */}
         <div className={cn(
-          "relative bg-neutral-100 overflow-hidden rounded-[1.5rem] md:rounded-[2rem]",
-          viewMode === 'list' ? "w-full md:w-[400px] aspect-[16/10] md:h-[300px] shrink-0" : "aspect-[16/10] md:aspect-[4/3] mb-5 md:mb-8"
+          "relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem]",
+          "bg-neutral-100",
+          // Coperta BF e pătrată (panoul cu prețul e în partea de jos): cadru pătrat, ca să nu fie decupată.
+          img.isCover
+            ? (viewMode === 'list' ? "w-full md:w-[300px] aspect-square shrink-0" : "aspect-square mb-5 md:mb-8")
+            : (viewMode === 'list' ? "w-full md:w-[400px] aspect-[16/10] md:h-[300px] shrink-0" : "aspect-[16/10] md:aspect-[4/3] mb-5 md:mb-8")
         )}>
           <Image 
-            src={product.mainImage || 'https://picsum.photos/seed/placeholder/800/600'} 
+            src={img.src} 
             alt={product.name} 
             fill 
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

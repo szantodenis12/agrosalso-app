@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { isBlackFridayActive } from '@/lib/promo/blackFriday';
+import { getBfProductBySlug, isBlackFridayActive } from '@/lib/promo/blackFriday';
 
 /**
  * Starea ofertei Black Friday evaluată pe client, după mount (la fiecare vizualizare,
@@ -13,4 +13,16 @@ export function useBlackFridayActive(): boolean {
     setActive(isBlackFridayActive());
   }, []);
   return active;
+}
+
+/**
+ * Imaginea pentru cardurile din liste (/produse, FeaturedProducts): cât ține oferta, produsele
+ * Black Friday arată coperta cu oferta (BF_<PRODUS>_01) în loc de mainImage; după ofertă (sau
+ * înainte de mount) revine la mainImage. `isCover` = imaginea e pătrată, cu panou de preț în
+ * partea de jos, deci se afișează întreagă (object-contain), nu decupată.
+ */
+export function useBfListImage(slug: string, mainImage: string): { src: string; isCover: boolean } {
+  const active = useBlackFridayActive();
+  const cover = active ? getBfProductBySlug(slug)?.listCover : undefined;
+  return cover ? { src: cover, isCover: true } : { src: mainImage, isCover: false };
 }

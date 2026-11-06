@@ -8,7 +8,8 @@
 //   - upcoming (de la deploy până la START): secțiunea BF pe homepage ca teaser
 //     ("Oferta începe pe ..."), fără prețuri BF pe paginile de produs / JSON-LD
 //   - active (START-END): secțiunea BF ("Oferta e valabilă până pe ...") + prețuri BF
-//     pe paginile TURAN / GRUNT + JSON-LD
+//     pe paginile TURAN / GRUNT / COMBINATOR K / RENAL / MAMUT + JSON-LD + imaginile BF
+//     (coperți în liste, galerie în plus pe pagină)
 //   - ended (după END): secțiunea dispare, paginile de produs revin la normal
 //   AFIR (OferteCurente) nu se mai randează în nicio fază.
 //
@@ -29,7 +30,7 @@ export const BF_WHATSAPP_NUMBER = '40761927076';
 export const BF_PHONE_DISPLAY = '0742 936 959';
 export const BF_PHONE_HREF = 'tel:+40742936959';
 
-export type BfProductId = 'leko' | 'turan' | 'grunt';
+export type BfProductId = 'leko' | 'turan' | 'grunt' | 'k' | 'renal' | 'mamut';
 
 export interface BfProduct {
   id: BfProductId;
@@ -38,8 +39,9 @@ export interface BfProduct {
   /** Slug-ul paginii de produs; lipsă = fără pagină (LEKO -> WhatsApp). */
   slug?: string;
   /**
-   * replace: prețul BF înlocuiește prețul de pe pagină (TURAN);
-   * variant: bloc separat sub prețul de bază, care NU se schimbă (GRUNT cu tăvălug).
+   * replace: prețul BF înlocuiește prețul de pe pagină (TURAN, RENAL);
+   * variant: bloc separat sub prețul de bază, care NU se schimbă (GRUNT cu tăvălug,
+   * COMBINATOR K 4,2 m, MAMUT 3 m).
    */
   priceMode: 'replace' | 'variant' | 'none';
   /** Euro, fără TVA. */
@@ -51,7 +53,19 @@ export interface BfProduct {
   imageAlt: string;
   /** Linia de specificații (RO, din pachet). Traducerile sunt în blackFridayContent.ts. */
   spec: string;
+  /** Numele configurației ofertate (blocul „variantă” și numele Offer-ului din JSON-LD). Doar la priceMode 'variant'. */
+  variantName?: string;
+  /**
+   * Doar cât ține oferta (faza 'active'), fără Firestore: coperta cu oferta (BF_<PRODUS>_01)
+   * înlocuiește mainImage în listele de produse; `gallery` se pune în fața galeriei de pe
+   * pagina produsului (coperta prima, apoi pozele reale). Hero-ul și JSON-LD rămân pe mainImage.
+   */
+  listCover?: string;
+  gallery?: string[];
 }
+
+const P = '/images/black-friday/products';
+const gal = (code: string) => [1, 2, 3, 4].map((n) => `${P}/BF_${code}_0${n}.webp`);
 
 export const BF_PRODUCTS: BfProduct[] = [
   {
@@ -76,6 +90,8 @@ export const BF_PRODUCTS: BfProduct[] = [
     image: '/images/black-friday/bf-turan.webp',
     imageAlt: 'Plug reversibil TURAN',
     spec: 'Reversare hidraulică · cadru din oțel tratat termic',
+    listCover: `${P}/BF_TURAN_01.webp`,
+    gallery: gal('TURAN'),
   },
   {
     id: 'grunt',
@@ -88,6 +104,53 @@ export const BF_PRODUCTS: BfProduct[] = [
     image: '/images/black-friday/bf-grunt.webp',
     imageAlt: 'Gruber DEXWAL GRUNT cu tăvălug',
     spec: 'Organe labă de gâscă pe 2 rânduri · cadru 80×80 mm',
+    variantName: 'Gruber GRUNT cu tăvălug',
+    listCover: `${P}/BF_GRUNT_01.webp`,
+    gallery: gal('GRUNT'),
+  },
+  {
+    id: 'k',
+    name: 'Combinator DEXWAL K 4,2 m',
+    slug: 'combinator-k',
+    priceMode: 'variant',
+    oldPrice: 6500,
+    newPrice: 5850,
+    discount: 10,
+    image: '/images/black-friday/bf-combinator-k.webp',
+    imageAlt: 'Combinator DEXWAL K 4,2 m',
+    spec: '36 organe active · tăvălug frontal 460 mm + 2 tăvălugi spate',
+    variantName: 'Combinator K 4,2 m',
+    listCover: `${P}/BF_COMBINATOR_K_01.webp`,
+    gallery: gal('COMBINATOR_K'),
+  },
+  {
+    id: 'renal',
+    name: 'Plantator universal RENAL',
+    slug: 'plantator-universal-automat',
+    priceMode: 'replace',
+    oldPrice: 3500,
+    newPrice: 3200,
+    discount: 9,
+    image: '/images/black-friday/bf-renal.webp',
+    imageAlt: 'Plantator universal RENAL',
+    spec: 'Arpagic și usturoi · 4 rânduri · tractor de la 40 CP',
+    listCover: `${P}/BF_RENAL_01.webp`,
+    gallery: gal('RENAL'),
+  },
+  {
+    id: 'mamut',
+    name: 'Terradisc DEXWAL MAMUT 3 m',
+    slug: 'terradisc-mamut',
+    priceMode: 'variant',
+    oldPrice: 8300,
+    newPrice: 7950,
+    discount: 4,
+    image: '/images/black-friday/bf-mamut.webp',
+    imageAlt: 'Terradisc DEXWAL MAMUT 3 m',
+    spec: 'Talere de 610 mm · tăvălug cracker',
+    variantName: 'Terradisc MAMUT 3 m, talere 610 mm, tăvălug cracker',
+    listCover: `${P}/BF_MAMUT_01.webp`,
+    gallery: gal('MAMUT'),
   },
 ];
 
