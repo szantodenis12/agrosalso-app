@@ -15,6 +15,7 @@ import Image from 'next/image';
 import { PRODUCT_CATEGORIES } from '@/lib/constants';
 import { LANGUAGES } from '@/context/LanguageContext';
 import { cn } from '@/lib/utils';
+import { slugify } from '@/lib/slug';
 
 interface Props {
   initialData?: Product;
@@ -176,7 +177,7 @@ export default function ProductForm({ initialData, mode }: Props) {
     }
   };
 
-  const generateSlug = (name: string) => name.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+  const generateSlug = (name: string) => slugify(name);
 
   const handleNameChange = (name: string) => {
     set('name', name);

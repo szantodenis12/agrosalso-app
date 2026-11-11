@@ -21,7 +21,7 @@ export default function DealerDexwalPage() {
         {/* Hero */}
         <section className="relative h-[50vh] md:h-[65vh] w-full flex flex-col justify-end overflow-hidden bg-neutral-900">
           <Image
-            src="/thumb-2-v2.jpg"
+            src="/thumb-2-v2.webp"
             alt="Utilaj Dexwal la lucru pe câmp"
             fill
             priority
@@ -131,6 +131,16 @@ export default function DealerDexwalPage() {
               {c.closingLinkText}
             </Link>
             .
+          </p>
+
+          <p className="text-neutral-400 font-body text-sm mt-4">
+            {lang === 'ro' ? 'Alte mărci la Agro Salso:' : 'Other brands at Agro Salso:'}{' '}
+            {[['helagro', 'Helagro'], ['strumyk', 'Strumyk'], ['tolmet', 'Tolmet'], ['bomet', 'Bomet']].map(([slug, name], i) => (
+              <span key={slug}>
+                {i > 0 && ' · '}
+                <Link href={`/marci/${slug}`} className="font-bold text-neutral-600 hover:text-neutral-900 transition-colors">{name}</Link>
+              </span>
+            ))}
           </p>
 
           {/* CTAs */}

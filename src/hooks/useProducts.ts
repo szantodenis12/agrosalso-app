@@ -17,7 +17,7 @@ export interface ProductFilters {
  * Încarcă toate produsele o singură dată și aplică filtrarea/sortarea local pentru viteză maximă.
  * Include gestionarea erorilor de conexiune.
  */
-export function useProducts() {
+export function useProducts(initialProducts?: Product[]) {
   const db = useFirestore();
   const [filters, setFilters] = useState<ProductFilters>({});
   const [sort, setSort] = useState<string>('oldest');
@@ -27,7 +27,12 @@ export function useProducts() {
     return query(collection(db, 'products'), orderBy('createdAt', 'asc'));
   }, [db]);
 
-  const { data: rawProducts, isLoading, error } = useCollection<Product>(productsQuery);
+  const { data: liveProducts, isLoading: liveLoading, error } = useCollection<Product>(productsQuery);
+
+  // Randare imediata din datele server (SSR); cand soseste snapshot-ul live, il inlocuieste.
+  const rawProducts = liveProducts ?? initialProducts ?? null;
+  const hasInitial = !!initialProducts && initialProducts.length > 0;
+  const isLoading = liveProducts ? false : hasInitial ? false : initialProducts ? liveLoading || !error : liveLoading;
 
   // Filtrarea și sortarea se întâmplă instantaneu pe client
   const filteredAndSortedProducts = useMemo(() => {

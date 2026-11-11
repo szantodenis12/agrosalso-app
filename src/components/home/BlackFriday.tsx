@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { normalizeSlug } from '@/lib/slug-redirects';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
@@ -158,7 +159,7 @@ export function BlackFriday({ phase: serverPhase }: BlackFridayProps) {
               <CarouselContent>
                 {BF_PRODUCTS.map((p, i) => {
                   const t = c.products[p.id];
-                  const href = p.slug ? `/produse/${p.slug}` : wa(t.whatsappText ?? c.whatsappGeneral);
+                  const href = p.slug ? `/produse/${normalizeSlug(p.slug)}` : wa(t.whatsappText ?? c.whatsappGeneral);
                   const external = !p.slug;
                   const cta = p.slug ? c.linkDetails : c.linkWhatsapp;
                   const body = (

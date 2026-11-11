@@ -1,6 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { getAllProductSlugs } from '@/lib/seo/product-data';
 import { NOUTATI } from '@/content/noutati';
+import { CATEGORII } from '@/content/categorii';
+import { MARCI } from '@/content/marci';
+import { normalizeSlug } from '@/lib/slug-redirects';
 
 // Generează https://agrosalso.ro/sitemap.xml
 //
@@ -23,7 +26,8 @@ export const revalidate = 3600;
 
 const BASE = 'https://agrosalso.ro';
 
-const PRODUSE_FALLBACK = [
+// Slug-uri finale (dupa corectarea celor 13 slug-uri, vezi src/lib/slug-redirects.ts).
+const PRODUSE_FALLBACK_RAW = [
   'terradisc-mamut',
   'terradisc-zuk',
   'terradisc-tur',
@@ -77,6 +81,7 @@ const PRODUSE_FALLBACK = [
   'erbicidator-purtat-klara',
   'erbicidator-purtat-xsara-tolmet',
 ];
+const PRODUSE_FALLBACK = Array.from(new Set(PRODUSE_FALLBACK_RAW.map(normalizeSlug)));
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const pagini: MetadataRoute.Sitemap = [
@@ -87,6 +92,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/servicii`, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE}/dealer-autorizat-dexwal`, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE}/noutati`, changeFrequency: 'weekly', priority: 0.7 },
+  ];
+
+  const landing: MetadataRoute.Sitemap = [
+    ...CATEGORII.map(({ slug }) => ({ url: `${BASE}/utilaje/${slug}`, changeFrequency: 'monthly' as const, priority: 0.8 })),
+    ...MARCI.map(({ slug }) => ({ url: `${BASE}/marci/${slug}`, changeFrequency: 'monthly' as const, priority: 0.7 })),
+    { url: `${BASE}/utilaje-agricole-bihor`, changeFrequency: 'monthly', priority: 0.7 },
   ];
 
   const noutati: MetadataRoute.Sitemap = NOUTATI.map(({ slug, date }) => ({
@@ -112,5 +123,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           priority: 0.8,
         }));
 
-  return [...pagini, ...noutati, ...produse];
+  return [...pagini, ...landing, ...noutati, ...produse];
 }

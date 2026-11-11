@@ -58,14 +58,88 @@ export interface ProdusMeta {
   slug: string;
   /** Prețul afișat pe site, cu moneda — ex. „4.000 EUR". Lipsă = fără preț în description. */
   pret?: string;
+  /** true = prețul e cel de Black Friday (descrierea își păstrează formularea proprie). */
+  bf?: boolean;
+  /** Imaginea principală a produsului, pentru openGraph.images. */
+  imagine?: string;
+}
+
+const TITLE_SUFFIX = ' | Agro Salso';
+const TITLE_MAX = 60;
+
+/** Taie la limita de cuvânt, fără semne de punctuație rămase la capăt. */
+function truncateWords(text: string, max: number): string {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max + 1);
+  const at = cut.lastIndexOf(' ');
+  const base = at > max * 0.5 ? cut.slice(0, at) : text.slice(0, max);
+  return base.replace(/[\s,;:.\-–—/(]+$/, '');
+}
+
+/** Categoria „Altele" nu spune nimic în title/description. */
+function usefulCategory(categorie: string): string {
+  return /^altele$/i.test(categorie.trim()) ? '' : categorie.trim();
+}
+
+/** Title ≤ 60 caractere: scoate întâi categoria, păstrează producătorul și brandul. */
+export function productTitle(p: Pick<ProdusMeta, 'nume' | 'categorie' | 'producator'>): string {
+  const cat = usefulCategory(p.categorie);
+  const candidates = [
+    cat ? `${p.nume} — ${cat} ${p.producator}` : `${p.nume} — ${p.producator}`,
+    `${p.nume} — ${p.producator}`,
+    p.nume,
+  ];
+  for (const c of candidates) {
+    const full = `${c}${TITLE_SUFFIX}`;
+    if (full.length <= TITLE_MAX) return full;
+  }
+  return `${truncateWords(p.nume, TITLE_MAX - TITLE_SUFFIX.length)}${TITLE_SUFFIX}`;
 }
 
 export function productMetadata(p: ProdusMeta): Metadata {
+  const cat = usefulCategory(p.categorie);
+  const what = cat ? `${cat.toLowerCase()} de la ${p.producator}` : `utilaj agricol de la ${p.producator}`;
+  const description = p.bf
+    ? `${p.nume}, ${what}.${p.pret ? ` Preț ${p.pret},` : ''} specificații complete și disponibilitate pe pagină.`
+    : p.pret
+      ? `Preț de la ${p.pret}: ${p.nume}, ${what}. Specificații complete și disponibilitate pe pagină.`
+      : `${p.nume}, ${what}. Specificații complete și disponibilitate pe pagină.`;
+  const title = productTitle(p);
+  const canonical = `/produse/${p.slug}`;
+
   return {
-    title: { absolute: `${p.nume} — ${p.categorie} ${p.producator} | Agro Salso` },
-    description: `${p.nume}, ${p.categorie.toLowerCase()} de la ${p.producator}.${
-      p.pret ? ` Preț ${p.pret},` : ''
-    } specificații complete și disponibilitate pe pagină.`,
-    alternates: { canonical: `/produse/${p.slug}` },
+    title: { absolute: title },
+    description,
+    alternates: { canonical },
+    openGraph: {
+      type: 'website',
+      locale: 'ro_RO',
+      siteName: 'Agro Salso',
+      title,
+      description,
+      url: canonical,
+      ...(p.imagine ? { images: [{ url: p.imagine, alt: p.nume }] } : {}),
+    },
+  };
+}
+
+/**
+ * Metadata pentru paginile de aterizare SEO (/utilaje/*, /marci/*, /utilaje-agricole-bihor).
+ * Titlul e `{ absolute }` (contine deja "Agro Salso", iar layout-ul radacina are
+ * template `%s | Agro Salso`), cu canonical + openGraph.
+ */
+export function landingMetadata(p: { title: string; description: string; path: string }): Metadata {
+  return {
+    title: { absolute: p.title },
+    description: p.description,
+    alternates: { canonical: p.path },
+    openGraph: {
+      type: 'website',
+      locale: 'ro_RO',
+      siteName: 'Agro Salso',
+      title: p.title,
+      description: p.description,
+      url: `${BASE_URL}${p.path}`,
+    },
   };
 }

@@ -35,7 +35,11 @@ const data = {
     addressRegion: 'Bihor',
     addressCountry: 'RO',
   },
-  sameAs: ['https://www.facebook.com/agrosalso'],
+  sameAs: [
+    'https://www.facebook.com/agrosalso',
+    'https://www.instagram.com/agrosalso/',
+    'https://www.tiktok.com/@agro.salso',
+  ],
   brand: [
     'Dexwal',
     'Helagro',

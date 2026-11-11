@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+import { normalizeSlug } from '@/lib/slug-redirects';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, Loader2 } from 'lucide-react';
 import { useMemo } from 'react';
@@ -19,7 +20,7 @@ function ProductCard({ product }: { product: Product }) {
   const img = useBfListImage(product.slug, product.mainImage || 'https://picsum.photos/seed/placeholder/800/600');
 
   return (
-    <Link href={`/produse/${product.slug}`} className="block h-full group/card">
+    <Link href={`/produse/${normalizeSlug(product.slug)}`} className="block h-full group/card">
       <motion.div
         whileHover={{ y: -10 }}
         className="flex flex-col h-full bg-white rounded-[2.5rem] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.03)] border border-neutral-100 hover:shadow-[0_30px_70px_rgba(0,0,0,0.08)] transition-all duration-500"
@@ -67,7 +68,7 @@ function ProductCard({ product }: { product: Product }) {
   );
 }
 
-export function FeaturedProducts() {
+export function FeaturedProducts({ initialProducts }: { initialProducts?: Product[] } = {}) {
   const db = useFirestore();
   const { lang } = useLanguage();
 
@@ -79,7 +80,10 @@ export function FeaturedProducts() {
     );
   }, [db]);
 
-  const { data: products, isLoading } = useCollection<Product>(featuredQuery);
+  const { data: liveProducts, isLoading: liveLoading } = useCollection<Product>(featuredQuery);
+  // Randare imediata din datele server; snapshot-ul live le inlocuieste cand soseste.
+  const products = liveProducts ?? initialProducts ?? null;
+  const isLoading = liveProducts ? false : initialProducts && initialProducts.length > 0 ? false : liveLoading;
 
   const containerVariants = {
     hidden: { opacity: 0 },

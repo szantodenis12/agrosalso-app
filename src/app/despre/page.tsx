@@ -70,7 +70,7 @@ export default function AboutPage() {
         {/* Hero Section */}
         <section className="relative h-[60vh] md:h-[80vh] w-full flex flex-col justify-end overflow-hidden bg-neutral-900">
           <Image
-            src="/despre-noi-hero.jpg"
+            src="/despre-noi-hero.webp"
             alt="AgroSalso Field"
             fill
             priority
@@ -159,7 +159,7 @@ export default function AboutPage() {
                 </div>
                 <div className="relative aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl">
                   <Image
-                    src="/despre-noi-photo.jpg"
+                    src="/despre-noi-photo.webp"
                     alt="AgroSalso Operations"
                     fill
                     className="object-cover"
@@ -188,7 +188,7 @@ export default function AboutPage() {
                 </div>
                 <div className="relative aspect-square rounded-[3rem] overflow-hidden bg-neutral-100">
                   <Image
-                    src="/desprenoi2.png"
+                    src="/desprenoi2.webp"
                     alt="Agro Salso"
                     fill
                     className="object-cover"

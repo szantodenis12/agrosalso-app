@@ -64,7 +64,7 @@ export function AboutSection() {
             className="relative aspect-[4/3] w-full rounded-[2.5rem] md:rounded-[4rem] overflow-hidden shadow-2xl"
           >
             <Image 
-              src="/despre-noi-photo.jpg" 
+              src="/despre-noi-photo.webp" 
               alt="Echipa AgroSalso" 
               fill 
               className="object-cover hover:scale-105 transition-transform duration-1000"

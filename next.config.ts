@@ -1,4 +1,5 @@
 import type {NextConfig} from 'next';
+import { slugRedirects } from './src/lib/slug-redirects';
 
 const securityHeaders = [
   {
@@ -40,7 +41,17 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      // Site-ul vechi (Laravel)
+      { source: '/products/:id', destination: '/produse', permanent: true },
+      { source: '/utilajeagricole/:id/products', destination: '/produse', permanent: true },
+      // Slug-uri de produs corectate: /produse/<vechi> -> /produse/<nou>
+      ...slugRedirects,
+    ];
+  },
   images: {
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',

@@ -11,6 +11,8 @@ export interface ProductJsonLdProps {
   categorie: string;
   slug: string;
   imagine?: string;
+  /** Text simplu (fara HTML), taiat la ~300 caractere. */
+  description?: string;
   pret?: number | string;
   moneda?: string;
   inStoc?: boolean;
@@ -26,6 +28,7 @@ export default function ProductJsonLd({
   categorie,
   slug,
   imagine,
+  description,
   pret,
   moneda = 'EUR',
   inStoc = true,
@@ -65,6 +68,7 @@ export default function ProductJsonLd({
     name: nume,
     brand: { '@type': 'Brand', name: producator },
     category: categorie,
+    ...(description ? { description: description.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 300) } : {}),
     ...(imagine ? { image: imagine } : {}),
     url: `https://agrosalso.ro/produse/${slug}`,
     ...(offers.length ? { offers: offers.length === 1 ? offers[0] : offers } : {}),

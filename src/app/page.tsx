@@ -11,14 +11,16 @@ import { Footer } from '@/components/layout/Footer';
 import { TBIInstallmentsBanner } from '@/components/common/TBIInstallmentsBanner';
 import OrganizationJsonLd from '@/components/seo/OrganizationJsonLd';
 import FaqJsonLd from '@/components/seo/FaqJsonLd';
+import { getFeaturedProducts } from '@/lib/seo/product-data';
 
 // Pagina e ISR: faza Black Friday (upcoming/active/ended) se recalculează pe server cel
 // mult la 5 minute, deci secțiunea apare/dispare la datele din blackFriday.ts fără
 // redeploy, iar HTML-ul server conține deja secțiunea (fără flash/layout shift).
 export const revalidate = 300;
 
-export default function Home() {
+export default async function Home() {
   const bfPhase = getBlackFridayPhase();
+  const featuredProducts = await getFeaturedProducts();
   return (
     <>
       <OrganizationJsonLd />
@@ -26,7 +28,7 @@ export default function Home() {
       <Navbar />
       <main>
         <HeroSection />
-        <FeaturedProducts />
+        <FeaturedProducts initialProducts={featuredProducts} />
         {/* AFIR (OferteCurente) expirat: componenta rămâne în cod, dar nu se mai randează. */}
         {bfPhase !== 'ended' && <BlackFriday phase={bfPhase} />}
         <AboutSection />

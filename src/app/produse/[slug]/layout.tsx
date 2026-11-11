@@ -3,6 +3,7 @@ import { META, productMetadata } from '@/lib/seo/metadata';
 import { getProductBySlugForSeo, categoryLabel } from '@/lib/seo/product-data';
 import ProductJsonLd from '@/components/seo/ProductJsonLd';
 import { BLACK_FRIDAY_END_DATE, getBfProductBySlug, isBlackFridayActive, formatEuro } from '@/lib/promo/blackFriday';
+import { normalizeSlug } from '@/lib/slug-redirects';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 
 // ISR: faza Black Friday se reevaluează pe server cel mult la 5 minute, ca metadata și
@@ -26,19 +27,21 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProductBySlugForSeo(slug);
-  const bf = isBlackFridayActive() ? getBfProductBySlug(slug) : undefined;
+  const bf = isBlackFridayActive() ? getBfProductBySlug(normalizeSlug(slug)) : undefined;
 
   if (!product) {
     // Fallback: metadata generică de catalog, nu text inventat.
-    return { ...META.produse, alternates: { canonical: `/produse/${slug}` } };
+    return { ...META.produse, alternates: { canonical: `/produse/${normalizeSlug(slug)}` } };
   }
 
   return productMetadata({
     nume: product.name,
     categorie: categoryLabel(product.category) ?? product.category,
     producator: product.brand,
-    slug: product.slug,
+    slug: normalizeSlug(product.slug),
     pret: bf?.priceMode === 'replace' ? `${formatEuro(bf.newPrice)} + TVA` : priceLabel(product),
+    bf: bf?.priceMode === 'replace',
+    imagine: product.mainImage,
   });
 }
 
@@ -50,7 +53,7 @@ export default async function ProductLayout({ params, children }: ProductLayoutP
     return <>{children}</>;
   }
 
-  const bf = isBlackFridayActive() ? getBfProductBySlug(product.slug) : undefined;
+  const bf = isBlackFridayActive() ? getBfProductBySlug(normalizeSlug(product.slug)) : undefined;
   // TURAN: prețul BF înlocuiește prețul principal. GRUNT: prețul de bază rămâne oferta
   // principală, iar varianta cu tăvălug devine un Offer separat.
   const pretBf = bf?.priceMode === 'replace' ? bf.newPrice : undefined;
@@ -67,8 +70,9 @@ export default async function ProductLayout({ params, children }: ProductLayoutP
         nume={product.name}
         producator={product.brand}
         categorie={categorie}
-        slug={product.slug}
+        slug={normalizeSlug(product.slug)}
         imagine={product.mainImage}
+        description={product.description}
         pret={pretBf ?? (product.priceOnRequest ? undefined : product.price)}
         valabilPanaLa={pretBf ? BLACK_FRIDAY_END_DATE : undefined}
         variante={variante}
@@ -79,7 +83,7 @@ export default async function ProductLayout({ params, children }: ProductLayoutP
         trasee={[
           { nume: 'Acasă', url: '/' },
           { nume: 'Produse', url: '/produse' },
-          { nume: product.name, url: `/produse/${product.slug}` },
+          { nume: product.name, url: `/produse/${normalizeSlug(product.slug)}` },
         ]}
       />
       {children}

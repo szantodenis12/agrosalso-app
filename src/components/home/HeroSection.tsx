@@ -14,25 +14,25 @@ const BACKGROUNDS = [
     id: 'bg-video',
     type: 'video',
     src: '/hero-video-tractor-v2.mp4',
-    thumbnail: '/thumb-0-v2.jpg'
+    thumbnail: '/thumb-0-v2.webp'
   },
   {
     id: 'bg-image-1',
     type: 'image',
-    src: '/thumb-2-v3.jpg',
-    thumbnail: '/thumb-2-v3.jpg'
+    src: '/thumb-2-v3.webp',
+    thumbnail: '/thumb-2-v3.webp'
   },
   {
     id: 'bg-image-2',
     type: 'image',
-    src: '/thumb-2-v2.jpg',
-    thumbnail: '/thumb-2-v2.jpg'
+    src: '/thumb-2-v2.webp',
+    thumbnail: '/thumb-2-v2.webp'
   },
   {
     id: 'bg-image-3',
     type: 'image',
-    src: '/thumb-3-v2.jpg',
-    thumbnail: '/thumb-3-v2.jpg'
+    src: '/thumb-3-v2.webp',
+    thumbnail: '/thumb-3-v2.webp'
   }
 ];
 
@@ -109,10 +109,12 @@ export function HeroSection() {
                 muted
                 loop
                 playsInline
-                preload="auto"
+                preload="metadata"
+                poster="/hero-video-tractor-v2-poster.webp"
                 className="w-full h-full object-cover"
               >
-                <source src={currentBg.src} type="video/mp4" />
+                <source src="/hero-video-tractor-v2-mobile.mp4" media="(max-width: 767px)" type="video/mp4" />
+                <source src="/hero-video-tractor-v2-desktop.mp4" type="video/mp4" />
               </video>
             ) : (
               <Image

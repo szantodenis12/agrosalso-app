@@ -5,6 +5,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
+import { CATEGORII } from '@/content/categorii';
 
 export function Footer() {
   const { lang } = useLanguage();
@@ -15,11 +16,10 @@ export function Footer() {
       <section className="relative h-[600px] w-full flex items-center px-6 md:px-14 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
-            src="/footer-image-v2.png" 
-            alt="Ready to Transform" 
+            src="/footer-image-v2.webp" 
+            alt="Utilaje agricole Agro Salso la lucru pe câmp" 
             fill 
             className="object-cover"
-            priority
           />
           {/* Main Overlay */}
           <div className="absolute inset-0 bg-black/50" />
@@ -67,7 +67,7 @@ export function Footer() {
       {/* Bottom Navigation Section */}
       <section className="bg-black text-white pt-24 pb-12 px-6 md:px-14">
         <div className="max-w-[1440px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16 mb-24">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 lg:gap-10 mb-24">
             {/* Brand Column */}
             <div className="lg:col-span-1 space-y-8">
               <Link href="/" className="block">
@@ -99,6 +99,16 @@ export function Footer() {
               </ul>
             </div>
 
+            {/* Categorii utilaje (linkuri interne SEO) */}
+            <div>
+              <h4 className="text-neutral-500 font-bold text-sm mb-8">{lang === 'ro' ? 'Categorii utilaje' : 'Equipment categories'}</h4>
+              <ul className="space-y-4">
+                {CATEGORII.map((c) => (
+                  <li key={c.slug}><Link href={`/utilaje/${c.slug}`} className="text-white/60 hover:text-white transition-colors text-sm">{c.nume}</Link></li>
+                ))}
+              </ul>
+            </div>
+
             {/* Links Columns */}
             <div>
               <h4 className="text-neutral-500 font-bold text-sm mb-8">{t[lang].footerCompany}</h4>
@@ -106,6 +116,7 @@ export function Footer() {
                 <li><Link href="/despre" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].about}</Link></li>
                 <li><Link href="/noutati" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].news}</Link></li>
                 <li><Link href="/dealer-autorizat-dexwal" className="text-white/60 hover:text-white transition-colors text-sm">{t[lang].dexwalDealer}</Link></li>
+                <li><Link href="/utilaje-agricole-bihor" className="text-white/60 hover:text-white transition-colors text-sm">{lang === 'ro' ? 'Utilaje agricole în Bihor' : 'Farm machinery in Bihor'}</Link></li>
               </ul>
             </div>
 

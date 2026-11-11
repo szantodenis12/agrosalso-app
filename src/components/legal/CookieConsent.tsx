@@ -68,7 +68,7 @@ export function CookieConsent() {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           className="fixed bottom-6 left-6 right-6 md:left-14 md:right-auto md:max-w-md z-[100]"

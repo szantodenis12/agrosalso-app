@@ -21,7 +21,7 @@ export default function ServiciiPage() {
         {/* Hero */}
         <section className="relative h-[50vh] md:h-[65vh] w-full flex flex-col justify-end overflow-hidden bg-neutral-900">
           <Image
-            src="/thumb-0-v2.jpg"
+            src="/thumb-0-v2.webp"
             alt="Utilaj agricol Agro Salso la lucru pe câmp"
             fill
             priority
