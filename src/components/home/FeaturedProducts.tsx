@@ -13,6 +13,7 @@ import { t } from '@/lib/translations';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useBfListImage } from '@/hooks/useBlackFriday';
 import { cn } from '@/lib/utils';
+import { useIdleReady } from '@/hooks/useIdleReady';
 
 function ProductCard({ product }: { product: Product }) {
   const { lang } = useLanguage();
@@ -72,13 +73,16 @@ export function FeaturedProducts({ initialProducts }: { initialProducts?: Produc
   const db = useFirestore();
   const { lang } = useLanguage();
 
+  const idle = useIdleReady();
+  const liveEnabled = idle || !initialProducts || initialProducts.length === 0;
   const featuredQuery = useMemoFirebase(() => {
+    if (!liveEnabled) return null;
     return query(
       collection(db, 'products'),
       where('isFeatured', '==', true),
       limit(10)
     );
-  }, [db]);
+  }, [db, liveEnabled]);
 
   const { data: liveProducts, isLoading: liveLoading } = useCollection<Product>(featuredQuery);
   // Randare imediata din datele server; snapshot-ul live le inlocuieste cand soseste.

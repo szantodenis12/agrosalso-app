@@ -31,8 +31,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ro">
+    <html lang="ro" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var c=localStorage.getItem('agro_cookie_consent_v1');if(c){var t=JSON.parse(c).timestamp;if((Date.now()-t)/864e5<=90)document.documentElement.classList.add('consent-given')}}catch(e){}`,
+          }}
+        />
         <Script id="gtm-consent-default" strategy="beforeInteractive">
           {`
             window.dataLayer = window.dataLayer || [];

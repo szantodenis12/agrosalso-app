@@ -270,8 +270,8 @@ export default function ProduseClient({ initialProducts }: { initialProducts: Pr
                   viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
                 )}>
                   <AnimatePresence mode="popLayout">
-                    {products.map((product) => (
-                      <ProductCard key={product.id} product={product} viewMode={viewMode} />
+                    {products.map((product, idx) => (
+                      <ProductCard key={product.id} product={product} viewMode={viewMode} priority={idx < 2} />
                     ))}
                   </AnimatePresence>
                 </div>

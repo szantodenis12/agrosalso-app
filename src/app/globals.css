@@ -158,3 +158,6 @@
     float: none !important;
   }
 }
+
+/* Banner cookie randat in HTML-ul serverului; ascuns instant daca consimtamantul exista deja */
+html.consent-given .cookie-consent-banner { display: none !important; }

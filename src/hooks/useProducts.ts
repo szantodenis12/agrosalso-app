@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import { Product } from '@/types';
+import { useIdleReady } from '@/hooks/useIdleReady';
 
 export interface ProductFilters {
   category?: string;
@@ -23,9 +24,13 @@ export function useProducts(initialProducts?: Product[]) {
   const [sort, setSort] = useState<string>('oldest');
 
   // Interogare stabilă: aducem toate produsele ordonate după dată
+  // Listener-ul live porneste dupa idle (datele initiale vin din SSR); fara date initiale porneste imediat.
+  const idle = useIdleReady();
+  const liveEnabled = idle || !initialProducts || initialProducts.length === 0;
   const productsQuery = useMemoFirebase(() => {
+    if (!liveEnabled) return null;
     return query(collection(db, 'products'), orderBy('createdAt', 'asc'));
-  }, [db]);
+  }, [db, liveEnabled]);
 
   const { data: liveProducts, isLoading: liveLoading, error } = useCollection<Product>(productsQuery);
 

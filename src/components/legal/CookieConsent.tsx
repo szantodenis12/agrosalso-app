@@ -11,12 +11,10 @@ const CONSENT_KEY = 'agro_cookie_consent_v1';
 const EXPIRY_DAYS = 90;
 
 export function CookieConsent() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(true); // randat in HTML-ul serverului; ascuns prin CSS (html.consent-given) pentru cei care au acceptat deja
   const { lang } = useLanguage();
 
   useEffect(() => {
-    setMounted(true);
     const savedConsent = localStorage.getItem(CONSENT_KEY);
     
     if (savedConsent) {
@@ -36,6 +34,7 @@ export function CookieConsent() {
             'ad_personalization': 'granted'
           });
           window.dataLayer.push({ event: 'cookie_consent_update' });
+          setIsVisible(false);
         }
       } catch (e) {
         setIsVisible(true);
@@ -62,8 +61,6 @@ export function CookieConsent() {
     setIsVisible(false);
   };
 
-  if (!mounted) return null;
-
   return (
     <AnimatePresence>
       {isVisible && (
@@ -71,7 +68,7 @@ export function CookieConsent() {
           initial={false}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-6 left-6 right-6 md:left-14 md:right-auto md:max-w-md z-[100]"
+          className="cookie-consent-banner fixed bottom-6 left-6 right-6 md:left-14 md:right-auto md:max-w-md z-[100]"
         >
           <div className="bg-neutral-950 border border-white/10 rounded-[2rem] p-6 md:p-8 shadow-2xl shadow-black/50 backdrop-blur-xl relative overflow-hidden group">
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent-lime/10 rounded-full blur-3xl" />

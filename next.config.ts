@@ -51,6 +51,9 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // Firebase App Hosting seteaza implicit images.unoptimized=true; il fortam pe false ca next/image sa serveasca /_next/image (AVIF/WebP, srcset).
+    unoptimized: false,
+    minimumCacheTTL: 2592000,
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {

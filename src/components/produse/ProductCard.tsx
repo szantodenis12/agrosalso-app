@@ -11,7 +11,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useBfListImage } from '@/hooks/useBlackFriday';
 import { useLocalePrice } from '@/hooks/useLocalePrice';
 
-export function ProductCard({ product, viewMode }: { product: any, viewMode: 'grid' | 'list' }) {
+export function ProductCard({ product, viewMode, priority = false }: { product: any, viewMode: 'grid' | 'list', priority?: boolean }) {
   const { lang } = useLanguage();
   const { translatedData, isTranslating } = useTranslation(product);
   const img = useBfListImage(product.slug, product.mainImage || 'https://picsum.photos/seed/placeholder/800/600');
@@ -44,6 +44,7 @@ export function ProductCard({ product, viewMode }: { product: any, viewMode: 'gr
             alt={product.name} 
             fill 
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={priority}
             className="object-cover group-hover/card:scale-110 transition-transform duration-1000"
           />
           <div className="absolute top-3 left-3 md:top-5 md:left-5 flex flex-wrap gap-1.5 md:gap-2">
