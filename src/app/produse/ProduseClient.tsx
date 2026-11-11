@@ -271,7 +271,7 @@ export default function ProduseClient({ initialProducts }: { initialProducts: Pr
                 )}>
                   <AnimatePresence mode="popLayout">
                     {products.map((product, idx) => (
-                      <ProductCard key={product.id} product={product} viewMode={viewMode} priority={idx < 2} />
+                      <ProductCard key={product.id} product={product} viewMode={viewMode} priority={idx < 2} cssEntrance={idx < 4} />
                     ))}
                   </AnimatePresence>
                 </div>

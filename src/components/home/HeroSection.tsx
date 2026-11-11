@@ -70,26 +70,6 @@ export function HeroSection() {
 
   const currentBg = BACKGROUNDS[currentIndex];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
-    },
-  };
-
   return (
     <section className="relative h-screen min-h-[700px] w-full flex flex-col justify-center px-6 md:px-14 overflow-hidden bg-black">
       {/* Background Media Layer */}
@@ -135,15 +115,10 @@ export function HeroSection() {
 
       {/* Static Content Layer */}
       <div className="relative z-20 max-w-[1440px] mx-auto w-full">
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="max-w-4xl"
-        >
-          <motion.h1 
-            variants={itemVariants}
-            className="font-headline font-bold text-[26px] sm:text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8 break-words"
+        {/* Intrarea e CSS pur (hero-enter*, globals.css): pornește la primul paint, fără hidratare. */}
+        <div className="max-w-4xl hero-enter-container">
+          <h1
+            className="hero-enter-item hero-enter-1 font-headline font-bold text-[26px] sm:text-4xl md:text-6xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8 break-words"
           >
             {t[lang].heroTitle.split('|').map((part, i, arr) => {
               const isLast = i === arr.length - 1;
@@ -154,16 +129,15 @@ export function HeroSection() {
                 </span>
               );
             })}
-          </motion.h1>
+          </h1>
 
-          <motion.p 
-            variants={itemVariants}
-            className="text-white/80 text-base md:text-lg max-w-xl mb-10 font-body leading-relaxed"
+          <p
+            className="hero-enter-item hero-enter-2 text-white/80 text-base md:text-lg max-w-xl mb-10 font-body leading-relaxed"
           >
             {t[lang].heroSub}
-          </motion.p>
+          </p>
 
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-6 items-start">
+          <div className="hero-enter-item hero-enter-3 flex flex-col sm:flex-row gap-6 items-start">
             <Link href="/produse">
               <motion.button 
                 whileHover={{ scale: 1.05, x: 5 }}
@@ -176,8 +150,8 @@ export function HeroSection() {
                 </div>
               </motion.button>
             </Link>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
 
       {/* Interface Elements Layer */}

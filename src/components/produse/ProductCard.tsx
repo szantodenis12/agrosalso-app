@@ -11,7 +11,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useBfListImage } from '@/hooks/useBlackFriday';
 import { useLocalePrice } from '@/hooks/useLocalePrice';
 
-export function ProductCard({ product, viewMode, priority = false }: { product: any, viewMode: 'grid' | 'list', priority?: boolean }) {
+export function ProductCard({ product, viewMode, priority = false, cssEntrance = false }: { product: any, viewMode: 'grid' | 'list', priority?: boolean, cssEntrance?: boolean }) {
   const { lang } = useLanguage();
   const { translatedData, isTranslating } = useTranslation(product);
   const img = useBfListImage(product.slug, product.mainImage || 'https://picsum.photos/seed/placeholder/800/600');
@@ -21,11 +21,12 @@ export function ProductCard({ product, viewMode, priority = false }: { product: 
     <Link href={`/produse/${normalizeSlug(product.slug)}`} className="block h-full group/card">
       <motion.div 
         layout
-        initial={{ opacity: 0, y: 20 }}
+        initial={cssEntrance ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
         className={cn(
+          cssEntrance && "card-enter",
           "bg-white border border-neutral-100 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.08)] transition-all duration-500 overflow-hidden rounded-[2rem] md:rounded-[2.5rem] p-5 md:p-8 flex flex-col h-full",
           viewMode === 'list' ? "md:flex-row gap-6 md:gap-10" : ""
         )}
