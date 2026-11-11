@@ -1,14 +1,22 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { getBfProductBySlug, isBlackFridayActive } from '@/lib/promo/blackFriday';
 
 /**
+ * Valoarea initiala a starii BF calculata pe server (pagini ISR). Furnizata prin
+ * <BfInitialProvider>; fara provider, initialul ramane false (comportamentul vechi).
+ * Clientul reverifica oricum datele dupa mount.
+ */
+export const BfInitialContext = createContext<boolean>(false);
+
+/**
  * Starea ofertei Black Friday evaluată pe client, după mount (la fiecare vizualizare,
- * nu înghețată la build). Înainte de mount întoarce false, ca SSR și primul render să
+ * nu înghețată la build). Înainte de mount întoarce valoarea calculată pe server (context), ca SSR și primul render să
  * coincidă (fără hydration mismatch).
  */
 export function useBlackFridayActive(): boolean {
-  const [active, setActive] = useState(false);
+  const initial = useContext(BfInitialContext);
+  const [active, setActive] = useState(initial);
   useEffect(() => {
     setActive(isBlackFridayActive());
   }, []);

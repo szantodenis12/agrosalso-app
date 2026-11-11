@@ -1,12 +1,14 @@
+import dynamic from 'next/dynamic';
 import { Navbar } from '@/components/layout/Navbar';
 import { HeroSection } from '@/components/home/HeroSection';
 import { FeaturedProducts } from '@/components/home/FeaturedProducts';
 import { BlackFriday } from '@/components/home/BlackFriday';
-import { getBlackFridayPhase } from '@/lib/promo/blackFriday';
-import { AboutSection } from '@/components/home/AboutSection';
-import { TestimonialsSection } from '@/components/home/TestimonialsSection';
-import { IntrebariFrecvente } from '@/components/home/IntrebariFrecvente';
-import { ContactSection } from '@/components/home/ContactSection';
+import { BfInitialProvider } from '@/components/common/BfInitialProvider';
+import { getBlackFridayPhase, isBlackFridayActive } from '@/lib/promo/blackFriday';
+const AboutSection = dynamic(() => import('@/components/home/AboutSection').then((m) => m.AboutSection));
+const TestimonialsSection = dynamic(() => import('@/components/home/TestimonialsSection').then((m) => m.TestimonialsSection));
+const IntrebariFrecvente = dynamic(() => import('@/components/home/IntrebariFrecvente').then((m) => m.IntrebariFrecvente));
+const ContactSection = dynamic(() => import('@/components/home/ContactSection').then((m) => m.ContactSection));
 import { Footer } from '@/components/layout/Footer';
 import { TBIInstallmentsBanner } from '@/components/common/TBIInstallmentsBanner';
 import OrganizationJsonLd from '@/components/seo/OrganizationJsonLd';
@@ -28,7 +30,9 @@ export default async function Home() {
       <Navbar />
       <main>
         <HeroSection />
-        <FeaturedProducts initialProducts={featuredProducts} />
+        <BfInitialProvider active={isBlackFridayActive()}>
+          <FeaturedProducts initialProducts={featuredProducts} />
+        </BfInitialProvider>
         {/* AFIR (OferteCurente) expirat: componenta rămâne în cod, dar nu se mai randează. */}
         {bfPhase !== 'ended' && <BlackFriday phase={bfPhase} />}
         <AboutSection />

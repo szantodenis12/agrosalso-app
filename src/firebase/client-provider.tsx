@@ -17,9 +17,7 @@ export function FirebaseClientProvider({ children }: FirebaseClientProviderProps
   return (
     <FirebaseProvider
       firebaseApp={firebaseServices.firebaseApp}
-      auth={firebaseServices.auth}
       firestore={firebaseServices.firestore}
-      storage={firebaseServices.storage}
     >
       {children}
     </FirebaseProvider>
