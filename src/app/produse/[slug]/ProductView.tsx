@@ -133,6 +133,7 @@ export default function ProductView({ product, relatedProducts = [] }: { product
             sizes="100vw"
             className="object-cover opacity-60"
             priority
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40 z-10" />
           
